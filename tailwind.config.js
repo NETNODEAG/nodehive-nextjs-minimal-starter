@@ -16,11 +16,6 @@ module.exports = {
         black: '#09090b',
         primary: colors.teal,
       },
-      backgroundImage: {
-        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-        'gradient-conic':
-          'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
-      },
       // Customize typography for prose to match the theme colors/sizes/etc.
       // By default, prose uses a custom font-size, line-height, and color.
       typography: ({ theme }) => ({

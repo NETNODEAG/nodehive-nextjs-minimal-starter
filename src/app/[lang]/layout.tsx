@@ -40,15 +40,13 @@ export default async function RootLayout({ children, params }: LayoutProps) {
   const { lang } = params;
 
   return (
-    <html lang="en">
+    <html lang={lang}>
       <body className={inter.className}>
         <div className="relative flex min-h-screen flex-col">
           <Header lang={lang} />
 
           <div className="flex-[1_0_auto]">
-            <main className="container mx-auto my-16 px-4 md:px-8">
-              {children}
-            </main>
+            <main className="container-wrapper my-16">{children}</main>
           </div>
 
           <Footer />
