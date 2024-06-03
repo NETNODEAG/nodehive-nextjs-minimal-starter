@@ -76,11 +76,11 @@ Please ensure all changes are made to keep your application functioning correctl
 
 The minimal starter is configured to support multiple languages. To enable this feature, follow these steps:
 
-Enable Translations for Content Types: Ensure that translations are enabled for all relevant content types in your application.
+1. Add Additional Languages: Add the additional languages you want to support. Make sure to configure the language settings appropriately for each language.
 
-Add Additional Languages: Add the additional languages you want to support. Make sure to configure the language settings appropriately for each language.
+2. Configure Prefixes: Set up the URL prefixes for each language. This step is crucial to ensure that your application's URLs are correctly routed based on the selected language.
 
-Configure Prefixes: Set up the URL prefixes for each language. This step is crucial to ensure that your application's URLs are correctly routed based on the selected language.
+3. Enable Translations for Content Types: Ensure that translations are enabled for all relevant content types in your application.
 
 By following these steps, you will have a fully functional multilingual setup for your application.
 
