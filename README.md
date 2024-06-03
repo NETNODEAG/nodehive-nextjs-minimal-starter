@@ -70,6 +70,20 @@ Replace the placeholders with the appropriate values:
 
 Please ensure all changes are made to keep your application functioning correctly.
 
+## 2. Backend configuration
+
+### 2.1 Multilanguage Setup
+
+The minimal starter is configured to support multiple languages. To enable this feature, follow these steps:
+
+Enable Translations for Content Types: Ensure that translations are enabled for all relevant content types in your application.
+
+Add Additional Languages: Add the additional languages you want to support. Make sure to configure the language settings appropriately for each language.
+
+Configure Prefixes: Set up the URL prefixes for each language. This step is crucial to ensure that your application's URLs are correctly routed based on the selected language.
+
+By following these steps, you will have a fully functional multilingual setup for your application.
+
 ## 3. Deployment
 
 ### 3.1 Deploy on Vercel
