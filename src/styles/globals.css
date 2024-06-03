@@ -1,0 +1,10 @@
+@import 'tailwindcss/base';
+@import 'theme/base.css';
+
+@import 'tailwindcss/components';
+@import 'theme/components.css';
+
+@import 'tailwindcss/utilities';
+@import 'theme/utilities.css';
+
+@import 'theme/ckeditor.css';

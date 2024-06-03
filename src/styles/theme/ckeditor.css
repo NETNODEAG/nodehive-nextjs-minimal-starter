@@ -1,0 +1,25 @@
+/*
+CKEditor global styles
+*/
+
+/* Link */
+.prose a {
+  @apply underline underline-offset-2;
+}
+
+/* Alignment */
+.prose .text-align-right {
+  @apply text-right;
+}
+
+.prose .text-align-center {
+  @apply text-center;
+}
+
+/*
+CKEditor inline styles
+*/
+/* Example of a custom class */
+/* .prose a.cta {
+  @apply px-4 py-2 text-white bg-blue-500 rounded-md;
+} */

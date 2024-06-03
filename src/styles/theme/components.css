@@ -1,0 +1,40 @@
+@layer components {
+  /*
+  Container
+  */
+  .max-container {
+    @apply w-full mx-auto max-w-7xl;
+  }
+
+  .container-wrapper {
+    @apply px-4 max-container md:px-8;
+  }
+
+  /*
+  Paragraphs
+  */
+  .paragraph {
+    @apply my-8 first:mt-0 last:mb-0;
+  }
+
+  /*
+  Links
+  */
+  .link {
+    @apply text-base font-bold underline decoration-2 underline-offset-2;
+  }
+
+  /*
+  Buttons
+  */
+  .btn {
+    @apply inline-flex h-fit items-center justify-center rounded-md px-5 py-1.5 text-base font-bold no-underline;
+    @apply transition-colors ease-in-out;
+  }
+
+  .btn-primary {
+    @apply btn;
+    @apply text-white border border-transparent bg-neutral-900;
+    @apply hover:border-neutral-900 hover:bg-white hover:text-neutral-900;
+  }
+}
