@@ -1,4 +1,4 @@
-# nodehive-nextjs-starter
+# nodehive-nextjs-minimal-starter
 
 ## 1. Installation
 
