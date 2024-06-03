@@ -18,7 +18,7 @@ export default async function Page() {
 
   return (
     <section className="space-y-8">
-      <h1 className="text-4xl font-bold sm:text-6xl">Account</h1>
+      <h1>Account</h1>
 
       <div className="space-y-4">
         <ul>

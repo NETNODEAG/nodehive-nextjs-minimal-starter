@@ -13,7 +13,7 @@ export default function Page() {
 
   return (
     <section className="space-y-8">
-      <h1 className="text-4xl font-bold sm:text-6xl">Login</h1>
+      <h1>Login</h1>
 
       <LoginForm />
     </section>

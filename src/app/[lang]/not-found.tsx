@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 export default function NotFound() {
   return (
-    <section className="container-wrapper my-8 space-y-8">
+    <section className="space-y-8">
       <h1>404 - Page Not Found</h1>
 
       <p>
