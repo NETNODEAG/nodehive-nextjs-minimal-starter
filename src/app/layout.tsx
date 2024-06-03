@@ -7,8 +7,8 @@ import { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { Locale } from '@/nodehive/i18n-config';
 
-import Footer from '@/components/layout/FooterLayout';
-import Header from '@/components/layout/HeaderLayout';
+import Footer from '@/components/layout/Footer';
+import Header from '@/components/layout/Header';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -53,6 +53,7 @@ export default async function RootLayout({ children, params }: LayoutProps) {
 
           <Footer />
         </div>
+
         <Connector />
       </body>
     </html>
