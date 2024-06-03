@@ -10,10 +10,6 @@ Create a new Next.js app using one of the following starter templates, where eve
 
 ```
 npx create-next-app frontend.example.ch -e https://github.com/NETNODEAG/nodehive-nextjs-minimal-starter/tree/main
-cd frontend.example.ch
-cp .env.example .env
-open localhost:3000
-npm run dev
 ```
 
 ### 1.2 Linking Your Frontend to Drupal
@@ -45,13 +41,34 @@ npm run dev
 
 ### 1.3 Adapt the project to your needs
 
-#### Startpage
+To ensure the correct configuration of your application's default landing page, please follow these updated steps. This involves updating the environment variables in your .env.local file.
 
-To change the default landing page of your application, follow the steps outlined below. This process involves modifying the `STARTPAGE_SLUG` value to reflect the Node ID of the page you wish to make your new start page.
+Update the environment variables as follows:
 
-1. Locate File: Go to your project's `src/app/` directory and open `page.tsx`.
-2. Change Value: Find the `STARTPAGE_SLUG` constant and replace its current value with your desired Node ID as a string (e.g., "12345").
-3. Save and Test: Save the file, then run the application to confirm that the new start page matches the specified Node ID.
+```
+# NodeHive
+NEXT_PUBLIC_DRUPAL_REST_BASE_URL=<drupal_backend_url>
+NEXT_PUBLIC_DRUPAL_BASE_URL=<drupal_backend_url>
+NEXT_IMAGE_DOMAIN=<drupal_backend_url>
+
+# Frontend
+NEXT_PUBLIC_FRONTEND_BASE_URL=<nextjs_frontend_url>
+
+# Drupal NodeHive
+NEXT_PUBLIC_NODEHIVE_SPACE_NAME="nodehive"
+NEXT_PUBLIC_DRUPAL_NODEHIVE_SPACE_ID=<drupal_nodehive_space_id>
+NODEHIVE_STARTPAGE_ID=<your_desired_node_id>
+NODEHIVE_DEFAULT_LANGUAGE=en
+```
+
+Replace the placeholders with the appropriate values:
+
+- `<drupal_backend_url>`: Your Drupal backend URL.
+- `<nextjs_frontend_url>`: Your Next.js frontend URL.
+- `<drupal_nodehive_space_id>`: Your Drupal NodeHive space ID.
+- `<your_desired_node_id>`: The Node ID you want to set as the start page.
+
+Please ensure all changes are made to keep your application functioning correctly.
 
 ## 3. Deployment
 
