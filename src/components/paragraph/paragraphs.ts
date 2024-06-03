@@ -1,13 +1,9 @@
 import { FunctionComponent } from 'react';
 
-import ParagraphNewsletter, {
-  ParagraphNewsletterProps,
-} from './newsletter/paragraph-newsletter';
-import ParagraphText, { ParagraphTextProps } from './text/paragraph-text';
+import ParagraphText, { ParagraphTextProps } from './text/ParagraphText';
 
 interface ParagraphPropMap {
   'paragraph--text': ParagraphTextProps;
-  'paragraph--newsletter': ParagraphNewsletterProps;
 }
 
 type ParagraphTypes = {
@@ -20,5 +16,4 @@ export function isParagraphType(key: string): key is keyof ParagraphTypes {
 
 export const paragraphTypes: ParagraphTypes = {
   'paragraph--text': ParagraphText,
-  'paragraph--newsletter': ParagraphNewsletter,
 };

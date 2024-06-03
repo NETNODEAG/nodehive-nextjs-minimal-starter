@@ -1,13 +1,14 @@
 import Connector from '@/nodehive/connector';
 import { spaceConfig } from '@/nodehive/space-config';
 
-import Footer from '@/components/layout/footer';
-import Header from '@/components/layout/header';
-
 import '@/styles/globals.css';
 
 import { Metadata } from 'next';
 import { Inter } from 'next/font/google';
+import { Locale } from '@/nodehive/i18n-config';
+
+import Footer from '@/components/layout/FooterLayout';
+import Header from '@/components/layout/HeaderLayout';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -30,14 +31,19 @@ export const metadata: Metadata = {
 
 interface LayoutProps {
   children: React.ReactNode;
+  params: {
+    lang: Locale;
+  };
 }
 
-export default async function RootLayout({ children }: LayoutProps) {
+export default async function RootLayout({ children, params }: LayoutProps) {
+  const { lang } = params;
+
   return (
     <html lang="en">
       <body className={inter.className}>
         <div className="relative flex min-h-screen flex-col">
-          <Header />
+          <Header lang={lang} />
 
           <div className="flex-[1_0_auto]">
             <main className="container mx-auto my-16 px-4 md:px-8">

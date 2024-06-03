@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { createServerClient } from '@/nodehive/client';
 import SmartActionsButton from '@/nodehive/components/smart-actions/smart-actions-button';
+import { Locale } from '@/nodehive/i18n-config';
 import { spaceConfig } from '@/nodehive/space-config';
 import { DrupalNode } from '@/nodehive/types';
 
@@ -9,7 +10,7 @@ import { absoluteUrl } from '@/lib/utils';
 import Node from '@/components/node/Node';
 
 interface PageProps {
-  params: { slug: Array<string> };
+  params: { slug: Array<string>; lang: Locale };
 }
 
 export async function generateMetadata({
@@ -64,7 +65,7 @@ export async function generateMetadata({
 export default async function Page({ params }: PageProps) {
   const client = createServerClient();
 
-  const { slug } = params;
+  const { slug, lang } = params;
 
   // Redirect to the 404 page using the notFound() function if no slug is received
   if (!slug) {
@@ -75,7 +76,7 @@ export default async function Page({ params }: PageProps) {
   const slugString = slug.join('/');
 
   // Retrieve a resource, utilizing its unique slug as the identifier
-  const entity = await client.getResourceBySlug(slugString);
+  const entity = await client.getResourceBySlug(slugString, lang);
 
   // Redirect to the 404 page using the notFound() function if no entity is received
   if (!entity) {
@@ -88,15 +89,6 @@ export default async function Page({ params }: PageProps) {
       <Node node={entity as unknown as DrupalNode} />
 
       <SmartActionsButton />
-
-      {
-        <details className="container mx-auto mb-10 mt-10 rounded-md bg-black p-8 px-4 text-xs text-slate-50">
-          <summary className="cursor-pointer font-bold">
-            API JSON Output
-          </summary>
-          <pre className="mt-8">{JSON.stringify(entity, null, 2)}</pre>
-        </details>
-      }
     </>
   );
 }

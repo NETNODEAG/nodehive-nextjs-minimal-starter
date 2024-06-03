@@ -1,6 +1,6 @@
 import { DrupalFragment } from '@/nodehive/types';
 
-import { FormattedText } from '@/components/layout/formatted-text';
+import { FormattedText } from '@/components/layout/FormattedText';
 
 interface FragmentTextProps {
   fragment: DrupalFragment;
