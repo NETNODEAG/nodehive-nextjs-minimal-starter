@@ -1,6 +1,7 @@
 import Link from 'next/link';
 
 import LanguageSwitcher from '@/components/layout/LanguageSwitcher';
+import Navigation from '@/components/layout/Navigation';
 
 export default async function Header({ lang }) {
   return (
@@ -10,6 +11,9 @@ export default async function Header({ lang }) {
           <Link href="/" className="font-bold">
             NodeHive Minimal Starter
           </Link>
+
+          {/* INFO: Add the id of the menu you want to display in the Navigation component below. */}
+          <Navigation menuId="demo-main" />
 
           <LanguageSwitcher lang={lang} />
         </div>
