@@ -13,7 +13,7 @@ export default async function Header({ lang }) {
           </Link>
 
           {/* INFO: Add the id of the menu you want to display in the Navigation component below. */}
-          <Navigation menuId="demo-main" />
+          <Navigation menuId="main" />
 
           <LanguageSwitcher lang={lang} />
         </div>
