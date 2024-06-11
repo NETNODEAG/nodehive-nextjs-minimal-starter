@@ -59,6 +59,11 @@ export function internalLinkUriToSlug(uri: string) {
     return uri.replace('entity:', `/`);
   }
 
+  // If uri contains 'internal:', remove 'internal:'
+  if (uri.includes('internal:')) {
+    return uri.replace('internal:', '');
+  }
+
   // Return uri if it doesn't contain 'entity:node/'
   return uri;
 }
