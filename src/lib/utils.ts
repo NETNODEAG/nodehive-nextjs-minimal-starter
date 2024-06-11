@@ -3,8 +3,8 @@ import { twMerge } from 'tailwind-merge';
 
 /**
  * Tailwind CSS classnames generator
- *
  * @param inputs - Classnames to be merged
+ *
  * @returns Tailwind CSS classnames
  *
  * @example
@@ -46,8 +46,8 @@ export function isRelative(url: string) {
 /**
  * This function is used to transform an internal link uri to a slug
  * Example: entity:node/123 -> /de/node/123
- *
  * @param uri - The internal link uri
+ *
  * @returns The slug
  */
 export function internalLinkUriToSlug(uri: string) {
@@ -72,7 +72,6 @@ export function internalLinkUriToSlug(uri: string) {
  * This function is used to format a date in a short format
  * It will use the locale de-CH
  * Example: 01.01.2021
- *
  * @param input - The date to format
  *
  * @returns The formatted date
