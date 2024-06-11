@@ -29,8 +29,10 @@ export default function NodePage({ node }: NodePageProps) {
         </div>
       )}
 
-      <details className="container mx-auto mb-10 mt-10 rounded-md bg-black p-8 px-4 text-xs text-slate-50">
-        <summary className="cursor-pointer font-bold">API JSON Output</summary>
+      <details className="container mx-auto mb-10 mt-10 rounded-md bg-black p-4 text-xs text-slate-50">
+        <summary className="cursor-pointer font-bold">
+          Node API JSON Output
+        </summary>
         <pre className="mt-8">{JSON.stringify(node, null, 2)}</pre>
       </details>
     </article>
