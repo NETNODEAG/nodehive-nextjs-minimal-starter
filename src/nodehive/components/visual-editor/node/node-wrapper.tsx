@@ -1,3 +1,5 @@
+import NodeMetadata from './NodeMetadata';
+
 export default function NodeWrapper({ entity, children }) {
   const { id, drupal_internal__nid, type } = entity;
 
@@ -12,6 +14,8 @@ export default function NodeWrapper({ entity, children }) {
       data-nodehive-uuid={id}
       className="relative"
     >
+      <NodeMetadata entity={entity} />
+
       {children}
     </div>
   );
