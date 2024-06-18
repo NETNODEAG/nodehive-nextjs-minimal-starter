@@ -1,18 +1,21 @@
 import { cookies } from 'next/headers';
 import { NodeHiveConfig } from '@/nodehive/jsonapi-config';
-import { NodeHiveClient } from 'nodehive-js';
+import { NodeHiveClient, NodeHiveOptions } from 'nodehive-js';
 
 export const cookieUserToken = `${process.env.NEXT_PUBLIC_NODEHIVE_SPACE_NAME}_user-token`;
 export const cookieUser = `${process.env.NEXT_PUBLIC_NODEHIVE_SPACE_NAME}_user`;
 
 export const createServerClient = () => {
-  let options = {};
+  let options: NodeHiveOptions = {
+    // Set to true to enable debug mode. Debug mode will log all requests and responses to the console.
+    debug: false,
+  };
 
   const hasUserToken = cookies().has(cookieUserToken);
   const userToken = cookies().get(cookieUserToken)?.value;
 
   if (hasUserToken) {
-    options = { token: userToken };
+    options.token = userToken;
   }
 
   const nodehiveClient = new NodeHiveClient(
