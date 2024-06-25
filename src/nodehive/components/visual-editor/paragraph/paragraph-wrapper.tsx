@@ -1,7 +1,7 @@
 import {
   AuthWrapper,
   NotLoggedIn,
-} from '@/nodehive/components/auth/auth-wrapper';
+} from '@/nodehive/components/auth/AuthWrapper';
 import IframeWrapper from '@/nodehive/components/visual-editor/iframe-wrapper';
 import ParagraphEditButton from '@/nodehive/components/visual-editor/paragraph/paragraph-edit-button';
 

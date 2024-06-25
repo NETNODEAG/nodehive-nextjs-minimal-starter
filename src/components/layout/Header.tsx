@@ -12,7 +12,8 @@ export default async function Header({ lang }) {
             NodeHive Next.js Minimal Starter
           </Link>
 
-          {/* INFO: Add the id of the menu you want to display in the Navigation component below. */}
+          {/* INFO: Add the id of the menu that you want to fetch */}
+          {/* You can uncomment the line below or remove it. It's just an example */}
           <Navigation menuId="main" />
 
           <LanguageSwitcher lang={lang} />

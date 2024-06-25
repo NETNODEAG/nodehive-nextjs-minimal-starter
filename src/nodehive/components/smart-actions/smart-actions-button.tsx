@@ -1,4 +1,4 @@
-import { AuthWrapper } from '@/nodehive/components/auth/auth-wrapper';
+import { AuthWrapper } from '@/nodehive/components/auth/AuthWrapper';
 import Logout from '@/nodehive/components/smart-actions/logout';
 import OpenVisualEditor from '@/nodehive/components/smart-actions/open-visual-editor';
 import RefreshPage from '@/nodehive/components/smart-actions/refresh-page';

@@ -1,7 +1,7 @@
 import {
   AuthWrapper,
   NotLoggedIn,
-} from '@/nodehive/components/auth/auth-wrapper';
+} from '@/nodehive/components/auth/AuthWrapper';
 
 import FragmentEditButton from './fragment-edit-button';
 
