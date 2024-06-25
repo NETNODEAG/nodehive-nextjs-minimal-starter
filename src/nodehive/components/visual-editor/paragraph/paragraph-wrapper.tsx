@@ -2,8 +2,8 @@ import {
   AuthWrapper,
   NotLoggedIn,
 } from '@/nodehive/components/auth/auth-wrapper';
-
-import ParagraphEditButton from './paragraph-edit-button';
+import IframeWrapper from '@/nodehive/components/visual-editor/iframe-wrapper';
+import ParagraphEditButton from '@/nodehive/components/visual-editor/paragraph/paragraph-edit-button';
 
 export default function ParagraphWrapper({
   entity,
@@ -35,7 +35,7 @@ export default function ParagraphWrapper({
       className="relative"
     >
       <AuthWrapper>
-        <div>
+        <IframeWrapper>
           <ParagraphEditButton
             label="Edit Paragraph"
             type="paragraph"
@@ -46,7 +46,7 @@ export default function ParagraphWrapper({
           />
 
           {children}
-        </div>
+        </IframeWrapper>
       </AuthWrapper>
 
       <NotLoggedIn>{children}</NotLoggedIn>

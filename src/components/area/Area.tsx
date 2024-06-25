@@ -1,4 +1,3 @@
-import AreaWrapper from '@/nodehive/components/visual-editor/area/area-wrapper';
 import { DrupalArea } from '@/nodehive/types';
 
 import Fragment from '@/components/fragment/Fragment';
@@ -11,10 +10,10 @@ export default function Area({ area }: AreaProps) {
   const fragments = area?.data?.fragment_id;
 
   return (
-    <AreaWrapper entity={area?.data}>
+    <div>
       {fragments?.map((fragment) => {
         return <Fragment key={fragment?.id} fragment={fragment} />;
       })}
-    </AreaWrapper>
+    </div>
   );
 }

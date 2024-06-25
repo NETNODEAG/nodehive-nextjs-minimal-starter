@@ -19,7 +19,6 @@ export default function VisualParagraphEditButton({
   const editComponent = (e) => {
     e.preventDefault();
 
-    // TODO: Add language information. To edit the content in the correct language.
     window.parent.postMessage(
       {
         type: type,

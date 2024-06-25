@@ -1,5 +1,3 @@
-import { AuthWrapper } from '@/nodehive/components/auth/auth-wrapper';
-import NodeEditButton from '@/nodehive/components/visual-editor/node/node-edit-button';
 import { DrupalNode, DrupalParagraph } from '@/nodehive/types';
 
 import Paragraph from '@/components/paragraph/Paragraph';
@@ -15,10 +13,6 @@ export default function NodePage({ node }: NodePageProps) {
 
   return (
     <article data-node-type="Page">
-      <AuthWrapper>
-        <NodeEditButton node={node} />
-      </AuthWrapper>
-
       <h1 className="mb-16 text-4xl font-bold sm:text-6xl">{title}</h1>
 
       {Array.isArray(paragraphs) && (

@@ -17,8 +17,6 @@ export default function MenuEditButton({
   const editComponent = (e) => {
     e.preventDefault();
 
-    // TODO: Add language information. To edit the content in the correct language.
-    // Backend implementation is not ready yet.
     window.parent.postMessage(
       {
         type: type,
