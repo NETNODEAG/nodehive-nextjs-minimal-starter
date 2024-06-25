@@ -20,13 +20,13 @@ const { spaceMetadata } = spaceConfig;
  */
 export const metadata: Metadata = {
   metadataBase: new URL(spaceMetadata.baseUrl),
-  title: spaceMetadata?.title,
-  description: spaceMetadata?.description,
-  icons: spaceMetadata?.icons,
-  openGraph: spaceMetadata?.openGraph,
-  alternates: {
-    canonical: './',
+  title: {
+    template: spaceMetadata.title.template,
+    default: spaceMetadata.title.default,
   },
+  description: spaceMetadata.description,
+  icons: spaceMetadata.icons,
+  openGraph: spaceMetadata.openGraph,
 };
 
 interface LayoutProps {

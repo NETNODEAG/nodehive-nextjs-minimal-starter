@@ -17,7 +17,7 @@ export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
   const client = createServerClient();
-  const { slug } = params;
+  const { slug, lang } = params;
 
   // Join the slug array into a string
   const slugString = slug.join('/');
@@ -48,7 +48,7 @@ export async function generateMetadata({
       siteName: spaceMetadata.openGraph.siteName,
       title: seoTitle,
       description: seoDescription,
-      locale: 'en',
+      locale: lang,
       type: 'website',
       images: [
         {
@@ -58,6 +58,10 @@ export async function generateMetadata({
           alt: seoTitle,
         },
       ],
+    },
+    robots: {
+      follow: true,
+      index: true,
     },
   };
 }
