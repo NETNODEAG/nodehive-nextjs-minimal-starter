@@ -1,4 +1,5 @@
 import { createServerClient } from '@/nodehive/client';
+import { DrupalJsonApiParams } from 'drupal-jsonapi-params';
 
 /**
  * Create the response
@@ -7,7 +8,7 @@ import { createServerClient } from '@/nodehive/client';
  *
  * @return {object} The response
  */
-export function createResponse(body) {
+export function createResponse(body: string): Response {
   return new Response(body, {
     status: 200,
     headers: {
@@ -20,23 +21,31 @@ export function createResponse(body) {
 /**
  * Generate the sitemap
  *
+ * @param {string} origin The site origin
  * @param {array} data The sitemap data
+ * @param {number} priority The priority of the sitemap
  *
  * @return {string} The sitemap
  */
-export function generateSitemap(url, data, priority = 0.5) {
+export function generateSitemap(
+  origin: string,
+  data: any[],
+  priority = 0.5
+): string {
   return `<?xml version="1.0" encoding="UTF-8"?>
     <urlset xmlns="https://www.sitemaps.org/schemas/sitemap/0.9">
       ${data
         .map((item) => {
-          const path = item.path?.alias || `/node/${item.drupal_internal__nid}`;
+          const path = item.path?.alias
+            ? `/${item.path.langcode}${item.path.alias}`
+            : `/${item.langcode}/node/${item.drupal_internal__nid}`;
           const changed = new Date(item.changed)
             .toISOString()
             .replace('Z', '+00:00');
 
           return `
             <url>
-              <loc>${url}${path}</loc>
+              <loc>${origin}${path}</loc>
               <lastmod>${changed}</lastmod>
               <changefreq>daily</changefreq>
               <priority>${priority}</priority>
@@ -48,14 +57,48 @@ export function generateSitemap(url, data, priority = 0.5) {
   `;
 }
 
-/**
- * Get the sitemap data - Pages data
- *
- * @return {Promise} Promise object represents the sitemap data
- */
-export async function getSitemapPagesData() {
-  const client = createServerClient();
-  const pages = await client.getNodes('page');
+export async function getSitemapData(
+  type: string,
+  language: string
+): Promise<any> {
+  const apiParams = new DrupalJsonApiParams();
+  apiParams.addFilter('langcode', language);
+  try {
+    const client = createServerClient();
+    const data = (await client.getNodes(type, language, apiParams)) as any;
+    const nodes = data?.data || [];
 
-  return pages?.data;
+    if (data?.links?.next) {
+      const nextNodes = await getNextNodes(data.links.next.href);
+      nodes.push(...nextNodes);
+    }
+
+    return nodes;
+  } catch (error) {
+    console.error('Error in getSitemapData:', error);
+    throw error;
+  }
+}
+
+async function getNextNodes(url: string): Promise<any> {
+  try {
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      throw new Error(`Network response was not ok: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    const nodes = data?.data || [];
+
+    if (data?.links?.next) {
+      const nextNodes = await getNextNodes(data.links.next.href);
+      nodes.push(...nextNodes);
+    }
+
+    return nodes;
+  } catch (error) {
+    console.error('Error in getNextNodes:', error);
+    throw error;
+  }
 }

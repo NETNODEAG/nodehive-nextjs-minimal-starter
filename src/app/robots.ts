@@ -1,4 +1,5 @@
 import { MetadataRoute } from 'next';
+import { i18n } from '@/nodehive/i18n-config';
 
 export default function robots(): MetadataRoute.Robots {
   return {
@@ -7,6 +8,9 @@ export default function robots(): MetadataRoute.Robots {
       allow: '/',
       disallow: '/private/',
     },
-    sitemap: `${process.env.NEXT_PUBLIC_FRONTEND_BASE_URL}/sitemap.xml`,
+    sitemap: i18n.locales.map(
+      (locale) =>
+        `${process.env.NEXT_PUBLIC_FRONTEND_BASE_URL}/${locale}/sitemap.xml`
+    ),
   };
 }
