@@ -1,5 +1,6 @@
 import VisualEditorFragmentWrapper from '@/nodehive/components/visual-editor/fragment/fragment-wrapper';
 import { DrupalFragment } from '@/nodehive/types';
+import { ErrorBoundary } from 'react-error-boundary';
 
 import { fragmentTypes, isFragmentType } from './fragments';
 
@@ -14,7 +15,16 @@ export default function Fragment({ fragment }: FragmentProps) {
     const FragmentInstance = fragmentTypes[fragmentType];
     return (
       <VisualEditorFragmentWrapper entity={fragment}>
-        <FragmentInstance fragment={fragment} />
+        <ErrorBoundary
+          fallback={
+            <div>
+              Error loading fragment: {fragmentType}{' '}
+              <pre className="mt-8">{JSON.stringify(fragment, null, 2)}</pre>
+            </div>
+          }
+        >
+          <FragmentInstance fragment={fragment} />
+        </ErrorBoundary>
       </VisualEditorFragmentWrapper>
     );
   }
