@@ -1,5 +1,6 @@
 import VisualEditorParagraphWrapper from '@/nodehive/components/visual-editor/paragraph/paragraph-wrapper';
 import { DrupalParagraph } from '@/nodehive/types';
+import { ErrorBoundary } from 'react-error-boundary';
 
 import { isParagraphType, paragraphTypes } from './paragraphs';
 
@@ -14,7 +15,16 @@ export default function Paragraph({ paragraph }: ParagraphProps) {
     const ParagraphInstance = paragraphTypes[paragraphType];
     return (
       <VisualEditorParagraphWrapper entity={paragraph}>
-        <ParagraphInstance paragraph={paragraph} />
+        <ErrorBoundary
+          fallback={
+            <div>
+              Error loading paragraph: {paragraphType}{' '}
+              <pre className="mt-8">{JSON.stringify(paragraph, null, 2)}</pre>
+            </div>
+          }
+        >
+          <ParagraphInstance paragraph={paragraph} />
+        </ErrorBoundary>
       </VisualEditorParagraphWrapper>
     );
   }
