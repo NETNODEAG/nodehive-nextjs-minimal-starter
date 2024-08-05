@@ -1,7 +1,9 @@
+import { NextRequest } from 'next/server';
+
 import {
   createResponse,
   generateSitemap,
-  getSitemapPagesData,
+  getSitemapData,
 } from '@/lib/sitemap/get-sitemap';
 
 /**
@@ -17,11 +19,15 @@ const PRIOTITY = 1.0;
  *
  * @returns {Promise} Promise object represents the generated sitemap as XML.
  */
-export async function GET(req) {
-  const url = req.nextUrl.origin;
+export async function GET(
+  req: NextRequest,
+  context: { params: { lang: string } }
+): Promise<Response> {
+  const origin = req.nextUrl.origin;
+  const lang = context.params.lang;
 
   try {
-    const data = await getSitemapPagesData();
+    const data = await getSitemapData('page', lang);
 
     // safer and more appropriate way to check if the array is empty
     if (data.content === '[]') {
@@ -32,7 +38,7 @@ export async function GET(req) {
       return createResponse(body);
     }
 
-    const body = generateSitemap(url, data, PRIOTITY);
+    const body = generateSitemap(origin, data, PRIOTITY);
     return createResponse(body);
   } catch (error) {
     console.error(
