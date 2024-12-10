@@ -13,8 +13,8 @@ import {
  * @returns {Promise}
  */
 export async function getUser() {
-  const cookieStore = cookies();
-  const client = createServerClient();
+  const cookieStore = await cookies();
+  const client = await createServerClient();
 
   const hasUserToken = cookieStore.has(cookieUserToken);
 
@@ -37,7 +37,7 @@ export async function getUser() {
  * @returns {Promise}
  */
 export async function saveUserDetails(user) {
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
 
   cookieStore.set({
     name: cookieUser,
@@ -55,7 +55,7 @@ export async function saveUserDetails(user) {
  * @returns {Promise}
  */
 export async function readUserDetails() {
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
 
   const hasUser = cookieStore.has(cookieUser);
   const user = cookieStore.get(cookieUser)?.value;

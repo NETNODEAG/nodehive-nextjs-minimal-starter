@@ -31,12 +31,16 @@ export const metadata: Metadata = {
 
 interface LayoutProps {
   children: React.ReactNode;
-  params: {
+  params: Promise<{
     lang: Locale;
-  };
+  }>;
 }
 
-export default async function RootLayout({ children, params }: LayoutProps) {
+export default async function RootLayout(props: LayoutProps) {
+  const params = await props.params;
+
+  const { children } = props;
+
   const { lang } = params;
 
   return (

@@ -10,13 +10,12 @@ import { absoluteUrl } from '@/lib/utils';
 import Node from '@/components/node/Node';
 
 interface PageProps {
-  params: { slug: Array<string>; lang: Locale };
+  params: Promise<{ slug: Array<string>; lang: Locale }>;
 }
 
-export async function generateMetadata({
-  params,
-}: PageProps): Promise<Metadata> {
-  const client = createServerClient();
+export async function generateMetadata(props: PageProps): Promise<Metadata> {
+  const params = await props.params;
+  const client = await createServerClient();
   const { slug, lang } = params;
 
   // Join the slug array into a string
@@ -66,8 +65,9 @@ export async function generateMetadata({
   };
 }
 
-export default async function Page({ params }: PageProps) {
-  const client = createServerClient();
+export default async function Page(props: PageProps) {
+  const params = await props.params;
+  const client = await createServerClient();
 
   const { slug, lang } = params;
 

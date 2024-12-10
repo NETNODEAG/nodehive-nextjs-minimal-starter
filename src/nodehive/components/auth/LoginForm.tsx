@@ -1,13 +1,13 @@
 'use client';
 
+import { useActionState } from 'react';
 import { login, LoginState } from '@/actions/_auth';
-import { useFormState, useFormStatus } from 'react-dom';
 
 import { cn } from '@/lib/utils';
 
 export default function LoginForm() {
   const initialState: LoginState = {} as LoginState;
-  const [state, dispatch] = useFormState(login, initialState);
+  const [state, dispatch, isPending] = useActionState(login, initialState);
 
   return (
     <section>
@@ -45,18 +45,16 @@ export default function LoginForm() {
           </div>
         )}
 
-        <LoginButton />
+        <LoginButton isPending={isPending} />
       </form>
     </section>
   );
 }
 
-function LoginButton() {
-  const { pending } = useFormStatus();
-
+function LoginButton({ isPending }: { isPending: boolean }) {
   return (
-    <button disabled={pending} type="submit" className="btn-primary">
-      {pending ? (
+    <button disabled={isPending} type="submit" className="btn-primary">
+      {isPending ? (
         <>
           <svg
             aria-hidden="true"

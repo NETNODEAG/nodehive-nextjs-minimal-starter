@@ -8,10 +8,10 @@ import { NextRequest } from 'next/server';
  */
 export async function GET(
   req: NextRequest,
-  context: { params: { lang: string } }
+  context: { params: Promise<{ lang: string }> }
 ): Promise<Response> {
   const origin = req.nextUrl.origin;
-  const lang = context.params.lang;
+  const lang = (await context.params).lang;
 
   try {
     const body = generateGlobalSitemap(origin, lang);

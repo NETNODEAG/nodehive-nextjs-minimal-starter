@@ -3,7 +3,7 @@ import { createServerClient } from '@/nodehive/client';
 import Fragment from '@/components/fragment/Fragment';
 
 export default async function Footer() {
-  const client = createServerClient();
+  const client = await createServerClient();
 
   // INFO: Add the id of the fragment that you want to fetch
   // You can uncomment the line below or remove it. It's just an example
