@@ -64,7 +64,7 @@ export async function getSitemapData(
   const apiParams = new DrupalJsonApiParams();
   apiParams.addFilter('langcode', language);
   try {
-    const client = createServerClient();
+    const client = await createServerClient();
     const data = (await client.getNodes(type, language, apiParams)) as any;
     const nodes = data?.data || [];
 

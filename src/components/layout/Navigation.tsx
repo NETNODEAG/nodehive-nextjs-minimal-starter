@@ -6,7 +6,7 @@ interface NavigationProps {
 }
 
 export default async function Navigation({ menuId }: NavigationProps) {
-  const client = createServerClient();
+  const client = await createServerClient();
 
   const navigation = await client.getMenuItems(menuId);
 

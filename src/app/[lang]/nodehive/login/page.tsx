@@ -3,8 +3,8 @@ import { redirect } from 'next/navigation';
 import { cookieUserToken } from '@/nodehive/client';
 import LoginForm from '@/nodehive/components/auth/LoginForm';
 
-export default function Page() {
-  const cookieStore = cookies();
+export default async function Page() {
+  const cookieStore = await cookies();
   const hasUserToken = cookieStore.has(cookieUserToken);
 
   if (hasUserToken) {

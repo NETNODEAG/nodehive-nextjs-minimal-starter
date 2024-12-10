@@ -5,14 +5,15 @@ import { NodeHiveClient, NodeHiveOptions } from 'nodehive-js';
 export const cookieUserToken = `${process.env.NEXT_PUBLIC_NODEHIVE_SPACE_NAME}_user-token`;
 export const cookieUser = `${process.env.NEXT_PUBLIC_NODEHIVE_SPACE_NAME}_user`;
 
-export const createServerClient = () => {
+export const createServerClient = async () => {
   let options: NodeHiveOptions = {
     // Set to true to enable debug mode. Debug mode will log all requests and responses to the console.
     debug: false,
   };
 
-  const hasUserToken = cookies().has(cookieUserToken);
-  const userToken = cookies().get(cookieUserToken)?.value;
+  const cookieStore = await cookies();
+  const hasUserToken = cookieStore.has(cookieUserToken);
+  const userToken = cookieStore.get(cookieUserToken)?.value;
 
   if (hasUserToken) {
     options.token = userToken;

@@ -5,16 +5,16 @@ interface AuthWrapperProps {
   children: React.ReactNode;
 }
 
-export function AuthWrapper({ children }: AuthWrapperProps) {
-  const cookieStore = cookies();
+export async function AuthWrapper({ children }: AuthWrapperProps) {
+  const cookieStore = await cookies();
 
   const userToken = cookieStore.has(cookieUserToken);
 
   if (userToken) return children;
 }
 
-export function NotLoggedIn({ children }: AuthWrapperProps) {
-  const cookieStore = cookies();
+export async function NotLoggedIn({ children }: AuthWrapperProps) {
+  const cookieStore = await cookies();
 
   const userToken = cookieStore.has(cookieUserToken);
 

@@ -10,15 +10,16 @@ import { absoluteUrl } from '@/lib/utils';
 import Node from '@/components/node/Node';
 
 interface RootPageProps {
-  params: {
+  params: Promise<{
     lang: Locale;
-  };
+  }>;
 }
 
-export async function generateMetadata({
-  params,
-}: RootPageProps): Promise<Metadata> {
-  const client = createServerClient();
+export async function generateMetadata(
+  props: RootPageProps
+): Promise<Metadata> {
+  const params = await props.params;
+  const client = await createServerClient();
 
   const { lang } = params;
 
@@ -69,8 +70,9 @@ export async function generateMetadata({
   };
 }
 
-export default async function RootPage({ params }: RootPageProps) {
-  const client = createServerClient();
+export default async function RootPage(props: RootPageProps) {
+  const params = await props.params;
+  const client = await createServerClient();
 
   const { lang } = params;
 

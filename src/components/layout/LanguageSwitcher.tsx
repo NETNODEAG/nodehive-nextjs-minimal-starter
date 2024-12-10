@@ -4,8 +4,8 @@ import { i18n } from '@/nodehive/i18n-config';
 
 import { cn } from '@/lib/utils';
 
-export default function LanguageSwitcher({ lang }) {
-  const headersList = headers();
+export default async function LanguageSwitcher({ lang }) {
+  const headersList = await headers();
 
   const pathname = headersList.get('x-pathname') || '';
 

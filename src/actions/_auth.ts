@@ -29,8 +29,8 @@ export type LoginState = {
  * @returns {Promise}
  */
 export async function login(prevState: LoginState, formData: FormData) {
-  const cookieStore = cookies();
-  const client = createServerClient();
+  const cookieStore = await cookies();
+  const client = await createServerClient();
 
   const email = formData.get('email') as string;
   const password = formData.get('password') as string;
@@ -84,7 +84,7 @@ export async function login(prevState: LoginState, formData: FormData) {
  * @returns {Promise}
  */
 export async function logout() {
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
 
   const hasUserToken = cookieStore.has(cookieUserToken);
   const hasUser = cookieStore.has(cookieUser);
