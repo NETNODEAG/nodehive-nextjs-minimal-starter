@@ -1,14 +1,16 @@
 import Link from 'next/link';
 import { createServerClient } from '@/nodehive/client';
+import { Locale } from '@/nodehive/i18n-config';
 
 interface NavigationProps {
   menuId: string;
+  lang: Locale;
 }
 
-export default async function Navigation({ menuId }: NavigationProps) {
+export default async function Navigation({ menuId, lang }: NavigationProps) {
   const client = await createServerClient();
 
-  const navigation = await client.getMenuItems(menuId);
+  const navigation = await client.getMenuItems(menuId, lang);
 
   if (!navigation?.data?.length) {
     return null;
