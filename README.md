@@ -1,5 +1,21 @@
 # nodehive-nextjs-minimal-starter
 
+This repo is the best way to start a custom NodeHive frontend with Next.js. It comes with the barebone functionlity to use the full power of NodeHive Headless CMS.
+
+This repo is maintained by the makers of NodeHive and used in production projects.
+
+## Features
+
+- Next.js 15
+- Drupal slug routing
+- Sitemap.xml stub
+- NodeHive Visual Editor integration
+- Smart Action Buttons
+- Multilingual support
+- Auth
+- .env.example
+- Tailwind
+
 ## 1. Installation
 
 ### 1.1 Create a new Next.js app
@@ -9,6 +25,7 @@ Create a new Next.js app using one of the following starter templates, where eve
 **Basic starter**
 
 ```
+nvm use 20
 npx create-next-app frontend.example.ch -e https://github.com/NETNODEAG/nodehive-nextjs-minimal-starter/tree/main
 ```
 
