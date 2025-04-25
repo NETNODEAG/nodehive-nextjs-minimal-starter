@@ -1,23 +1,8 @@
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
-  images: {
-    remotePatterns: [
-      {
-        hostname: process.env.NEXT_IMAGE_DOMAIN,
-      },
-    ],
-  },
-  experimental: {
-    turbo: {
-      rules: {
-        '*.svg': {
-          loaders: ['@svgr/webpack'],
-          as: '*.js',
-        },
-      },
-    },
-  },
+  images: { remotePatterns: [{ hostname: process.env.NEXT_IMAGE_DOMAIN }] },
+  turbopack: { rules: { '*.svg': { loaders: ['@svgr/webpack'], as: '*.js' } } },
   webpack(config) {
     config.module.rules.push({
       test: /\.svg$/i,
