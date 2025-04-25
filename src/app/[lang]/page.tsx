@@ -91,11 +91,6 @@ export default async function RootPage(props: RootPageProps) {
     notFound();
   }
 
-  // throw error to simulate a error page
-  if (entity) {
-    throw new Error('Simulated error');
-  }
-
   // Node data
   const node = entity?.data;
 
