@@ -23,19 +23,23 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
 
   // Retrieve a resource, utilizing its unique slug as the identifier
   const entity = await client.getResourceBySlug(slugString);
+  const node = entity?.data;
 
   const { spaceMetadata } = spaceConfig;
 
-  // Drupal metadata
-  const entityData = entity?.data;
-  const title = entityData?.title;
-  const teaser = entityData?.field_teaser?.value;
-  const image = entityData?.field_media?.field_media_image?.uri?.url;
+  // Default metadata
+  let seoTitle = spaceMetadata.openGraph.title;
+  let seoDescription = spaceMetadata.openGraph.description;
+  let seoImage = spaceMetadata.ogImage;
 
-  // SEO metadata
-  let seoTitle = title || spaceMetadata.openGraph.title;
-  let seoDescription = teaser || spaceMetadata.openGraph.description;
-  let seoImage = image ? absoluteUrl(image) : spaceMetadata.ogImage;
+  // Drupal metadata
+  const title = node?.title;
+  const teaser = node?.field_teaser?.value;
+  const image = node?.field_media?.field_media_image?.uri?.url;
+
+  if (title) seoTitle = title;
+  if (teaser) seoDescription = teaser;
+  if (image) seoImage = absoluteUrl(image);
 
   return {
     title: {
@@ -87,10 +91,12 @@ export default async function Page(props: PageProps) {
     notFound();
   }
 
+  // Node data
+  const node = entity?.data;
+
   return (
     <>
-      {/* TODO: Fix the types correctly */}
-      <Node node={entity as unknown as DrupalNode} />
+      <Node node={node as DrupalNode} />
 
       <SmartActionsButton />
     </>

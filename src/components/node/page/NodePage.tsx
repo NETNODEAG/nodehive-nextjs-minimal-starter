@@ -7,9 +7,8 @@ export interface NodePageProps {
 }
 
 export default function NodePage({ node }: NodePageProps) {
-  const nodeData = node?.data;
-  const title = nodeData?.title;
-  const paragraphs = nodeData?.field_paragraphs;
+  const title = node?.title;
+  const paragraphs = node?.field_paragraphs;
 
   return (
     <article data-node-type="Page">
@@ -23,7 +22,7 @@ export default function NodePage({ node }: NodePageProps) {
         </div>
       )}
 
-      <details className="container mx-auto mb-10 mt-10 rounded-md bg-black p-4 text-xs text-slate-50">
+      <details className="container mx-auto mt-10 mb-10 rounded-md bg-black p-4 text-xs text-slate-50">
         <summary className="cursor-pointer font-bold">
           Node API JSON Output
         </summary>

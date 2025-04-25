@@ -8,13 +8,14 @@ interface NodeProps {
 }
 
 export default function Node({ node }: NodeProps) {
-  const nodeType = node?.data?.type;
+  const nodeType = node?.type;
 
   if (isNodeType(nodeType)) {
     const NodeInstance = nodeTypes[nodeType];
+
     return (
-      <NodeWrapper entity={node?.data}>
-        <NodeInstance node={node} />
+      <NodeWrapper entity={node as DrupalNode}>
+        <NodeInstance node={node as DrupalNode} />
       </NodeWrapper>
     );
   }
