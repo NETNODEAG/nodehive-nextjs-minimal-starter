@@ -38,10 +38,10 @@ export default function MenuEditButton({
   }
 
   return (
-    <div className="absolute -right-10 -top-2 flex transform-gpu gap-2 antialiased opacity-75 transition-all duration-75 ease-in-out hover:scale-105 hover:opacity-100">
+    <div className="absolute -top-2 -right-10 flex transform-gpu gap-2 antialiased opacity-75 transition-all duration-75 ease-in-out hover:scale-105 hover:opacity-100">
       <button
         onClick={editComponent}
-        className="flex gap-2 rounded bg-primary-700 px-2 py-2 text-xs font-bold text-white shadow-lg transition-colors hover:bg-primary-900"
+        className="bg-primary-700 hover:bg-primary-900 flex gap-2 rounded-sm px-2 py-2 text-xs font-bold text-white shadow-lg transition-colors"
       >
         <span className="sr-only">{label}</span>
 

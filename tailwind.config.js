@@ -1,21 +1,8 @@
 /** @type {import('tailwindcss').Config} */
 
-const colors = require('tailwindcss/colors');
-
 module.exports = {
-  content: [
-    './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
-    './src/components/**/*.{js,ts,jsx,tsx,mdx}',
-    './src/app/**/*.{js,ts,jsx,tsx,mdx}',
-    './src/ui/**/*.{js,ts,jsx,tsx,mdx}',
-    './src/nodehive/**/*.{js,ts,jsx,tsx,mdx}',
-  ],
   theme: {
     extend: {
-      colors: {
-        black: '#09090b',
-        primary: colors.teal,
-      },
       // Customize typography for prose to match the theme colors/sizes/etc.
       // By default, prose uses a custom font-size, line-height, and color.
       typography: ({ theme }) => ({
@@ -64,10 +51,4 @@ module.exports = {
       }),
     },
   },
-  plugins: [
-    require('@tailwindcss/typography'),
-    require('@tailwindcss/forms')({
-      strategy: 'base', // only generate global styles
-    }),
-  ],
 };

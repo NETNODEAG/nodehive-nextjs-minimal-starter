@@ -10,7 +10,7 @@ type HeaderProps = {
 
 export default async function Header({ lang }: HeaderProps) {
   return (
-    <header className="sticky top-0 z-20 bg-white shadow-sm">
+    <header className="sticky top-0 z-20 bg-white shadow-xs">
       <div className="container-wrapper">
         <div className="flex h-[60px] items-center justify-between gap-4 py-2">
           <Link href={`/${lang}`} className="font-bold">

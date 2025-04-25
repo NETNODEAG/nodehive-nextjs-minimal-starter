@@ -1,24 +1,21 @@
-@layer base {
-  /*
-  Base styles
-  */
-  body {
-    @apply font-sans text-base text-black antialiased;
-  }
+/*
+Base styles
+*/
 
-  /*
-  Typography
-  */
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    @apply break-words font-bold;
-  }
+body {
+  @apply font-sans text-base text-black antialiased;
+}
 
-  h1 {
-    @apply text-4xl;
-  }
+/* Typography */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  @apply font-bold break-words;
+}
+
+h1 {
+  @apply text-4xl;
 }

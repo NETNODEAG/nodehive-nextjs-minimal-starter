@@ -1,3 +1,16 @@
-@layer utilities {
-  /* ... */
+@utility max-container {
+  @apply mx-auto w-full max-w-7xl;
+}
+
+@utility container-wrapper {
+  @apply max-container px-4 md:px-8;
+}
+
+@utility paragraph {
+  @apply my-8 first:mt-0 last:mb-0;
+}
+
+@utility btn {
+  @apply inline-flex h-fit items-center justify-center rounded-md px-5 py-1.5 text-base font-bold no-underline;
+  @apply transition-colors ease-in-out;
 }

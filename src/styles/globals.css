@@ -1,10 +1,18 @@
-@import 'tailwindcss/base';
-@import 'theme/base.css';
+@import 'tailwindcss';
+@plugin '@tailwindcss/forms' {
+  strategy: 'base';
+}
+@plugin '@tailwindcss/typography';
+@config '../../tailwind.config.js';
 
-@import 'tailwindcss/components';
-@import 'theme/components.css';
+@import './theme/base.css' layer(base);
+@import './theme/ckeditor.css';
+@import './theme/utilities.css';
+@import './theme/components.css' layer(components);
 
-@import 'tailwindcss/utilities';
-@import 'theme/utilities.css';
-
-@import 'theme/ckeditor.css';
+@theme {
+  --color-black: #09090b;
+  --color-white: #ffffff;
+  --color-primary: #0284c7;
+  --color-secondary: #082f49;
+}

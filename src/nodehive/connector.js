@@ -32,7 +32,7 @@ export default function Connector() {
 }
 
 const SavingMessage = () => (
-  <div className="fixed inset-0 z-50 flex items-center justify-center bg-teal-900 bg-opacity-50 transition-all">
+  <div className="fixed inset-0 z-50 flex items-center justify-center bg-teal-900/50 transition-all">
     <div className="text-3xl font-semibold text-white">Saving...</div>
   </div>
 );
