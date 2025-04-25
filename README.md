@@ -25,7 +25,7 @@ Create a new Next.js app using one of the following starter templates, where eve
 **Basic starter**
 
 ```
-nvm use
+nvm use 22
 npx create-next-app frontend.example.ch -e https://github.com/NETNODEAG/nodehive-nextjs-minimal-starter/tree/main
 ```
 
