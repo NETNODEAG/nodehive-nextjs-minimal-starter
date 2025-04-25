@@ -1,7 +1,16 @@
-import type { NextConfig } from 'next';
+import { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
-  images: { remotePatterns: [{ hostname: process.env.NEXT_IMAGE_DOMAIN }] },
+  images: {
+    remotePatterns: [
+      {
+        hostname:
+          process.env.NEXT_IMAGE_DOMAIN?.replace(/https?:\/\//, '') || '',
+      },
+    ],
+    formats: ['image/avif', 'image/webp'],
+  },
+  staticPageGenerationTimeout: 120,
   turbopack: { rules: { '*.svg': { loaders: ['@svgr/webpack'], as: '*.js' } } },
   webpack(config) {
     config.module.rules.push({
@@ -13,4 +22,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-module.exports = nextConfig;
+export default nextConfig;

@@ -3,7 +3,8 @@ import Logout from '@/nodehive/components/smart-actions/logout';
 import OpenVisualEditor from '@/nodehive/components/smart-actions/open-visual-editor';
 import RefreshPage from '@/nodehive/components/smart-actions/refresh-page';
 import UserProfile from '@/nodehive/components/smart-actions/user-profile';
-import Tooltip from '@/ui/netnode/tooltip';
+
+import Tooltip from '@/components/ui/netnode/tooltip';
 
 export default function SmartActionsButton() {
   return (
