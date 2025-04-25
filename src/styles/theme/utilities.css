@@ -11,6 +11,6 @@
 }
 
 @utility btn {
-  @apply inline-flex h-fit items-center justify-center rounded-md px-5 py-1.5 text-base font-bold no-underline;
+  @apply inline-flex h-fit items-center justify-center rounded-md px-5 py-1.5 pb-2 text-sm font-bold no-underline cursor-pointer;
   @apply transition-colors ease-in-out;
 }
