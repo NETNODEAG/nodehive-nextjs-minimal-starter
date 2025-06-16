@@ -1,22 +1,21 @@
-import { cookies } from 'next/headers';
-import { cookieUserToken } from '@/nodehive/client';
+import { isAuthenticated } from '@/nodehive/auth';
 
 interface AuthWrapperProps {
   children: React.ReactNode;
 }
 
 export async function AuthWrapper({ children }: AuthWrapperProps) {
-  const cookieStore = await cookies();
+  if (await isAuthenticated()) {
+    return children;
+  }
 
-  const userToken = cookieStore.has(cookieUserToken);
-
-  if (userToken) return children;
+  return null;
 }
 
 export async function NotLoggedIn({ children }: AuthWrapperProps) {
-  const cookieStore = await cookies();
+  if (!(await isAuthenticated())) {
+    return children;
+  }
 
-  const userToken = cookieStore.has(cookieUserToken);
-
-  if (!userToken) return children;
+  return null;
 }

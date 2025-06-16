@@ -6,6 +6,7 @@ import '@/styles/globals.css';
 import { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { Locale } from '@/nodehive/i18n-config';
+import { AuthProvider } from '@/nodehive/providers/auth-provider';
 
 import Footer from '@/components/layout/Footer';
 import Header from '@/components/layout/Header';
@@ -31,9 +32,7 @@ export const metadata: Metadata = {
 
 interface LayoutProps {
   children: React.ReactNode;
-  params: Promise<{
-    lang: Locale;
-  }>;
+  params: Promise<{ lang: Locale }>;
 }
 
 export default async function RootLayout(props: LayoutProps) {
@@ -46,17 +45,19 @@ export default async function RootLayout(props: LayoutProps) {
   return (
     <html lang={lang}>
       <body className={inter.className}>
-        <div className="relative flex min-h-screen flex-col">
-          <Header lang={lang} />
+        <AuthProvider>
+          <div className="relative flex min-h-screen flex-col">
+            <Header lang={lang} />
 
-          <div className="flex-[1_0_auto]">
-            <main className="container-wrapper my-16">{children}</main>
+            <div className="flex-[1_0_auto]">
+              <main className="container-wrapper my-16">{children}</main>
+            </div>
+
+            <Footer />
           </div>
 
-          <Footer />
-        </div>
-
-        <Connector />
+          <Connector />
+        </AuthProvider>
       </body>
     </html>
   );

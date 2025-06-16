@@ -1,10 +1,10 @@
 import Image from 'next/image';
-import { readUserDetails } from '@/actions/_user';
+import { getUser } from '@/nodehive/auth';
 
 import { cn } from '@/lib/utils';
 
 export default async function UserProfile() {
-  const user = await readUserDetails();
+  const user = await getUser();
 
   return (
     <button

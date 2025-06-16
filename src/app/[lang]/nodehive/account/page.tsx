@@ -1,9 +1,9 @@
 import { redirect } from 'next/navigation';
 import { logout } from '@/actions/_auth';
-import { getUser } from '@/actions/_user';
+import { getUser } from '@/nodehive/auth';
 
 export default async function Page() {
-  const { user } = await getUser();
+  const user = await getUser();
 
   if (!user) {
     redirect('/nodehive/login');

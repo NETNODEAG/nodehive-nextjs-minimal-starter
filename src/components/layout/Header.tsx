@@ -4,9 +4,7 @@ import { Locale } from '@/nodehive/i18n-config';
 import LanguageSwitcher from '@/components/layout/LanguageSwitcher';
 import Navigation from '@/components/layout/Navigation';
 
-type HeaderProps = {
-  lang: Locale;
-};
+type HeaderProps = { lang: Locale };
 
 export default async function Header({ lang }: HeaderProps) {
   return (
@@ -17,9 +15,10 @@ export default async function Header({ lang }: HeaderProps) {
             NodeHive Next.js Minimal Starter
           </Link>
 
-          {/* INFO: Add the id of the menu that you want to fetch */}
-          {/* You can uncomment the line below or remove it. It's just an example */}
-          <Navigation menuId="main" lang={lang} />
+          <Navigation
+            menuId={process.env.NEXT_PUBLIC_NODEHIVE_MAIN_MENU}
+            lang={lang}
+          />
 
           <LanguageSwitcher lang={lang} />
         </div>
