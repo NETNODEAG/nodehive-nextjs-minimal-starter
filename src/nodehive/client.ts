@@ -1,9 +1,6 @@
-import { cookies } from 'next/headers';
+import { getAuthToken } from '@/nodehive/auth';
 import { NodeHiveConfig } from '@/nodehive/jsonapi-config';
 import { NodeHiveClient, NodeHiveOptions } from 'nodehive-js';
-
-export const cookieUserToken = `${process.env.NEXT_PUBLIC_NODEHIVE_SPACE_NAME}_user-token`;
-export const cookieUser = `${process.env.NEXT_PUBLIC_NODEHIVE_SPACE_NAME}_user`;
 
 export const createServerClient = async () => {
   let options: NodeHiveOptions = {
@@ -11,12 +8,10 @@ export const createServerClient = async () => {
     debug: false,
   };
 
-  const cookieStore = await cookies();
-  const hasUserToken = cookieStore.has(cookieUserToken);
-  const userToken = cookieStore.get(cookieUserToken)?.value;
+  const authToken = await getAuthToken();
 
-  if (hasUserToken) {
-    options.token = userToken;
+  if (authToken) {
+    options.token = authToken;
   }
 
   const nodehiveClient = new NodeHiveClient(

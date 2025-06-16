@@ -1,13 +1,11 @@
-import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { cookieUserToken } from '@/nodehive/client';
+import { getUser } from '@/nodehive/auth';
 import LoginForm from '@/nodehive/components/auth/LoginForm';
 
 export default async function Page() {
-  const cookieStore = await cookies();
-  const hasUserToken = cookieStore.has(cookieUserToken);
+  const user = await getUser();
 
-  if (hasUserToken) {
+  if (user) {
     redirect('/nodehive/account');
   }
 

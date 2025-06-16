@@ -1,10 +1,11 @@
 import Image from 'next/image';
-import { readUserDetails } from '@/actions/_user';
+import { getUser } from '@/nodehive/auth';
 
 import { cn } from '@/lib/utils';
 
 export default async function UserProfile() {
-  const user = await readUserDetails();
+  // TODOD: Fix the type in nodehive-js
+  const user = (await getUser()) as any;
 
   return (
     <button

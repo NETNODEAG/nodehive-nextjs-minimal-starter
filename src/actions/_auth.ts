@@ -1,24 +1,14 @@
 'use server';
 
-import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
-import {
-  cookieUser,
-  cookieUserToken,
-  createServerClient,
-} from '@/nodehive/client';
-
-import { getUser, saveUserDetails } from './_user';
+import { clearAuthToken, getUser, saveAuthToken } from '@/nodehive/auth';
+import { createServerClient } from '@/nodehive/client';
 
 /**
  * The login state
  */
 export type LoginState = {
-  message?: {
-    title: string;
-    text: string;
-    type: string;
-  };
+  message?: { title: string; text: string; type: string };
 };
 
 /**
@@ -29,7 +19,6 @@ export type LoginState = {
  * @returns {Promise}
  */
 export async function login(prevState: LoginState, formData: FormData) {
-  const cookieStore = await cookies();
   const client = await createServerClient();
 
   const email = formData.get('email') as string;
@@ -43,28 +32,10 @@ export async function login(prevState: LoginState, formData: FormData) {
 
     if (tokenError && tokenError !== undefined) {
       return {
-        message: {
-          title: 'Login Failed',
-          text: tokenError,
-          type: 'error',
-        },
+        message: { title: 'Login Failed', text: tokenError, type: 'error' },
       };
-    } else {
-      cookieStore.set({
-        name: cookieUserToken,
-        value: token,
-        httpOnly: true,
-        sameSite: 'none',
-        secure: true,
-        path: '/',
-      });
-
-      if (token) {
-        const { user } = await getUser();
-
-        await saveUserDetails(user);
-      }
     }
+    await saveAuthToken(token);
   } catch (e) {
     console.error(e);
 
@@ -84,13 +55,29 @@ export async function login(prevState: LoginState, formData: FormData) {
  * @returns {Promise}
  */
 export async function logout() {
-  const cookieStore = await cookies();
-
-  const hasUserToken = cookieStore.has(cookieUserToken);
-  const hasUser = cookieStore.has(cookieUser);
-
-  if (hasUserToken) cookieStore.delete(cookieUserToken);
-  if (hasUser) cookieStore.delete(cookieUser);
-
+  await clearAuthToken();
   redirect('/nodehive/login');
+}
+
+/**
+ * Server action to get the current user
+ * @returns {Promise<User | null>} The user object or null if not authenticated
+ */
+export const getUserAction = async () => {
+  return await getUser();
+};
+
+/**
+ * Server action to save auth token
+ * @param {string} token - The auth token
+ */
+export async function saveAuthTokenAction(token: string) {
+  return await saveAuthToken(token);
+}
+
+/**
+ * Server action to clear auth token from cookies
+ */
+export async function clearAuthTokenAction() {
+  return await clearAuthToken();
 }
