@@ -5,7 +5,7 @@ interface AuthWrapperProps {
 }
 
 export async function AuthWrapper({ children }: AuthWrapperProps) {
-  if (isAuthenticated()) {
+  if (await isAuthenticated()) {
     return children;
   }
 
@@ -13,7 +13,7 @@ export async function AuthWrapper({ children }: AuthWrapperProps) {
 }
 
 export async function NotLoggedIn({ children }: AuthWrapperProps) {
-  if (!isAuthenticated()) {
+  if (!(await isAuthenticated())) {
     return children;
   }
 
