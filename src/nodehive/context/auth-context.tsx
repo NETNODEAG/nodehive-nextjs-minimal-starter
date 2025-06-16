@@ -1,9 +1,10 @@
 'use client';
 
 import { createContext, useContext } from 'react';
+import { NodeHiveUser } from '@/nodehive/types';
 
 export interface AuthContextType {
-  user: any | null;
+  user: NodeHiveUser | null;
   isLoggedIn: boolean;
   isLoading: boolean;
 }

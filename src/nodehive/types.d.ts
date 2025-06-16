@@ -228,6 +228,35 @@ export interface DrupalUser extends JsonApiResourceWithPath {
   default_langcode: boolean;
   name: string;
 }
+
+export interface NodeHiveUser {
+  uid: Array<{ value: number }>;
+  uuid: Array<{ value: string }>;
+  langcode: Array<{ value: string }>;
+  preferred_langcode: Array<{ value: string }>;
+  preferred_admin_langcode: Array<{ value: string }>;
+  name: Array<{ value: string }>;
+  mail: Array<{ value: string }>;
+  timezone: Array<{ value: string }>;
+  status: Array<{ value: boolean }>;
+  created: Array<{ value: string; format: string }>;
+  changed: Array<{ value: string; format: string }>;
+  access: Array<{ value: string; format: string }>;
+  login: Array<{ value: string; format: string }>;
+  init: Array<{ value: string }>;
+  roles: Array<{
+    target_id: string;
+    target_type: string;
+    target_uuid: string;
+  }>;
+  default_langcode: Array<{ value: boolean }>;
+  path: Array<{
+    alias: string | null;
+    pid: string | null;
+    langcode: string;
+  }>;
+  user_picture: Array<{ url?: string }>;
+}
 export interface DrupalView<T = Record<string, any>[]> {
   id: string;
   results: T;

@@ -3,9 +3,10 @@
 import React, { useEffect, useState } from 'react';
 import { getUserAction, saveAuthTokenAction } from '@/actions/_auth';
 import { AuthContext } from '@/nodehive/context/auth-context';
+import { NodeHiveUser } from '@/nodehive/types';
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<any | null>(null);
+  const [user, setUser] = useState<NodeHiveUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   const checkAuth = async () => {

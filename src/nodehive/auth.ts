@@ -3,24 +3,23 @@ import 'server-only';
 import { cache } from 'react';
 import { cookies } from 'next/headers';
 import { createServerClient } from '@/nodehive/client';
+import { NodeHiveUser } from '@/nodehive/types';
 
 export const nodehiveAuthToken = `${process.env.NEXT_PUBLIC_NODEHIVE_SPACE_NAME}_auth-token`;
 
-const fetchUserCached = cache(async (authToken: string) => {
-  const client = await createServerClient();
-  const user = await client.fetchUserDetails(authToken);
-  // Check if user is empty object
-  if (!user || (typeof user === 'object' && Object.keys(user).length === 0)) {
-    return null;
+const fetchUserCached = cache(
+  async (authToken: string): Promise<NodeHiveUser | null> => {
+    const client = await createServerClient();
+    const user = await client.fetchUserDetails(authToken);
+    // Check if user is empty object
+    if (!user || (typeof user === 'object' && Object.keys(user).length === 0)) {
+      return null;
+    }
+    return user as unknown as NodeHiveUser;
   }
-  return user;
-});
+);
 
-/**
- * Get the current user
- * @returns {Promise<User | null>} The user object or null if not authenticated
- */
-export const getUser = async () => {
+export const getUser = async (): Promise<NodeHiveUser | null> => {
   const authToken = await getAuthToken();
 
   if (!authToken) return null;
@@ -32,20 +31,12 @@ export const getUser = async () => {
   }
 };
 
-/**
- * Get the current auth token from cookies
- * @returns {Promise<string | null>} The auth token or null if not found
- */
-export const getAuthToken = async () => {
+export const getAuthToken = async (): Promise<string | null> => {
   const cookieStore = await cookies();
   return cookieStore.get(nodehiveAuthToken)?.value || null;
 };
 
-/**
- * Save auth token to cookies
- * @param {string} token - The auth token
- */
-export const saveAuthToken = async (token: string) => {
+export const saveAuthToken = async (token: string): Promise<void> => {
   const cookieStore = await cookies();
 
   cookieStore.set({
@@ -58,10 +49,7 @@ export const saveAuthToken = async (token: string) => {
   });
 };
 
-/**
- * Clear auth token from cookies
- */
-export const clearAuthToken = async () => {
+export const clearAuthToken = async (): Promise<void> => {
   const cookieStore = await cookies();
 
   if (cookieStore.has(nodehiveAuthToken)) {
@@ -69,11 +57,7 @@ export const clearAuthToken = async () => {
   }
 };
 
-/**
- * Check if user is authenticated
- * @returns {Promise<boolean>} True if user is authenticated
- */
-export const isAuthenticated = async () => {
+export const isAuthenticated = async (): Promise<boolean> => {
   const user = await getUser();
   return !!user;
 };

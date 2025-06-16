@@ -4,8 +4,7 @@ import { getUser } from '@/nodehive/auth';
 import { cn } from '@/lib/utils';
 
 export default async function UserProfile() {
-  // TODO: Fix the type in nodehive-js
-  const user = (await getUser()) as any;
+  const user = await getUser();
 
   return (
     <button
