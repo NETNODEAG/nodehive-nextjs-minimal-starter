@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import { createServerClient } from '@/nodehive/client';
 import SmartActionsButton from '@/nodehive/components/smart-actions/smart-actions-button';
 import { Locale } from '@/nodehive/i18n-config';
@@ -14,9 +14,8 @@ interface PageProps {
 }
 
 export async function generateMetadata(props: PageProps): Promise<Metadata> {
-  const params = await props.params;
+  const { slug, lang } = await props.params;
   const client = await createServerClient();
-  const { slug, lang } = params;
 
   // Join the slug array into a string
   const slugString = slug.join('/');
@@ -93,6 +92,13 @@ export default async function Page(props: PageProps) {
 
   // Node data
   const node = entity?.data;
+  const aliasPath = node?.path?.alias;
+  const aliasLang = node?.langcode || lang;
+
+  // Redirect to the aliased path if it differs from the current slug
+  if (aliasPath && aliasPath !== `/${slug.join('/')}`) {
+    redirect('/' + aliasLang + aliasPath);
+  }
 
   return (
     <>
