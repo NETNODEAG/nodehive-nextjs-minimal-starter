@@ -22,40 +22,31 @@ const getLocale = (request: NextRequest) => {
   return locale;
 };
 
-// Create a middleware that will detect the default language of the user
-// and redirect to the correct path
+// Paths that are handled by the Next.js app, not Drupal
+const NON_ENTITY_PATHS = [
+  'static',
+  '_next',
+  'sitemap',
+  'sitemap.xml',
+  'forbidden',
+  'not-found',
+  'api',
+];
+
 export function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
-  // Create a new Headers object from the request headers
-  const requestHeaders = new Headers(request.headers);
-  requestHeaders.set('x-url', request.url);
-  requestHeaders.set('x-pathname', pathname);
-
-  const response = NextResponse.next({
-    request: {
-      headers: requestHeaders,
-    },
-  });
-
-  // Check if the request is for a resource in the public/css directory
-  if (pathname.startsWith('/css/')) {
-    return response; // No redirection for resources in the public directory
-  }
-
-  // Check if the request is for a resource in the public/metadata directory
-  if (pathname.startsWith('/metadata/')) {
-    return response; // No redirection for resources in the public directory
-  }
-
-  // Ignore it for icons and favicon and manifest
+  // Allow requests for static files to pass through
   if (
+    pathname.startsWith('/css/') ||
+    pathname.startsWith('/metadata/') ||
+    pathname.startsWith('/images/') ||
     pathname.startsWith('/icon') ||
     pathname === '/favicon.ico' ||
     pathname === '/manifest.webmanifest' ||
     pathname === '/robots.txt'
   ) {
-    return response;
+    return NextResponse.next();
   }
 
   // Check if the pathname is missing a locale
@@ -77,7 +68,32 @@ export function middleware(request: NextRequest) {
     );
   }
 
-  return response;
+  const pathWithoutLocale = i18n.locales.reduce(
+    (path, locale) => path.replace(`/${locale}`, ''),
+    pathname
+  );
+
+  // Check if the pathWithoutLocale matches any of the NON_ENTITY_PATHS
+  const isNonEntityPath = NON_ENTITY_PATHS.some(
+    (path) =>
+      pathWithoutLocale.startsWith(`/${path}/`) ||
+      pathWithoutLocale === `/${path}`
+  );
+
+  if (isNonEntityPath) {
+    return NextResponse.next();
+  }
+
+  // If no other conditions are met, proceed to the dynamic route [[...slug]]
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set('x-url', request.url);
+  requestHeaders.set('x-pathname', pathname);
+
+  return NextResponse.next({
+    request: {
+      headers: requestHeaders,
+    },
+  });
 }
 
 export const config = {
