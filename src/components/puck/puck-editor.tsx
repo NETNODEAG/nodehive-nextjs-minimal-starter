@@ -58,7 +58,7 @@ export default function PuckEditor({
 
   const onSave = async (data) => {
     setIsSaving(true);
-    const response = await fetch(`/api/puck/publish`, {
+    const response = await fetch(`/${lang}/api/puck/publish`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',

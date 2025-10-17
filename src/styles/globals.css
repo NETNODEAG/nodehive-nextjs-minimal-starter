@@ -16,3 +16,16 @@
   --color-primary: #0284c7;
   --color-secondary: #082f49;
 }
+
+@theme inline {
+  --header-height: 56px;
+  --puck-header-height: 51px;
+}
+
+#frame-root {
+  width: 99%;
+}
+
+#preview-frame {
+  padding-bottom: 50px;
+}
