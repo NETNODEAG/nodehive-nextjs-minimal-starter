@@ -1,9 +1,11 @@
 import { FunctionComponent } from 'react';
 
-import NodePage, { NodePageProps } from './page/NodePage';
+import NodeStoryCollection, {
+  NodeStoryCollectionProps,
+} from './story-collection/NodeStoryCollection';
 
 interface NodePropMap {
-  'node--page': NodePageProps;
+  'node--story_collection': NodeStoryCollectionProps;
 }
 
 type NodeTypes = {
@@ -15,5 +17,5 @@ export function isNodeType(key: string): key is keyof NodeTypes {
 }
 
 export const nodeTypes: NodeTypes = {
-  'node--page': NodePage,
+  'node--story_collection': NodeStoryCollection,
 };
