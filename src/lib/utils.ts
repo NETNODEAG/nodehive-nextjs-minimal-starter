@@ -51,13 +51,13 @@ export function isRelative(url: string) {
  *
  * @returns The slug
  */
-export function internalLinkUriToSlug(uri: string) {
+export function internalLinkUriToSlug(uri: string, lang: Locale) {
   // Return null if uri is falsy or an empty string
   if (!uri || uri.trim() === '') return null;
 
   // If uri contains 'entity:node/', replace 'entity:' with '/{lang}/'
   if (uri.includes('entity:node/')) {
-    return uri.replace('entity:', `/`);
+    return uri.replace('entity:', `/${lang}/`);
   }
 
   // If uri contains 'internal:', remove 'internal:'

@@ -98,7 +98,7 @@ export default async function RootPage(props: RootPageProps) {
     <>
       <Node node={node as DrupalNode} />
 
-      <SmartActionsButton />
+      <SmartActionsButton lang={lang} />
     </>
   );
 }

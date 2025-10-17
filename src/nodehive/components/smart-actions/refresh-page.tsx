@@ -2,10 +2,11 @@
 
 import { useState } from 'react';
 import { usePathname } from 'next/navigation';
+import { Locale } from '@/nodehive/i18n-config';
 
 import { cn } from '@/lib/utils';
 
-export default function RefreshPage() {
+export default function RefreshPage({ lang }: { lang: Locale }) {
   const pathname = usePathname();
   const [refreshSuccess, setRefreshSuccess] = useState(false);
 
@@ -15,7 +16,7 @@ export default function RefreshPage() {
 
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_FRONTEND_BASE_URL}/api/nodehive/revalidate?path=${pathname}`
+        `${process.env.NEXT_PUBLIC_FRONTEND_BASE_URL}/${lang}/api/nodehive/revalidate?path=${pathname}`
       );
 
       if (!response.ok) {

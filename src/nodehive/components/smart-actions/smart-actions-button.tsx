@@ -3,10 +3,11 @@ import Logout from '@/nodehive/components/smart-actions/logout';
 import OpenVisualEditor from '@/nodehive/components/smart-actions/open-visual-editor';
 import RefreshPage from '@/nodehive/components/smart-actions/refresh-page';
 import UserProfile from '@/nodehive/components/smart-actions/user-profile';
+import { Locale } from '@/nodehive/i18n-config';
 
 import Tooltip from '@/components/ui/netnode/tooltip';
 
-export default function SmartActionsButton() {
+export default function SmartActionsButton({ lang }: { lang: Locale }) {
   return (
     <AuthWrapper>
       <div className="fixed bottom-10 left-1/2 z-50 -translate-x-1/2">
@@ -24,7 +25,7 @@ export default function SmartActionsButton() {
             </li>
             <li>
               <Tooltip label="Refresh">
-                <RefreshPage />
+                <RefreshPage lang={lang} />
               </Tooltip>
             </li>
             <li>
