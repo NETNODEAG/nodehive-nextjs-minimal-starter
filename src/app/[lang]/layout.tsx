@@ -6,10 +6,10 @@ import '@/styles/globals.css';
 import { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { Locale } from '@/nodehive/i18n-config';
-import { AuthProvider } from '@/nodehive/providers/auth-provider';
 
 import Footer from '@/components/layout/Footer';
 import Header from '@/components/layout/Header';
+import { AuthProvider } from '@/components/providers/AuthProvider';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -49,7 +49,7 @@ export default async function RootLayout(props: LayoutProps) {
           <div className="relative flex min-h-screen flex-col">
             <Header lang={lang} />
 
-            <div className="flex-[1_0_auto]">
+            <div className="flex-[1_0_auto]" id="scroll-container">
               <main className="container-wrapper my-16">{children}</main>
             </div>
 

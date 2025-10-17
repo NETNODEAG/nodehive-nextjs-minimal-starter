@@ -1,7 +1,7 @@
 'use client';
 
 import { useActionState } from 'react';
-import { login, LoginState } from '@/actions/_auth';
+import { login, LoginState } from '@/data/auth/server';
 
 import { cn } from '@/lib/utils';
 

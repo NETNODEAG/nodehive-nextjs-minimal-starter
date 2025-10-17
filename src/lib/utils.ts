@@ -1,3 +1,4 @@
+import { i18n, Locale } from '@/nodehive/i18n-config';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
@@ -89,4 +90,24 @@ export function formatDate(input: string): string {
   });
 
   return formattedDate;
+}
+
+/**
+ * Extract locale from pathname
+ *
+ * @param pathname - The pathname to extract locale from
+ * @returns The locale extracted from pathname or default locale
+ *
+ * @example
+ * ```tsx
+ * const locale = getLocaleFromPathname('/de/about'); // returns 'de'
+ * const locale = getLocaleFromPathname('/invalid/path'); // returns 'de' (default)
+ * ```
+ */
+export function getLocaleFromPathname(pathname: string): Locale {
+  const segments = pathname.split('/');
+  const localeSegment = segments[1];
+  return (i18n.locales as readonly string[]).includes(localeSegment)
+    ? (localeSegment as Locale)
+    : i18n.defaultLocale;
 }

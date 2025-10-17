@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { getUserAction, saveAuthTokenAction } from '@/actions/_auth';
-import { AuthContext } from '@/nodehive/context/auth-context';
+import { AuthContext } from '@/context/auth-context';
+import { getUserAction, saveAuthTokenAction } from '@/data/auth/server';
 import { NodeHiveUser } from '@/nodehive/types';
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {

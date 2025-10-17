@@ -1,5 +1,5 @@
 import { redirect } from 'next/navigation';
-import { logout } from '@/actions/_auth';
+import { logout } from '@/data/auth/server';
 import { getUser } from '@/nodehive/auth';
 
 export default async function Page() {
