@@ -21,7 +21,6 @@ export default async function LanguageSwitcher({
         <li key={locale}>
           <Link
             href={lang === locale ? pathname : pathname.replace(lang, locale)}
-            locale={locale}
             className={cn(
               lang === locale
                 ? 'underline underline-offset-2'
