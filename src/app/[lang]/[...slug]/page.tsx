@@ -21,7 +21,7 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
   const slugString = slug.join('/');
 
   // Retrieve a resource, utilizing its unique slug as the identifier
-  const entity = await client.getResourceBySlug(slugString);
+  const entity = await client.getResourceBySlug(slugString, lang);
   const node = entity?.data;
 
   const { spaceMetadata } = spaceConfig;
