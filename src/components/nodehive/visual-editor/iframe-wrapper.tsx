@@ -15,7 +15,7 @@ export default function IframeWrapper({ children }) {
   }
 
   return (
-    <div className="rounded-lg p-2 outline-primary-700 hover:outline-dashed hover:outline-2 hover:-outline-offset-2">
+    <div className="outline-primary-700 rounded-lg p-2 hover:outline-2 hover:-outline-offset-2 hover:outline-dashed">
       {children}
     </div>
   );

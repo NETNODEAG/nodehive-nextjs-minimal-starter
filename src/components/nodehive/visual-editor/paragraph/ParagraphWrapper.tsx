@@ -1,7 +1,6 @@
-import IframeWrapper from '@/nodehive/components/visual-editor/iframe-wrapper';
-import ParagraphEditButton from '@/nodehive/components/visual-editor/paragraph/paragraph-edit-button';
-
 import { AuthWrapper, NotLoggedIn } from '@/components/auth/AuthWrapper';
+import IframeWrapper from '@/components/nodehive/visual-editor/iframe-wrapper';
+import ParagraphEditButton from '@/components/nodehive/visual-editor/paragraph/ParagraphEditButton';
 
 export default function ParagraphWrapper({
   entity,

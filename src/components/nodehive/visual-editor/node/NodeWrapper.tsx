@@ -1,4 +1,4 @@
-import NodeMetadata from '@/nodehive/components/visual-editor/node/NodeMetadata';
+import NodeMetadata from '@/components/nodehive/visual-editor/node/NodeMetadata';
 
 export default function NodeWrapper({ entity, children }) {
   const { id, drupal_internal__nid, type } = entity;

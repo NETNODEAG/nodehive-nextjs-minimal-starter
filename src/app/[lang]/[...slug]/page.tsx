@@ -1,13 +1,13 @@
 import { Metadata } from 'next';
 import { notFound, redirect } from 'next/navigation';
 import { createServerClient } from '@/nodehive/client';
-import SmartActionsButton from '@/nodehive/components/smart-actions/smart-actions-button';
 import { Locale } from '@/nodehive/i18n-config';
 import { spaceConfig } from '@/nodehive/space-config';
 import { DrupalNode } from '@/nodehive/types';
 
 import { absoluteUrl } from '@/lib/utils';
 import Node from '@/components/node/Node';
+import SmartActionsButton from '@/components/nodehive/smart-actions/SmartActionsButton';
 
 interface PageProps {
   params: Promise<{ slug: Array<string>; lang: Locale }>;
