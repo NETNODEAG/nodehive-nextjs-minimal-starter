@@ -15,7 +15,7 @@ export default async function Header({ lang }: HeaderProps) {
             NodeHive Next.js Minimal Starter
           </Link>
 
-          {/* <Navigation menuId={process.env.NODEHIVE_MAIN_MENU} lang={lang} /> */}
+          <Navigation menuId={process.env.NODEHIVE_MAIN_MENU} lang={lang} />
 
           <LanguageSwitcher lang={lang} />
         </div>
