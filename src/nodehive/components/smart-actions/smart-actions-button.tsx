@@ -1,10 +1,10 @@
-import { AuthWrapper } from '@/nodehive/components/auth/AuthWrapper';
 import Logout from '@/nodehive/components/smart-actions/logout';
 import OpenVisualEditor from '@/nodehive/components/smart-actions/open-visual-editor';
 import RefreshPage from '@/nodehive/components/smart-actions/refresh-page';
 import UserProfile from '@/nodehive/components/smart-actions/user-profile';
 import { Locale } from '@/nodehive/i18n-config';
 
+import { AuthWrapper } from '@/components/auth/AuthWrapper';
 import Tooltip from '@/components/ui/netnode/tooltip';
 
 export default function SmartActionsButton({ lang }: { lang: Locale }) {

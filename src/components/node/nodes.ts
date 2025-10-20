@@ -1,9 +1,13 @@
 import { FunctionComponent } from 'react';
 
-import NodePage, { NodePageProps } from './page/NodePage';
+import NodePage, { NodePageProps } from '@/components/node/page/NodePage';
+import NodePuckPage, {
+  NodePuckPageProps,
+} from '@/components/node/puck-page/NodePage';
 
 interface NodePropMap {
   'node--page': NodePageProps;
+  'node--puck_page': NodePuckPageProps;
 }
 
 type NodeTypes = {
@@ -16,4 +20,5 @@ export function isNodeType(key: string): key is keyof NodeTypes {
 
 export const nodeTypes: NodeTypes = {
   'node--page': NodePage,
+  'node--puck_page': NodePuckPage,
 };

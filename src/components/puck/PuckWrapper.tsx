@@ -2,15 +2,15 @@
 
 import { useState } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { useAuth } from '@/context/auth-context';
+import { useAuth } from '@/context/AuthContext';
 import { DrupalNode } from '@/nodehive/types';
 import { Button } from '@measured/puck';
 import { AnimatePresence } from 'framer-motion';
 import { SquareDashedMousePointerIcon } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
-import PuckEditor from '@/components/puck/editor/puck-editor';
-import PuckRender from '@/components/puck/puck-render';
+import PuckEditor from '@/components/puck/editor/PuckEditor';
+import PuckRender from '@/components/puck/PuckRender';
 
 type PuckWrapperProps = {
   node: DrupalNode;

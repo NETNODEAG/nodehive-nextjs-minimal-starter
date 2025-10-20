@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { AuthContext } from '@/context/auth-context';
+import { AuthContext } from '@/context/AuthContext';
 import { getUserAction, saveAuthTokenAction } from '@/data/auth/server';
 import { NodeHiveUser } from '@/nodehive/types';
 

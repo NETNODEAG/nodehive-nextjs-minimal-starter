@@ -12,7 +12,7 @@ import { DrupalNode } from '@/nodehive/types';
 import { ImperativePanelHandle } from 'react-resizable-panels';
 
 import ComponentItem from '@/components/puck/editor/component-item';
-import PuckHeader from '@/components/puck/puck-header';
+import PuckHeader from '@/components/puck/editor/PuckHeader';
 import {
   ResizableHandle,
   ResizablePanel,
