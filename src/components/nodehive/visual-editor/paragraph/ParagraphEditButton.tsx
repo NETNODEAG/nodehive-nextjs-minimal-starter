@@ -5,6 +5,15 @@ import { usePathname } from 'next/navigation';
 
 import { EditIcon } from '@/lib/icons';
 
+type VisualParagraphEditButtonProps = {
+  label: string;
+  type: string;
+  uuid: string;
+  id: string;
+  parentId: string;
+  langcode: string;
+};
+
 export default function VisualParagraphEditButton({
   label,
   type,
@@ -12,11 +21,12 @@ export default function VisualParagraphEditButton({
   id,
   parentId,
   langcode,
-}) {
+}: VisualParagraphEditButtonProps) {
   const pathname = usePathname();
-  const [isInIframe, setIsInIframe] = useState(false);
+  const isInIframe =
+    typeof window !== 'undefined' && window.self !== window.top;
 
-  const editComponent = (e) => {
+  const editComponent = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
     window.parent.postMessage(
@@ -31,11 +41,6 @@ export default function VisualParagraphEditButton({
       '*'
     );
   };
-
-  useEffect(() => {
-    const inIframe = window.self !== window.top;
-    setIsInIframe(inIframe);
-  }, []);
 
   if (!isInIframe) {
     return null;

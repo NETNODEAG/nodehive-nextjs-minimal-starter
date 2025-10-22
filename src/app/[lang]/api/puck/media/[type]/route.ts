@@ -14,7 +14,6 @@ export async function GET(request: Request, { params }: RouteParams) {
     const { type, lang } = await params;
     const { searchParams } = new URL(request.url);
     const query = searchParams.get('query');
-    const client = await createServerClient();
 
     const apiParams = new DrupalJsonApiParams().addSort('created', 'DESC');
     // Create params object with filtering when query is provided

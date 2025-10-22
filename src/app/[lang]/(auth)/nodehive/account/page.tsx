@@ -9,11 +9,7 @@ export default async function Page() {
     redirect('/nodehive/login');
   }
 
-  // prettier-ignore
-  {/* @ts-ignore */}
   const name = user?.name?.[0]?.value;
-  // prettier-ignore
-  {/* @ts-ignore */}
   const email = user?.mail?.[0]?.value;
 
   return (

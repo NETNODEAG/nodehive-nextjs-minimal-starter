@@ -23,6 +23,10 @@ export async function generateMetadata(
 
   const { lang } = params;
 
+  if (!process.env.NODEHIVE_STARTPAGE_SLUG) {
+    return {};
+  }
+
   // Retrieve a resource, utilizing its unique slug as the identifier
   const entity = await client.getResourceBySlug(
     process.env.NODEHIVE_STARTPAGE_SLUG,
@@ -79,6 +83,10 @@ export default async function RootPage(props: RootPageProps) {
   const client = await createServerClient();
 
   const { lang } = params;
+
+  if (!process.env.NODEHIVE_STARTPAGE_SLUG) {
+    notFound();
+  }
 
   // Retrieve a resource, utilizing its unique slug as the identifier
   const entity = await client.getResourceBySlug(

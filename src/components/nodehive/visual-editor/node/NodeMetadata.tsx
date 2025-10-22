@@ -1,4 +1,8 @@
-export default function NodeMetadata({ entity }) {
+type NodeMetadataProps = {
+  entity: any;
+};
+
+export default function NodeMetadata({ entity }: NodeMetadataProps) {
   const title = entity?.title;
   const status = entity?.status;
 

@@ -1,6 +1,11 @@
 import NodeMetadata from '@/components/nodehive/visual-editor/node/NodeMetadata';
 
-export default function NodeWrapper({ entity, children }) {
+type NodeWrapperProps = {
+  entity: any;
+  children: React.ReactNode;
+};
+
+export default function NodeWrapper({ entity, children }: NodeWrapperProps) {
   const { id, drupal_internal__nid, type } = entity;
 
   const dynamicId = `node-${drupal_internal__nid}`;

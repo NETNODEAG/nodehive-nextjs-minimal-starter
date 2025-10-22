@@ -1,6 +1,5 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { Edit, Eye } from 'lucide-react';
 
@@ -8,7 +7,8 @@ import { cn } from '@/lib/utils';
 
 export default function OpenVisualEditor() {
   const pathname = usePathname();
-  const [isInIframe, setIsInIframe] = useState(false);
+  const isInIframe =
+    typeof window !== 'undefined' && window.self !== window.top;
 
   const openBackend = () => {
     const frontendUrl = `${process.env.NEXT_PUBLIC_FRONTEND_BASE_URL}${pathname}`;
@@ -21,11 +21,6 @@ export default function OpenVisualEditor() {
     const frontendUrl = `${process.env.NEXT_PUBLIC_FRONTEND_BASE_URL}${pathname}`;
     window.open(frontendUrl, '_parent');
   };
-
-  useEffect(() => {
-    const inIframe = window.self !== window.top;
-    setIsInIframe(inIframe);
-  }, []);
 
   return (
     <>

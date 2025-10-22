@@ -7,7 +7,7 @@ export interface ParagraphTextProps {
 export default function ParagraphText({ paragraph }: ParagraphTextProps) {
   return (
     <section data-paragraph-type="Text" className="rounded-lg border p-4">
-      <h2>Paragraph Text</h2>
+      <h2>Paragraph Text {paragraph.id}</h2>
     </section>
   );
 }

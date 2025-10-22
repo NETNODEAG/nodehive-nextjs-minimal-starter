@@ -1,5 +1,6 @@
 import { createServerClient } from '@/nodehive/client';
 import { DrupalJsonApiParams } from 'drupal-jsonapi-params';
+import { NextResponse } from 'next/server';
 
 /**
  * Create the response
@@ -8,8 +9,8 @@ import { DrupalJsonApiParams } from 'drupal-jsonapi-params';
  *
  * @return {object} The response
  */
-export function createResponse(body: string): Response {
-  return new Response(body, {
+export function createResponse(body: string): NextResponse {
+  return new NextResponse(body, {
     status: 200,
     headers: {
       'Cache-control': 'public, s-maxage=43200, stale-while-revalidate=43200',

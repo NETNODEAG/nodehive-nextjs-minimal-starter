@@ -9,7 +9,6 @@ import { cn } from '@/lib/utils';
 
 export default function RefreshPage({ lang }: { lang: Locale }) {
   const pathname = usePathname();
-  const [refreshSuccess, setRefreshSuccess] = useState(false);
 
   async function refreshPage() {
     let success = false;
@@ -26,9 +25,9 @@ export default function RefreshPage({ lang }: { lang: Locale }) {
         success = true;
         location.reload();
       }
-    } catch (error) {
-      console.error(error);
-      error = error?.message;
+    } catch (err) {
+      console.error(err);
+      error = err instanceof Error ? err.message : 'Unknown error occurred';
     }
 
     return { success, error };
@@ -36,14 +35,7 @@ export default function RefreshPage({ lang }: { lang: Locale }) {
 
   return (
     <div
-      onClick={async () => {
-        setRefreshSuccess(false);
-        const { success, error } = await refreshPage();
-
-        if (success) {
-          setRefreshSuccess(true);
-        }
-      }}
+      onClick={async () => await refreshPage()}
       className={cn(
         'flex h-[32px] w-[32px] items-center justify-center rounded-full text-white transition-colors hover:bg-neutral-700',
         'cursor-pointer'

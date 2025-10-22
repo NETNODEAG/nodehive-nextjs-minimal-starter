@@ -1,12 +1,21 @@
+import { DrupalFragment } from '@/nodehive/types';
+
 import { AuthWrapper, NotLoggedIn } from '@/components/auth/AuthWrapper';
 import FragmentEditButton from '@/components/nodehive/visual-editor/fragment/FragmentEditButton';
+
+type FragmentWrapperProps = {
+  entity: DrupalFragment;
+  enable?: boolean;
+  editmode?: 'edit-form' | 'sidebar' | 'modal' | 'inline';
+  children: React.ReactNode;
+};
 
 export default function FragmentWrapper({
   entity,
   enable = true,
   editmode = 'sidebar',
   children,
-}) {
+}: FragmentWrapperProps) {
   const { type, id, drupal_internal__fid } = entity;
 
   if (!type) {

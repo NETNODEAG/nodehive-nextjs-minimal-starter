@@ -2,12 +2,19 @@ import { AuthWrapper, NotLoggedIn } from '@/components/auth/AuthWrapper';
 import IframeWrapper from '@/components/nodehive/visual-editor/IframeWrapper';
 import ParagraphEditButton from '@/components/nodehive/visual-editor/paragraph/ParagraphEditButton';
 
+type ParagraphWrapperProps = {
+  entity: any;
+  enable?: boolean;
+  editmode?: 'edit-form' | 'sidebar' | 'modal' | 'inline';
+  children: React.ReactNode;
+};
+
 export default function ParagraphWrapper({
   entity,
   enable = true,
   editmode = 'sidebar',
   children,
-}) {
+}: ParagraphWrapperProps) {
   const { meta, type, parent_id, id } = entity;
   const { drupal_internal__target_id } = meta || {};
 

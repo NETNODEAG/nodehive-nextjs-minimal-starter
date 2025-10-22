@@ -1,4 +1,4 @@
-import { DrupalArea } from '@/nodehive/types';
+import { DrupalArea, DrupalFragment } from '@/nodehive/types';
 
 import Fragment from '@/components/fragment/Fragment';
 
@@ -7,11 +7,12 @@ interface AreaProps {
 }
 
 export default function Area({ area }: AreaProps) {
+  // TODO Check if this is getting the correct data
   const fragments = area?.data?.fragment_id;
 
   return (
     <div>
-      {fragments?.map((fragment) => {
+      {fragments?.map((fragment: DrupalFragment) => {
         return <Fragment key={fragment?.id} fragment={fragment} />;
       })}
     </div>

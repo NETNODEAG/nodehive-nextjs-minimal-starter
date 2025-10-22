@@ -34,15 +34,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   useEffect(() => {
-    const isInIframe = window.self !== window.top;
+    const isInIframe =
+      typeof window !== 'undefined' && window.self !== window.top;
+
+    const baseUrl = process.env.NEXT_PUBLIC_DRUPAL_BASE_URL;
+
+    if (!baseUrl) {
+      console.error('NEXT_PUBLIC_DRUPAL_BASE_URL is not defined');
+      return;
+    }
 
     if (!isInIframe) {
       return;
     }
 
     const handlePostMessage = (event: MessageEvent) => {
-      const isValidOrigin =
-        event.origin === process.env.NEXT_PUBLIC_DRUPAL_BASE_URL;
+      const isValidOrigin = event.origin === baseUrl;
 
       if (!isValidOrigin) {
         console.warn(
@@ -64,10 +71,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     window.addEventListener('message', handlePostMessage);
     // Notify the parent window that the auth provider is ready
-    window.parent.postMessage(
-      { type: 'auth-ready' },
-      process.env.NEXT_PUBLIC_DRUPAL_BASE_URL
-    );
+    window.parent.postMessage({ type: 'auth-ready' }, baseUrl);
 
     return () => {
       window.removeEventListener('message', handlePostMessage);

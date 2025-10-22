@@ -32,7 +32,7 @@ export const metadata: Metadata = {
 
 interface LayoutProps {
   children: React.ReactNode;
-  params: Promise<{ lang: Locale }>;
+  params: Promise<{ lang: string }>;
 }
 
 export default async function RootLayout(props: LayoutProps) {
@@ -41,13 +41,14 @@ export default async function RootLayout(props: LayoutProps) {
   const { children } = props;
 
   const { lang } = params;
+  const locale = lang as Locale;
 
   return (
     <html lang={lang}>
       <body className={inter.className}>
         <AuthProvider>
           <div className="relative flex min-h-screen flex-col">
-            <Header lang={lang} />
+            <Header lang={locale} />
 
             <div className="flex-[1_0_auto]" id="scroll-container">
               <main className="container-wrapper my-16">{children}</main>

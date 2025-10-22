@@ -36,19 +36,21 @@ export default function PuckEditor({
   closePuckEditor,
 }: PuckEditorProps) {
   const [isSaving, setIsSaving] = useState(false);
-  const { width } = useWindowSize();
+  const windowSize = useWindowSize();
+  const width = windowSize.width || 1440;
   const previewDefaultSize = (896 / width) * 100;
   const leftSidebarCollapsedSize = (80 / width) * 100;
   const rightSidebarMinSize = (300 / width) * 100;
   const nodeData = node;
   const lang = nodeData?.langcode;
   const pathName = usePathname();
-  const leftPanelRef = useRef<ImperativePanelHandle>(null);
-  const rightPanelRef = useRef<ImperativePanelHandle>(null);
+  const leftPanelRef = useRef<ImperativePanelHandle | null>(null);
+  const rightPanelRef = useRef<ImperativePanelHandle | null>(null);
 
   // prevent scrolling when editor is open
   useEffect(() => {
     const scrollContainer = document.querySelector('#scroll-container');
+    if (!scrollContainer) return;
     scrollContainer.classList.add('!overflow-hidden');
 
     return () => {
@@ -56,7 +58,7 @@ export default function PuckEditor({
     };
   }, []);
 
-  const onSave = async (data) => {
+  const onSave = async (data: any) => {
     setIsSaving(true);
     const response = await fetch(`/${lang}/api/puck/publish`, {
       method: 'PATCH',

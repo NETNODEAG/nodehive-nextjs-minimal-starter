@@ -19,7 +19,15 @@ export const createTextEditorField = ({
     type: 'custom' as const,
     contentEditable: editorType === 'title' ? true : false,
     label,
-    render: ({ field, value, onChange }) => {
+    render: ({
+      field,
+      value,
+      onChange,
+    }: {
+      field: any;
+      value: any;
+      onChange: any;
+    }) => {
       return (
         <TextEditor
           label={field.label}
@@ -43,7 +51,15 @@ export const createDatePickerField = ({
   return {
     type: 'custom' as const,
     label,
-    render: ({ onChange, value, field }) => {
+    render: ({
+      onChange,
+      value,
+      field,
+    }: {
+      onChange: any;
+      value: any;
+      field: any;
+    }) => {
       return (
         <DatePicker date={value} onChange={onChange} label={field.label} />
       );
@@ -63,7 +79,15 @@ export const createMediaSelectorField = ({
   return {
     type: 'custom' as const,
     label,
-    render: ({ onChange, value, field }) => {
+    render: ({
+      onChange,
+      value,
+      field,
+    }: {
+      onChange: any;
+      value: any;
+      field: any;
+    }) => {
       return (
         <MediaSelectorField
           onChange={onChange}
@@ -90,7 +114,7 @@ export const createVisualSettingsField = ({
   return {
     type: 'custom' as const,
     label,
-    render: ({ value, onChange }) => {
+    render: ({ value, onChange }: { value: any; onChange: any }) => {
       return (
         <VisualSettingsField
           value={value}

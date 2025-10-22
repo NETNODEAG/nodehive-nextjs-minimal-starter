@@ -7,6 +7,12 @@ interface NavigationProps {
   lang: Locale;
 }
 
+type NavigationItem = {
+  id: string;
+  title: string;
+  url: string;
+};
+
 export default async function Navigation({ menuId, lang }: NavigationProps) {
   const client = await createServerClient();
 
@@ -19,7 +25,7 @@ export default async function Navigation({ menuId, lang }: NavigationProps) {
   return (
     <nav className="hidden md:block">
       <ul className="flex gap-8">
-        {navigation?.data?.map((item) => (
+        {navigation?.data?.map((item: NavigationItem) => (
           <li key={item.id}>
             <Link href={item.url} className="font-semibold">
               {item.title}

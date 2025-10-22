@@ -19,7 +19,7 @@ const isElement = (domNode: DOMNode): domNode is Element =>
 // Helper to convert style string to React CSSProperties
 function styleStringToObject(styles?: string): React.CSSProperties | undefined {
   if (!styles) return undefined;
-  return styles.split(';').reduce((acc, style) => {
+  return styles.split(';').reduce<Record<string, string>>((acc, style) => {
     const [key, value] = style.split(':');
     if (key && value) {
       const camelKey = key
@@ -28,7 +28,7 @@ function styleStringToObject(styles?: string): React.CSSProperties | undefined {
       acc[camelKey] = value.trim();
     }
     return acc;
-  }, {} as React.CSSProperties);
+  }, {}) as React.CSSProperties;
 }
 
 interface BodyCopyProps extends HTMLAttributes<HTMLDivElement> {

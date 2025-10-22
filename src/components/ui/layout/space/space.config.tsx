@@ -9,7 +9,11 @@ const spacingClasses = {
   '3xl': 'py-20 md:py-40',
 } as const;
 
-export const SpaceConfig: ComponentConfig = {
+type SpaceProps = {
+  size: keyof typeof spacingClasses;
+};
+
+export const SpaceConfig: ComponentConfig<SpaceProps> = {
   label: 'Abstand',
   fields: {
     size: {

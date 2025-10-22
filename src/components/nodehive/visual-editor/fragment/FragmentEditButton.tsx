@@ -5,11 +5,24 @@ import { usePathname } from 'next/navigation';
 
 import { EditIcon } from '@/lib/icons';
 
-export default function FragmentEditButton({ label, type, uuid, id }) {
-  const pathname = usePathname();
-  const [isInIframe, setIsInIframe] = useState(false);
+type FragmentEditButtonProps = {
+  label: string;
+  type: string;
+  uuid: string;
+  id: string;
+};
 
-  const editComponent = (e) => {
+export default function FragmentEditButton({
+  label,
+  type,
+  uuid,
+  id,
+}: FragmentEditButtonProps) {
+  const pathname = usePathname();
+  const isInIframe =
+    typeof window !== 'undefined' && window.self !== window.top;
+
+  const editComponent = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
     // TODO: Add language information. To edit the content in the correct language.
@@ -23,11 +36,6 @@ export default function FragmentEditButton({ label, type, uuid, id }) {
       '*'
     );
   };
-
-  useEffect(() => {
-    const inIframe = window.self !== window.top;
-    setIsInIframe(inIframe);
-  }, []);
 
   if (!isInIframe) {
     return null;

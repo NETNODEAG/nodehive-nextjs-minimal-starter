@@ -7,6 +7,7 @@ import Navigation from '@/components/layout/Navigation';
 type HeaderProps = { lang: Locale };
 
 export default async function Header({ lang }: HeaderProps) {
+  const mainMenuId = process.env.NODEHIVE_MAIN_MENU;
   return (
     <header className="sticky top-0 z-20 bg-white shadow-xs">
       <div className="container-wrapper">
@@ -15,8 +16,7 @@ export default async function Header({ lang }: HeaderProps) {
             NodeHive Next.js Minimal Starter
           </Link>
 
-          <Navigation menuId={process.env.NODEHIVE_MAIN_MENU} lang={lang} />
-
+          {mainMenuId && <Navigation menuId={mainMenuId} lang={lang} />}
           <LanguageSwitcher lang={lang} />
         </div>
       </div>

@@ -18,7 +18,10 @@ export type LoginState = {
  *
  * @returns {Promise}
  */
-export async function login(prevState: LoginState, formData: FormData) {
+export async function login(
+  prevState: LoginState | undefined,
+  formData: FormData
+) {
   const client = await createServerClient();
 
   const email = formData.get('email') as string;

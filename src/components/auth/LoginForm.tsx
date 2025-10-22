@@ -1,13 +1,12 @@
 'use client';
 
 import { useActionState } from 'react';
-import { login, LoginState } from '@/data/auth/server';
+import { login } from '@/data/auth/server';
 
 import { cn } from '@/lib/utils';
 
 export default function LoginForm() {
-  const initialState: LoginState = {} as LoginState;
-  const [state, dispatch, isPending] = useActionState(login, initialState);
+  const [state, dispatch, isPending] = useActionState(login, undefined);
 
   return (
     <section>

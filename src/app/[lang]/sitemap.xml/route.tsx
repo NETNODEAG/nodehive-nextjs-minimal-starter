@@ -1,4 +1,4 @@
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
 /**
  * Fetches the latest sitemap data and generates the sitemap.
@@ -9,14 +9,14 @@ import { NextRequest } from 'next/server';
 export async function GET(
   req: NextRequest,
   context: { params: Promise<{ lang: string }> }
-): Promise<Response> {
+): Promise<NextResponse> {
   const origin = req.nextUrl.origin;
   const lang = (await context.params).lang;
 
   try {
     const body = generateGlobalSitemap(origin, lang);
 
-    return new Response(body, {
+    return new NextResponse(body, {
       status: 200,
       headers: {
         'Cache-control': 'public, s-maxage=60, stale-while-revalidate=60',
@@ -24,8 +24,14 @@ export async function GET(
       },
     });
   } catch (error) {
-    console.error(
-      `There was a problem generating the sitemap: ${error.message}`
+    const errorMessage =
+      error instanceof Error ? error.message : 'Unknown error';
+    return NextResponse.json(
+      {
+        status: 'error',
+        message: `There was a problem generating the sitemap: ${errorMessage}`,
+      },
+      { status: 500 }
     );
   }
 }

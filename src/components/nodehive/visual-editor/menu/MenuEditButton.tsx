@@ -5,16 +5,24 @@ import { usePathname } from 'next/navigation';
 
 import { EditIcon } from '@/lib/icons';
 
+type MenuEditButtonProps = {
+  label: string;
+  type?: string;
+  menuId: string;
+  lang?: string;
+};
+
 export default function MenuEditButton({
   label,
   type = 'menu',
   menuId,
   lang = 'de',
-}) {
+}: MenuEditButtonProps) {
   const pathname = usePathname();
-  const [isInIframe, setIsInIframe] = useState(false);
+  const isInIframe =
+    typeof window !== 'undefined' && window.self !== window.top;
 
-  const editComponent = (e) => {
+  const editComponent = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
     window.parent.postMessage(
@@ -27,11 +35,6 @@ export default function MenuEditButton({
       '*'
     );
   };
-
-  useEffect(() => {
-    const inIframe = window.self !== window.top;
-    setIsInIframe(inIframe);
-  }, []);
 
   if (!isInIframe) {
     return null;

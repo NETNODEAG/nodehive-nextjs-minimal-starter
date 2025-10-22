@@ -51,7 +51,12 @@ export async function PATCH(request: NextRequest) {
   } catch (error) {
     console.error('Error updating Drupal node:', error);
     return NextResponse.json(
-      { status: 'error', message: error.message },
+      {
+        status: 'error',
+        message: `Error updating Drupal node: ${
+          error instanceof Error ? error.message : 'Unknown error'
+        }`,
+      },
       { status: 500 }
     );
   }

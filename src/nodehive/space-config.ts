@@ -3,9 +3,9 @@ export const spaceConfig = {
   shortName: 'NH',
   shortUrl: 'nodehive.ch',
   themeColor: '#ffffff',
-  url: process.env.NEXT_PUBLIC_FRONTEND_BASE_URL,
+  url: process.env.NEXT_PUBLIC_FRONTEND_BASE_URL || '',
   spaceMetadata: {
-    baseUrl: process.env.NEXT_PUBLIC_FRONTEND_BASE_URL,
+    baseUrl: process.env.NEXT_PUBLIC_FRONTEND_BASE_URL || '',
     title: {
       template: '%s | NodeHive',
       default: 'NodeHive Next.js Starter',

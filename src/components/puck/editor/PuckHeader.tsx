@@ -20,8 +20,8 @@ type PuckHeaderProps = {
   onSave: (data: any) => void;
   onClose?: () => void;
   isSaving?: boolean;
-  leftPanelRef: React.RefObject<ImperativePanelHandle>;
-  rightPanelRef: React.RefObject<ImperativePanelHandle>;
+  leftPanelRef: React.RefObject<ImperativePanelHandle | null>;
+  rightPanelRef: React.RefObject<ImperativePanelHandle | null>;
 };
 
 export default function PuckHeader({

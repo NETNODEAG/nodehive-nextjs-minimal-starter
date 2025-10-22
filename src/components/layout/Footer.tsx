@@ -1,7 +1,5 @@
 import { createServerClient } from '@/nodehive/client';
 
-import Fragment from '@/components/fragment/Fragment';
-
 export default async function Footer() {
   const client = await createServerClient();
 

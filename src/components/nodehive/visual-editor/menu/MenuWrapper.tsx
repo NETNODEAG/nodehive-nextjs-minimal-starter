@@ -1,12 +1,17 @@
 import { AuthWrapper, NotLoggedIn } from '@/components/auth/AuthWrapper';
 import MenuEditButton from '@/components/nodehive/visual-editor/menu/MenuEditButton';
 
+type MenuWrapperProps = {
+  type?: string;
+  menuId: string;
+  children: React.ReactNode;
+};
+
 export default function MenuWrapper({
   type = 'menu',
   menuId,
   children,
-  negative = false,
-}) {
+}: MenuWrapperProps) {
   return (
     <div data-nodehive-type="menu" className="relative">
       <AuthWrapper>

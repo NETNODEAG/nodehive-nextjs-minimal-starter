@@ -1,4 +1,4 @@
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
 import {
   createResponse,
@@ -22,7 +22,7 @@ const PRIOTITY = 1.0;
 export async function GET(
   req: NextRequest,
   context: { params: Promise<{ lang: string }> }
-): Promise<Response> {
+): Promise<NextResponse> {
   const origin = req.nextUrl.origin;
   const lang = (await context.params).lang;
 
@@ -41,8 +41,14 @@ export async function GET(
     const body = generateSitemap(origin, data, PRIOTITY);
     return createResponse(body);
   } catch (error) {
-    console.error(
-      `There was a problem generating the sitemap: ${error.message}`
+    const errorMessage =
+      error instanceof Error ? error.message : 'Unknown error';
+    return NextResponse.json(
+      {
+        status: 'error',
+        message: `There was a problem generating the sitemap: ${errorMessage}`,
+      },
+      { status: 500 }
     );
   }
 }
