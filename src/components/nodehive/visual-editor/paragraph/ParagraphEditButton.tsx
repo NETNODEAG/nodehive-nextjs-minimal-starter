@@ -23,8 +23,11 @@ export default function VisualParagraphEditButton({
   langcode,
 }: VisualParagraphEditButtonProps) {
   const pathname = usePathname();
-  const isInIframe =
-    typeof window !== 'undefined' && window.self !== window.top;
+  const [isInIframe, setIsInIframe] = useState(false);
+
+  useEffect(() => {
+    setIsInIframe(typeof window !== 'undefined' && window.self !== window.top);
+  }, []);
 
   const editComponent = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();

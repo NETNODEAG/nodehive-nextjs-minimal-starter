@@ -1,12 +1,17 @@
 'use client';
 
+import { useEffect, useState } from 'react';
+
 type IframeWrapperProps = {
   children: React.ReactNode;
 };
 
 export default function IframeWrapper({ children }: IframeWrapperProps) {
-  const isInIframe =
-    typeof window !== 'undefined' && window.self !== window.top;
+  const [isInIframe, setIsInIframe] = useState(false);
+
+  useEffect(() => {
+    setIsInIframe(typeof window !== 'undefined' && window.self !== window.top);
+  }, []);
 
   if (!isInIframe) {
     return children;

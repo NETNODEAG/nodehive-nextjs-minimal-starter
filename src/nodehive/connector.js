@@ -9,7 +9,7 @@ export default function Connector() {
   const [isReloading, setIsReloading] = useState(false); // State to manage the reloading state
 
   useEffect(() => {
-    setIsInIframe(window.self !== window.top);
+    setIsInIframe(typeof window !== 'undefined' && window.self !== window.top);
 
     const handleMessage = async (event) => {
       if (event.data === 'reloadFrame') {
