@@ -5,7 +5,7 @@ import { NodeHiveClient, NodeHiveOptions } from 'nodehive-js';
 export const createServerClient = async () => {
   const baseUrl = process.env.NEXT_PUBLIC_DRUPAL_REST_BASE_URL;
   const authToken = await getAuthToken();
-  let options: NodeHiveOptions = {
+  const options: NodeHiveOptions = {
     // Set to true to enable debug mode. Debug mode will log all requests and responses to the console.
     debug: false,
   };
