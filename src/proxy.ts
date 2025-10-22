@@ -33,7 +33,7 @@ const NON_ENTITY_PATHS = [
   'api',
 ];
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
   // Allow requests for static files to pass through
