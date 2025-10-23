@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { createServerClient } from '@/nodehive/client';
+import Debug from '@/nodehive/components/helpers/Debug';
 import { Locale } from '@/nodehive/i18n-config';
 
 interface NavigationProps {
@@ -16,10 +17,11 @@ type NavigationItem = {
 export default async function Navigation({ menuId, lang }: NavigationProps) {
   const client = await createServerClient();
 
-  const navigation = await client.getMenuItems(menuId, { lang });
+  const navigation = await client.getMenuTree(menuId, { lang });
 
+  <Debug data={navigation} />;
   if (!navigation?.data?.length) {
-    return null;
+    return <>No menu for menu {menuId}</>;
   }
 
   return (

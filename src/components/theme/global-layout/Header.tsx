@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { Locale } from '@/nodehive/i18n-config';
 
 import LanguageSwitcher from '@/components/layout/LanguageSwitcher';
-import Navigation from '@/components/layout/Navigation';
+import Navigation from '@/components/theme/global-layout/Navigation';
 
 type HeaderProps = { lang: Locale };
 
@@ -15,7 +15,6 @@ export default async function Header({ lang }: HeaderProps) {
           <Link href={`/${lang}`} className="font-bold">
             NodeHive Next.js Minimal Starter
           </Link>
-
           {mainMenuId && <Navigation menuId={mainMenuId} lang={lang} />}
           <LanguageSwitcher lang={lang} />
         </div>

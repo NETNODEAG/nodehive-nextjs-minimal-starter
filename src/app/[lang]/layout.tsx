@@ -7,9 +7,9 @@ import { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { Locale } from '@/nodehive/i18n-config';
 
-import Footer from '@/components/layout/Footer';
-import Header from '@/components/layout/Header';
 import { AuthProvider } from '@/components/providers/AuthProvider';
+import Footer from '@/components/theme/global-layout/Footer';
+import Header from '@/components/theme/global-layout/Header';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -51,7 +51,7 @@ export default async function RootLayout(props: LayoutProps) {
             <Header lang={locale} />
 
             <div className="flex-[1_0_auto]" id="scroll-container">
-              <main className="my-16">{children}</main>
+              <main className="">{children}</main>
             </div>
 
             <Footer />
