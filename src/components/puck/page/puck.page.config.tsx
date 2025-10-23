@@ -1,8 +1,8 @@
 import { Config } from '@measured/puck';
 
-import { BodyCopyConfig } from '@/components/ui/content/body-copy/body-copy.config';
-import { CallToActionConfig } from '@/components/ui/content/call-to-action/call-to-action.config';
-import { HeadingConfig } from '@/components/ui/content/heading/heading.config';
+import { BodyCopyConfig } from '@/components/theme/atoms-content/body-copy/body-copy.config';
+import { CallToActionConfig } from '@/components/theme/atoms-content/call-to-action/call-to-action.config';
+import { HeadingConfig } from '@/components/theme/atoms-content/heading/heading.config';
 import { ContainerConfig } from '@/components/ui/layout/container/container.config';
 import { GridConfig } from '@/components/ui/layout/grid/grid.config';
 import { SpaceConfig } from '@/components/ui/layout/space/space.config';

@@ -1,7 +1,7 @@
 import { ComponentConfig } from '@measured/puck';
 
 import { createTextEditorField } from '@/components/puck/editor/field-utils';
-import BodyCopy from '@/components/ui/content/body-copy/body-copy';
+import BodyCopy from '@/components/theme/atoms-content/body-copy/body-copy';
 
 export const BodyCopyConfig: ComponentConfig = {
   label: 'Body Copy',

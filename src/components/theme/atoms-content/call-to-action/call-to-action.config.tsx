@@ -8,7 +8,7 @@ import {
   TwitterIcon,
   YoutubeIcon,
 } from '@/lib/icons';
-import CallToAction from '@/components/ui/content/call-to-action/call-to-action';
+import CallToAction from '@/components/theme/atoms-content/call-to-action/call-to-action';
 
 const iconOptions = [
   { value: '', label: 'No Icon' },

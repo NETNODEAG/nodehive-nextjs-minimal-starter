@@ -1,7 +1,13 @@
 import { NextConfig } from 'next';
 
 const imageDomains = process.env.NEXT_IMAGE_DOMAINS
-  ? process.env.NEXT_IMAGE_DOMAINS.split(',').map((domain) => new URL(domain))
+  ? process.env.NEXT_IMAGE_DOMAINS.split(',').map((domain) => {
+      const url = new URL(domain);
+      return {
+        protocol: url.protocol.replace(':', '') as 'http' | 'https',
+        hostname: url.hostname,
+      };
+    })
   : [];
 
 const nextConfig: NextConfig = {

@@ -13,12 +13,12 @@ import { ImperativePanelHandle } from 'react-resizable-panels';
 
 import ComponentItem from '@/components/puck/editor/component-item';
 import PuckHeader from '@/components/puck/editor/PuckHeader';
+import { H3 } from '@/components/theme/atoms-content/heading/heading';
 import {
   ResizableHandle,
   ResizablePanel,
   ResizablePanelGroup,
 } from '@/components/ui/atoms/resizable/resizable';
-import { H3 } from '@/components/ui/content/heading/heading';
 
 type PuckEditorProps = {
   node: DrupalNode;
@@ -41,6 +41,7 @@ export default function PuckEditor({
   const previewDefaultSize = (896 / width) * 100;
   const leftSidebarCollapsedSize = (80 / width) * 100;
   const rightSidebarMinSize = (300 / width) * 100;
+  const sidebarMaxSize = (400 / width) * 100;
   const nodeData = node;
   const lang = nodeData?.langcode;
   const pathName = usePathname();
@@ -113,12 +114,13 @@ export default function PuckEditor({
         <ResizablePanelGroup direction="horizontal">
           <ResizablePanel
             minSize={10}
+            maxSize={sidebarMaxSize}
             collapsible
             collapsedSize={leftSidebarCollapsedSize}
             ref={leftPanelRef}
             className="h-[calc(100dvh-var(--puck-header-height))]"
           >
-            <div className="@container h-full space-y-12 overflow-auto p-4">
+            <div className="@container h-full space-y-12 overflow-auto bg-red-300 p-4">
               <div>
                 <H3 className="mb-4 hidden @min-[180px]:block">Komponenten</H3>
                 <Puck.Components />
@@ -142,6 +144,7 @@ export default function PuckEditor({
           <ResizablePanel
             collapsible
             minSize={rightSidebarMinSize}
+            maxSize={sidebarMaxSize}
             ref={rightPanelRef}
             className="relative h-[calc(100dvh-var(--puck-header-height))]"
           >

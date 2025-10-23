@@ -1,6 +1,6 @@
 import { ComponentConfig } from '@measured/puck';
 
-import { Heading } from '@/components/ui/content/heading/heading';
+import { Heading } from '@/components/theme/atoms-content/heading/heading';
 
 export const HeadingConfig: ComponentConfig = {
   label: 'Heading',
@@ -14,13 +14,12 @@ export const HeadingConfig: ComponentConfig = {
       type: 'select',
       label: 'Grösse',
       options: [
-        { label: '2XL', value: '2xl' },
-        { label: 'XL', value: 'xl' },
+        { label: 'Display XXL', value: 'display-xxl' },
+        { label: 'Display XL', value: 'display-xl' },
+        { label: 'Extra Large', value: 'xl' },
         { label: 'Large', value: 'lg' },
         { label: 'Medium', value: 'md' },
         { label: 'Small', value: 'sm' },
-        { label: 'Display XL', value: 'display-xl' },
-        { label: 'Display XXL', value: 'display-xxl' },
       ],
     },
     level: {
