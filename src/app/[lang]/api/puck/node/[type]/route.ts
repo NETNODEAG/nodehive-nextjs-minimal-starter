@@ -13,7 +13,7 @@ export async function GET(request: Request, { params }: RouteParams) {
     const { type, lang } = await params;
 
     const client = await createServerClient();
-    const node = await client.getNodes(type, lang);
+    const node = await client.getNodes(type, { lang });
 
     if (!node) {
       return NextResponse.json(

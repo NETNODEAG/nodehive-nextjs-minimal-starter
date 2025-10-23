@@ -1,6 +1,6 @@
+import { NextResponse } from 'next/server';
 import { createServerClient } from '@/nodehive/client';
 import { DrupalJsonApiParams } from 'drupal-jsonapi-params';
-import { NextResponse } from 'next/server';
 
 /**
  * Create the response
@@ -66,7 +66,7 @@ export async function getSitemapData(
   apiParams.addFilter('langcode', language);
   try {
     const client = await createServerClient();
-    const data = (await client.getNodes(type, language, apiParams)) as any;
+    const data = (await client.getNodes(type, { params: apiParams })) as any;
     const nodes = data?.data || [];
 
     if (data?.links?.next) {

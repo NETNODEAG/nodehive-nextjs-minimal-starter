@@ -30,7 +30,7 @@ export async function generateMetadata(
   // Retrieve a resource, utilizing its unique slug as the identifier
   const entity = await client.getResourceBySlug(
     process.env.NODEHIVE_STARTPAGE_SLUG,
-    lang
+    { lang }
   );
   const node = entity?.data;
 
@@ -91,7 +91,7 @@ export default async function RootPage(props: RootPageProps) {
   // Retrieve a resource, utilizing its unique slug as the identifier
   const entity = await client.getResourceBySlug(
     process.env.NODEHIVE_STARTPAGE_SLUG,
-    lang
+    { lang }
   );
 
   // Redirect to the 404 page using the notFound() function if no entity is received

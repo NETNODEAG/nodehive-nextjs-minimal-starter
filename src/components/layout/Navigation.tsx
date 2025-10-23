@@ -16,7 +16,7 @@ type NavigationItem = {
 export default async function Navigation({ menuId, lang }: NavigationProps) {
   const client = await createServerClient();
 
-  const navigation = await client.getMenuItems(menuId, lang);
+  const navigation = await client.getMenuItems(menuId, { lang });
 
   if (!navigation?.data?.length) {
     return null;

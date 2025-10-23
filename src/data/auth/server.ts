@@ -21,24 +21,41 @@ export type LoginState = {
 export async function login(
   prevState: LoginState | undefined,
   formData: FormData
-) {
+): Promise<LoginState> {
   const client = await createServerClient();
 
   const email = formData.get('email') as string;
   const password = formData.get('password') as string;
 
   try {
-    const { data: token, error: tokenError } = await client.getJWTAccessToken(
-      email,
-      password
-    );
+    // const { data: token, error: tokenError } = await client.getJWTAccessToken(
+    //   email,
+    //   password
+    // );
 
-    if (tokenError && tokenError !== undefined) {
+    const { token, success } = await client.login(email, password, {
+      grantType: 'password',
+      clientId: process.env.NODEHIVE_OAUTH_USER_CLIENT_ID || '',
+      clientSecret: process.env.NODEHIVE_OAUTH_USER_CLIENT_SECRET || '',
+    });
+
+    if (!success) {
       return {
-        message: { title: 'Login Failed', text: tokenError, type: 'error' },
+        message: {
+          title: 'Login Failed',
+          text: 'Invalid credentials. Please try again.',
+          type: 'error',
+        },
       };
     }
     await saveAuthToken(token);
+    return {
+      message: {
+        title: 'Login Successful',
+        text: 'You have been logged in successfully.',
+        type: 'success',
+      },
+    };
   } catch (e) {
     console.error(e);
 
