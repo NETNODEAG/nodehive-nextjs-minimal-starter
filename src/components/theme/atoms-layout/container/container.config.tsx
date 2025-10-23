@@ -1,6 +1,6 @@
 import { ComponentConfig } from '@measured/puck';
 
-import Section from '@/components/ui/layout/container/container';
+import Section from '@/components/theme/atoms-layout/container/container';
 
 export const ContainerConfig: ComponentConfig = {
   label: 'Container',

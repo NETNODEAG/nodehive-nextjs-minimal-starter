@@ -51,7 +51,7 @@ export default async function RootLayout(props: LayoutProps) {
             <Header lang={locale} />
 
             <div className="flex-[1_0_auto]" id="scroll-container">
-              <main className="container-wrapper my-16">{children}</main>
+              <main className="my-16">{children}</main>
             </div>
 
             <Footer />

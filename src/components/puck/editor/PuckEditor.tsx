@@ -120,7 +120,7 @@ export default function PuckEditor({
             ref={leftPanelRef}
             className="h-[calc(100dvh-var(--puck-header-height))]"
           >
-            <div className="@container h-full space-y-12 overflow-auto bg-red-300 p-4">
+            <div className="@container h-full space-y-12 overflow-auto p-4">
               <div>
                 <H3 className="mb-4 hidden @min-[180px]:block">Komponenten</H3>
                 <Puck.Components />

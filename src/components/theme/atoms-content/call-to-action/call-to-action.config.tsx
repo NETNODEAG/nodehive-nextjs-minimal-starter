@@ -81,8 +81,8 @@ export const CallToActionConfig: ComponentConfig = {
   defaultProps: {
     text: 'Call to Action',
     href: '#',
-    variant: 'link',
-    size: 'small',
+    variant: 'button',
+    size: 'big',
     icon: '',
     iconPosition: 'right',
     target: '_self',
