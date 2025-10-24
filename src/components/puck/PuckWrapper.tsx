@@ -70,7 +70,7 @@ export default function PuckWrapper({
       ) : (
         <div
           className={cn(
-            'relative border-2 border-transparent hover:border-dashed hover:border-blue-300',
+            'hover:border-primary relative border-2 border-transparent hover:border-dashed',
             {
               'min-h-[56px]':
                 !puckData?.content || puckData?.content?.length === 0,

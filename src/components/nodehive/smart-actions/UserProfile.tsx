@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import Link from 'next/link';
 import { getUser } from '@/nodehive/auth';
 import { User } from 'lucide-react';
 
@@ -8,9 +9,10 @@ export default async function UserProfile() {
   const user = await getUser();
 
   return (
-    <div
+    <Link
+      href="/nodehive/account"
       className={cn(
-        'flex h-[32px] w-[32px] cursor-default items-center justify-center rounded-full border border-neutral-700 text-white transition-colors hover:border-neutral-700 hover:bg-neutral-700'
+        'flex h-[32px] w-[32px] cursor-pointer items-center justify-center rounded-full border border-neutral-700 text-white transition-colors hover:border-neutral-700 hover:bg-neutral-700'
       )}
     >
       <span>
@@ -28,6 +30,6 @@ export default async function UserProfile() {
           <User className="h-5 w-5" />
         )}
       </span>
-    </div>
+    </Link>
   );
 }

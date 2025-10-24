@@ -126,8 +126,8 @@ export function MediaSelectorModal({
       case 'docx':
         return {
           icon: 'description',
-          bgColor: 'bg-blue-50',
-          iconColor: 'text-blue-600',
+          bgColor: 'bg-primary/10',
+          iconColor: 'text-primary',
         };
       case 'xls':
       case 'xlsx':
@@ -248,7 +248,7 @@ export function MediaSelectorModal({
                   placeholder="Medien suchen"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full rounded-md border border-gray-300 py-1.5 pr-10 pl-8 focus:border-blue-500 focus:ring-blue-500"
+                  className="focus:border-primary focus:ring-primary w-full rounded-md border border-gray-300 py-1.5 pr-10 pl-8"
                 />
                 {searchQuery && (
                   <button
@@ -286,7 +286,7 @@ export function MediaSelectorModal({
                     id="mediaType"
                     value={mediaType}
                     onChange={handleMediaTypeChange}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                    className="focus:border-primary focus:ring-primary mt-1 block w-full rounded-md border-gray-300 shadow-sm"
                   >
                     {mediaTypes.map((type) => (
                       <option key={type} value={type}>
@@ -315,7 +315,7 @@ export function MediaSelectorModal({
                     className={cn(
                       'cursor-pointer rounded-lg border border-gray-200 p-2 transition-all hover:border-gray-300',
                       {
-                        'border-blue-500 ring-2 ring-blue-500':
+                        'border-primary ring-primary ring-2':
                           value?.id === item.id,
                       }
                     )}
@@ -382,7 +382,7 @@ export function MediaSelectorModal({
                     className="cursor-pointer"
                     onClick={handlePreviousPage}
                   >
-                    <ChevronLeftIcon className="size-5 hover:text-blue-500" />
+                    <ChevronLeftIcon className="hover:text-primary size-5" />
                   </button>
                 ) : (
                   <div className="size-5"></div>
@@ -390,7 +390,7 @@ export function MediaSelectorModal({
                 <span>Page {Math.floor(currentOffset / PAGE_LIMIT) + 1}</span>
                 {hasNextPage ? (
                   <button onClick={handleNextPage} className="cursor-pointer">
-                    <ChevronRightIcon className="size-5 hover:text-blue-500" />
+                    <ChevronRightIcon className="hover:text-primary size-5" />
                   </button>
                 ) : (
                   <div className="size-5"></div>

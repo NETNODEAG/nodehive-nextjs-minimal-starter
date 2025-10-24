@@ -94,7 +94,7 @@ export function ImageUploadForm({
           name="name"
           value={formData.name}
           onChange={handleChange}
-          className="mt-1 block w-full max-w-3xl rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+          className="focus:border-primary focus:ring-primary mt-1 block w-full max-w-3xl rounded-md border-gray-300 shadow-sm"
           required
         />
       </div>
@@ -111,7 +111,7 @@ export function ImageUploadForm({
           id="file"
           name="file"
           accept="image/*"
-          className="mt-1 block w-full max-w-3xl rounded-md border border-gray-300 p-2 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+          className="focus:border-primary focus:ring-primary mt-1 block w-full max-w-3xl rounded-md border border-gray-300 p-2 shadow-sm"
           required
           onClick={(e) => {
             e.stopPropagation();
@@ -133,7 +133,7 @@ export function ImageUploadForm({
           name="alt"
           value={formData.alt}
           onChange={handleChange}
-          className="mt-1 block w-full max-w-3xl rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+          className="focus:border-primary focus:ring-primary mt-1 block w-full max-w-3xl rounded-md border-gray-300 shadow-sm"
         />
       </div>
 

@@ -41,7 +41,7 @@ export default function PuckEditor({
   const previewDefaultSize = (896 / width) * 100;
   const leftSidebarCollapsedSize = (80 / width) * 100;
   const rightSidebarMinSize = (300 / width) * 100;
-  const sidebarMaxSize = (400 / width) * 100;
+  const sidebarMaxSize = (320 / width) * 100;
   const nodeData = node;
   const lang = nodeData?.langcode;
   const pathName = usePathname();

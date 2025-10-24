@@ -91,8 +91,8 @@ export function MediaSelectorField({
       case 'docx':
         return {
           icon: 'description',
-          bgColor: 'bg-blue-50',
-          iconColor: 'text-blue-600',
+          bgColor: 'bg-primary/10',
+          iconColor: 'text-primary',
         };
       case 'xls':
       case 'xlsx':

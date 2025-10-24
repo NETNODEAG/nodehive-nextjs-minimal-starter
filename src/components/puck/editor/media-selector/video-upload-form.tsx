@@ -95,7 +95,7 @@ export function VideoUploadForm({
           placeholder=""
           value={formData.name}
           onChange={handleChange}
-          className="mt-1 block w-full max-w-3xl rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+          className="focus:border-primary focus:ring-primary mt-1 block w-full max-w-3xl rounded-md border-gray-300 shadow-sm"
           required
         />
       </div>
@@ -114,7 +114,7 @@ export function VideoUploadForm({
           placeholder="https://www.youtube.com/watch?v=..."
           value={formData.videoUrl}
           onChange={handleChange}
-          className="mt-1 block w-full max-w-3xl rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+          className="focus:border-primary focus:ring-primary mt-1 block w-full max-w-3xl rounded-md border-gray-300 shadow-sm"
           required
         />
       </div>

@@ -8,6 +8,7 @@ import { GridConfig } from '@/components/theme/atoms-layout/grid/grid.config';
 import { SpaceConfig } from '@/components/theme/atoms-layout/space/space.config';
 import { TwoColumnsConfig } from '@/components/theme/atoms-layout/two-columns/two-columns.config';
 import { CardConfig } from '@/components/theme/organisms/card/card.config';
+import { StatisticsConfig } from '@/components/theme/organisms/statistics/statistics.config';
 import { HeroConfig } from '@/components/theme/sections/hero/hero.config';
 import { TwoColumnContentConfig } from '@/components/theme/sections/two-column-content/two-column-content.config';
 
@@ -34,7 +35,7 @@ export const config: Config = {
     organisms: {
       visible: true,
       title: 'Organisms',
-      components: ['Card'],
+      components: ['Card', 'Statistics'],
     },
     templates: {
       visible: false,
@@ -54,6 +55,7 @@ export const config: Config = {
     CallToAction: CallToActionConfig,
     // Organisms
     Card: CardConfig,
+    Statistics: StatisticsConfig,
     // Sections
     Hero: HeroConfig,
     TwoColumnContent: TwoColumnContentConfig,

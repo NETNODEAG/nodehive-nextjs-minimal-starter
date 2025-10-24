@@ -1,5 +1,7 @@
 import { Metadata } from 'next';
+import { unstable_noStore } from 'next/cache';
 import { notFound, redirect } from 'next/navigation';
+import { isAuthenticated } from '@/nodehive/auth';
 import { createServerClient } from '@/nodehive/client';
 import { Locale } from '@/nodehive/i18n-config';
 import { spaceConfig } from '@/nodehive/space-config';
@@ -14,6 +16,12 @@ interface PageProps {
 }
 
 export async function generateMetadata(props: PageProps): Promise<Metadata> {
+  // Disable caching when user is authenticated
+  const authenticated = await isAuthenticated();
+  if (authenticated) {
+    unstable_noStore();
+  }
+
   const { slug, lang } = await props.params;
   const client = await createServerClient();
 
@@ -69,6 +77,12 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
 }
 
 export default async function Page(props: PageProps) {
+  // Disable caching when user is authenticated
+  const authenticated = await isAuthenticated();
+  if (authenticated) {
+    unstable_noStore();
+  }
+
   const params = await props.params;
   const client = await createServerClient();
 

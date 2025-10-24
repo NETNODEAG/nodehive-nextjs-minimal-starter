@@ -13,7 +13,7 @@
 @theme {
   --color-black: #09090b;
   --color-white: #ffffff;
-  --color-primary: #0284c7;
+  --color-primary: rgb(16, 133, 127);
   --color-secondary: #082f49;
 }
 
