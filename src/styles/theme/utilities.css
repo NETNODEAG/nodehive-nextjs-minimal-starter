@@ -1,16 +1,18 @@
-@utility max-container {
-  @apply mx-auto w-full max-w-7xl;
-}
-
-@utility container-wrapper {
-  @apply max-container px-4 md:px-8;
-}
-
-@utility paragraph {
-  @apply my-8 first:mt-0 last:mb-0;
-}
-
-@utility btn {
-  @apply inline-flex h-fit items-center justify-center rounded-md px-5 py-1.5 pb-2 text-sm font-bold no-underline cursor-pointer;
-  @apply transition-colors ease-in-out;
+@utility prose-theme {
+  --tw-prose-body: var(--color-black);
+  --tw-prose-headings: var(--color-black);
+  --tw-prose-lead: var(--color-black);
+  --tw-prose-links: var(--color-black);
+  --tw-prose-bold: var(--color-black);
+  --tw-prose-counters: var(--color-black);
+  --tw-prose-bullets: var(--color-black);
+  --tw-prose-hr: var(--color-black);
+  --tw-prose-quotes: var(--color-black);
+  --tw-prose-quote-borders: var(--color-black);
+  --tw-prose-captions: var(--color-black);
+  --tw-prose-code: var(--color-black);
+  --tw-prose-pre-code: var(--color-black);
+  --tw-prose-pre-bg: var(--color-black);
+  --tw-prose-th-borders: var(--color-black);
+  --tw-prose-td-borders: var(--color-black);
 }

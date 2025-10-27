@@ -1,31 +1,22 @@
 @import 'tailwindcss';
+@import './theme/utilities.css';
+@import './theme/components.css';
+@import './theme/puck.css';
+@import './theme/ckeditor.css';
+
 @plugin '@tailwindcss/forms' {
   strategy: 'base';
 }
 @plugin '@tailwindcss/typography';
-@config '../../tailwind.config.js';
-
-@import './theme/base.css' layer(base);
-@import './theme/ckeditor.css';
-@import './theme/utilities.css';
-@import './theme/components.css' layer(components);
 
 @theme {
   --color-black: #09090b;
   --color-white: #ffffff;
-  --color-primary: rgb(16, 133, 127);
+  --color-primary: #10857f;
   --color-secondary: #082f49;
 }
 
 @theme inline {
-  --header-height: 56px;
-  --puck-header-height: 51px;
-}
-
-#frame-root {
-  width: 99%;
-}
-
-#preview-frame {
-  padding-bottom: 50px;
+  --font-sans: var(--font-inter);
+  --font-heading: var(--font-helvetica-now);
 }

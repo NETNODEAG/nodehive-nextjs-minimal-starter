@@ -1,15 +1,5 @@
-/*
-Components
-*/
-
-/* Link */
-.link {
-  @apply text-base font-bold underline decoration-2 underline-offset-2;
-}
-
-/* Buttons */
-.btn-primary {
-  @apply btn;
-  @apply border border-transparent bg-neutral-900 text-white;
-  @apply hover:border-neutral-900 hover:bg-white hover:text-neutral-900;
+@layer components {
+  .max-container {
+    @apply mx-auto w-full max-w-7xl;
+  }
 }

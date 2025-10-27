@@ -1,4 +1,4 @@
-import { HTMLAttributes, ReactNode } from 'react';
+import { HTMLAttributes } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { cva } from 'class-variance-authority';
@@ -35,14 +35,14 @@ interface BodyCopyProps extends HTMLAttributes<HTMLDivElement> {
   size?: 'sm' | 'base' | 'lg' | 'xl' | '2xl';
 }
 
-export const bodyCopyVariants = cva('', {
+export const bodyCopyVariants = cva('prose prose-theme', {
   variants: {
     size: {
-      base: 'prose',
-      sm: 'prose prose-sm',
-      lg: 'prose prose-lg',
-      xl: 'prose prose-xl',
-      '2xl': 'prose prose-2xl',
+      base: '',
+      sm: 'prose-sm',
+      lg: 'prose-lg',
+      xl: 'prose-xl',
+      '2xl': 'prose-2xl',
     },
   },
   defaultVariants: {
@@ -52,7 +52,6 @@ export const bodyCopyVariants = cva('', {
 
 export default function BodyCopy({
   size = 'base',
-  className,
   children,
   ...props
 }: BodyCopyProps) {
@@ -63,7 +62,6 @@ export default function BodyCopy({
       const { name, attribs, children } = domNode;
       const classes = attribs?.class;
       const styles = attribs?.style;
-      const id = attribs?.id;
 
       switch (name) {
         case 'img': {

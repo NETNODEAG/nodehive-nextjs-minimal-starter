@@ -3,7 +3,7 @@ import { cva, type VariantProps } from 'class-variance-authority';
 
 import { cn } from '@/lib/utils';
 
-const headingVariants = cva('hyphens-auto lg:hyphens-none ', {
+const headingVariants = cva('hyphens-auto lg:hyphens-none font-heading', {
   variants: {
     size: {
       'display-xxl':

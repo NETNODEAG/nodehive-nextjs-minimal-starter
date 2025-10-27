@@ -4,26 +4,12 @@ import { spaceConfig } from '@/nodehive/space-config';
 import '@/styles/globals.css';
 
 import { Metadata } from 'next';
-import { Inter } from 'next/font/google';
-import localFont from 'next/font/local';
 import { Locale } from '@/nodehive/i18n-config';
 
+import { helveticaNow, inter } from '@/lib/fonts';
 import { AuthProvider } from '@/components/providers/auth-provider';
 import Footer from '@/components/theme/global-layout/footer';
 import Header from '@/components/theme/global-layout/header';
-
-const inter = Inter({ subsets: ['latin'] });
-const helvetica = localFont({
-  src: [
-    {
-      path: '@/assets/fonts/HelveticaNowVar.ttf',
-      style: 'normal',
-    },
-  ],
-  variable: '--font-helvetica-now',
-  fallback: ['Helvetica', 'sans-serif'],
-  display: 'swap',
-});
 
 const { spaceMetadata } = spaceConfig;
 
@@ -57,7 +43,7 @@ export default async function RootLayout(props: LayoutProps) {
 
   return (
     <html lang={lang}>
-      <body className={`${inter.className} ${helvetica.variable}`}>
+      <body className={`${inter.variable} ${helveticaNow.variable} font-sans`}>
         <AuthProvider>
           <div className="relative flex min-h-screen flex-col">
             <Header lang={locale} />
