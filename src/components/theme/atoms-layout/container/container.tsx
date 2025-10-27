@@ -8,12 +8,12 @@ export interface ContainerProps extends VariantProps<typeof containerVariants> {
   id?: string;
 }
 
-const containerVariants = cva('relative w-full', {
+const containerVariants = cva('relative w-full px-4 md:px-8', {
   variants: {
     width: {
-      full: 'w-full',
-      wide: 'container-wrapper',
-      narrow: 'mx-auto w-full max-w-4xl px-4 md:px-8',
+      full: '',
+      wide: 'mx-auto max-w-7xl',
+      narrow: 'mx-auto max-w-4xl',
     },
   },
   defaultVariants: {

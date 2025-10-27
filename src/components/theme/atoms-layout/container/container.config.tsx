@@ -1,6 +1,6 @@
 import { ComponentConfig } from '@measured/puck';
 
-import Section from '@/components/theme/atoms-layout/container/container';
+import Container from '@/components/theme/atoms-layout/container/container';
 
 export const ContainerConfig: ComponentConfig = {
   label: 'Container',
@@ -26,11 +26,9 @@ export const ContainerConfig: ComponentConfig = {
     width: 'wide',
     backgroundColor: 'transparent',
   },
-  render: ({ width, anchor, content: Content, backgroundColor }) => (
-    <div className="py-8 md:py-16">
-      <Section width={width} id={anchor}>
-        <Content />
-      </Section>
-    </div>
+  render: ({ width, anchor, content: Content }) => (
+    <Container width={width} id={anchor}>
+      <Content />
+    </Container>
   ),
 };

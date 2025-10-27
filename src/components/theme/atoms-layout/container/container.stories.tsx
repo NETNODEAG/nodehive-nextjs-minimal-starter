@@ -4,6 +4,12 @@ import Container from './container';
 
 const widthOptions = ['full', 'wide', 'narrow'] as const;
 
+const widthLabels: Record<(typeof widthOptions)[number], string> = {
+  full: 'full (fluid)',
+  wide: 'wide (max 1280px)',
+  narrow: 'narrow (max 896px)',
+};
+
 const meta = {
   title: 'Atoms Layout/Container',
   component: Container,
@@ -39,7 +45,7 @@ export const Widths: Story = {
       {widthOptions.map((width) => (
         <Container key={width} {...args} width={width}>
           <div className="rounded-lg border border-dashed border-slate-400 bg-slate-50 p-6 text-sm text-slate-700">
-            {`Container width: ${width}`}
+            Container width: {widthLabels[width]}
           </div>
         </Container>
       ))}

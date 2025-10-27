@@ -35,17 +35,7 @@ export default meta;
 type Story = StoryObj<typeof Space>;
 
 export const Default: Story = {
-  render: (args) => (
-    <div className="flex flex-col items-start gap-2">
-      <div className="inline-block rounded bg-emerald-200 px-2 py-1 text-xs font-semibold text-emerald-800">
-        Above spacer
-      </div>
-      <Space {...args} />
-      <div className="inline-block rounded bg-indigo-200 px-2 py-1 text-xs font-semibold text-indigo-800">
-        Below spacer
-      </div>
-    </div>
-  ),
+  render: (args) => <Space {...args} />,
 };
 
 export const Showcase: Story = {
