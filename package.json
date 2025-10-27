@@ -25,6 +25,7 @@
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
     "drupal-jsonapi-params": "^2.3.2",
+    "eslint-plugin-check-file": "^3.3.0",
     "framer-motion": "^12.23.24",
     "html-react-parser": "^5.2.7",
     "lucide-react": "^0.546.0",
