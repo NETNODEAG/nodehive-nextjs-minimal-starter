@@ -1,6 +1,6 @@
 import { DrupalFragment } from '@/nodehive/types';
 
-import { FormattedText } from '@/components/layout/formatted-text';
+import BodyCopy from '@/components/theme/atoms-content/body-copy/body-copy';
 
 interface FragmentTextProps {
   fragment: DrupalFragment;
@@ -9,5 +9,5 @@ interface FragmentTextProps {
 export default function FragmentText({ fragment }: FragmentTextProps) {
   const text = fragment?.field_text_content;
 
-  return <FormattedText html={text?.processed} className="prose" />;
+  return <BodyCopy>{text?.processed}</BodyCopy>;
 }

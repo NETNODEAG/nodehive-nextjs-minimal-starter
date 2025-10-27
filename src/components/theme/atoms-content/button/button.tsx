@@ -6,16 +6,17 @@ import { cva, VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 
 export const buttonVariants = cva(
-  'cursor-pointer inline-flex items-center justify-center whitespace-nowrap font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
+  'inline-flex cursor-pointer items-center justify-center px-3 py-1.5 text-sm font-bold whitespace-nowrap transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50',
   {
     variants: {
       variant: {
-        primary: 'bg-primary text-white rounded-full hover:bg-primary/90',
+        primary:
+          'bg-primary hover:bg-primary/90 rounded-full border text-white',
         secondary:
-          'bg-white text-primary border border-primary rounded-full hover:bg-primary/10',
+          'bg-secondary border-secondary hover:bg-secondary/90 rounded-full border text-white',
         outline:
-          'border border-primary text-primary bg-white hover:bg-slate-50',
-        ghost: 'hover:bg-gray-50 hover:text-black',
+          'border-primary text-primary hover:bg-primary/10 rounded-full border bg-white',
+        ghost: 'rounded-full hover:bg-slate-100 hover:text-black',
       },
     },
     defaultVariants: { variant: 'primary' },

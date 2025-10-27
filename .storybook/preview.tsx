@@ -1,4 +1,4 @@
-import type { Preview } from '@storybook/nextjs-vite';
+import type { Preview } from '@storybook/nextjs';
 
 import { helveticaNow, inter } from '../src/lib/fonts';
 

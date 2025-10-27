@@ -3,16 +3,16 @@ import { cva, type VariantProps } from 'class-variance-authority';
 
 import { cn } from '@/lib/utils';
 
-const headingVariants = cva('hyphens-auto lg:hyphens-none font-heading', {
+const headingVariants = cva('font-heading hyphens-auto lg:hyphens-none', {
   variants: {
     size: {
       'display-xxl':
-        'text-6xl md:text-8xl lg:text-9xl font-bold tracking-tight',
-      'display-xl': 'text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight',
-      xl: 'text-4xl md:text-5xl font-bold',
-      lg: 'text-3xl md:text-4xl font-bold',
-      md: 'text-xl md:text-2xl font-bold',
-      sm: 'text-lg md:text-xl font-bold',
+        'text-6xl font-bold tracking-tight md:text-8xl lg:text-9xl',
+      'display-xl': 'text-5xl font-bold tracking-tight md:text-7xl lg:text-8xl',
+      xl: 'text-4xl font-bold md:text-5xl',
+      lg: 'text-3xl font-bold md:text-4xl',
+      md: 'text-xl font-bold md:text-2xl',
+      sm: 'text-lg font-bold md:text-xl',
     },
   },
 });

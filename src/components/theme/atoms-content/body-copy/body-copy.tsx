@@ -53,6 +53,7 @@ export const bodyCopyVariants = cva('prose prose-theme', {
 export default function BodyCopy({
   size = 'base',
   children,
+  className,
   ...props
 }: BodyCopyProps) {
   const options: HTMLReactParserOptions = {
@@ -133,7 +134,7 @@ export default function BodyCopy({
   if (!children) return null;
 
   return (
-    <div className={cn(bodyCopyVariants({ size }))} {...props}>
+    <div className={cn(bodyCopyVariants({ size }), className)} {...props}>
       {renderContent()}
     </div>
   );

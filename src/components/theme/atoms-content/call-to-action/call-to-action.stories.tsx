@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
+import { ChevronDownIcon } from '@/lib/icons';
 import CallToAction from './call-to-action';
 
 const variantOptions = ['link', 'button', 'buttonOutline'] as const;
@@ -44,6 +45,36 @@ export const Variants: Story = {
           {`CTA ${variant}`}
         </CallToAction>
       ))}
+    </div>
+  ),
+};
+
+export const Sizes: Story = {
+  args: {
+    variant: 'button',
+  },
+  render: (args) => (
+    <div className="flex flex-wrap items-center gap-4">
+      {sizeOptions.map((size) => (
+        <CallToAction key={size} {...args} size={size}>
+          {`CTA ${size}`}
+        </CallToAction>
+      ))}
+    </div>
+  ),
+};
+
+export const WithIcons: Story = {
+  args: {
+    variant: 'button',
+    icon: <ChevronDownIcon />,
+  },
+  render: (args) => (
+    <div className="flex flex-wrap items-center gap-4">
+      <CallToAction {...args}>CTA with right icon</CallToAction>
+      <CallToAction {...args} iconPosition="left">
+        CTA with left icon
+      </CallToAction>
     </div>
   ),
 };

@@ -11,19 +11,22 @@ const callToActionVariants = cva(
       variant: {
         link: 'text-primary hover:text-primary/80 underline hover:no-underline',
         button:
-          'border border-transparent bg-primary text-white hover:bg-primary/80 rounded-full',
+          'bg-primary hover:bg-primary/80 rounded-full border border-transparent text-white',
         buttonOutline:
-          'border border-primary text-primary bg-white hover:bg-slate-50 rounded-full',
+          'border-primary text-primary rounded-full border bg-white hover:bg-slate-50',
       },
       size: {
-        small: 'text-sm px-3 py-1.5',
-        big: 'text-lg px-5 py-2.5',
+        small: 'px-3 py-1.5 text-sm',
+        big: 'px-5 py-2.5 text-lg',
       },
     },
     defaultVariants: {
       variant: 'link',
       size: 'small',
     },
+    compoundVariants: [
+      { variant: 'link', size: ['small', 'big'], className: 'px-0 py-0' },
+    ],
   }
 );
 
@@ -35,7 +38,7 @@ export interface CallToActionProps
   text?: string;
   icon?: ReactNode;
   iconPosition?: 'left' | 'right';
-  target?: string;
+  target?: HTMLAnchorElement['target'];
 }
 
 export default function CallToAction({
@@ -47,7 +50,7 @@ export default function CallToAction({
   icon,
   iconPosition = 'right',
   target = '_self',
-  href, // The href prop is used directly
+  href,
   ...props
 }: CallToActionProps) {
   const content = text || children;
@@ -57,20 +60,16 @@ export default function CallToAction({
   return (
     <NextLink
       href={href}
-      className={cn(
-        callToActionVariants({ variant, size }),
-        variant === 'link' && 'px-0 py-0',
-        className
-      )}
-      target={target === '_blank' ? '_blank' : '_self'}
+      className={cn(callToActionVariants({ variant, size }), className)}
+      target={target}
       {...props}
     >
       {icon && iconPosition === 'left' && (
-        <span className={cn('flex-shrink-0', iconSize)}>{icon}</span>
+        <span className={cn('shrink-0', iconSize)}>{icon}</span>
       )}
       <span>{content}</span>
       {icon && iconPosition === 'right' && (
-        <span className={cn('flex-shrink-0', iconSize)}>{icon}</span>
+        <span className={cn('shrink-0', iconSize)}>{icon}</span>
       )}
     </NextLink>
   );

@@ -9,7 +9,7 @@ const cardVariants = cva('rounded-lg transition-all duration-200', {
   variants: {
     mode: {
       flat: 'bg-transparent',
-      card: 'bg-white shadow-md hover:shadow-lg border border-gray-200',
+      card: 'border border-gray-200 bg-white shadow-md hover:shadow-lg',
     },
   },
   defaultVariants: {

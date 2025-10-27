@@ -46,7 +46,7 @@
   "devDependencies": {
     "@ianvs/prettier-plugin-sort-imports": "^4.7.0",
     "@playwright/test": "^1.56.1",
-    "@storybook/nextjs-vite": "^9.1.15",
+    "@storybook/nextjs": "^9.1.15",
     "@svgr/webpack": "^8.1.0",
     "@tailwindcss/postcss": "^4.1.14",
     "@types/negotiator": "^0.6.4",
@@ -65,8 +65,5 @@
     "prettier-plugin-tailwindcss": "^0.7.0",
     "tailwindcss": "^4.1.14",
     "typescript": "^5.9.3"
-  },
-  "optionalDependencies": {
-    "@esbuild/linux-x64": "0.24.0"
   }
 }

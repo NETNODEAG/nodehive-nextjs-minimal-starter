@@ -1,8 +1,8 @@
 import React from 'react';
-import { cva, type VariantProps } from 'class-variance-authority';
+import { cva } from 'class-variance-authority';
 
 import { cn } from '@/lib/utils';
-import { FormattedText } from '@/components/layout/formatted-text';
+import BodyCopy from '@/components/theme/atoms-content/body-copy/body-copy';
 
 const statisticsVariants = cva('mx-auto max-w-7xl');
 
@@ -12,8 +12,8 @@ const statCardVariants = cva('flex flex-col gap-y-4', {
   variants: {
     variant: {
       default: '',
-      bordered: 'border-t-4 border-primary pt-8',
-      subtle: 'bg-gray-50 p-8 rounded-lg',
+      bordered: 'border-primary border-t-4 pt-8',
+      subtle: 'rounded-lg bg-gray-50 p-8',
     },
   },
   defaultVariants: {
@@ -37,7 +37,7 @@ const titleVariants = cva(
   }
 );
 
-const textVariants = cva('prose prose-sm max-w-none', {
+const textVariants = cva('prose prose-theme max-w-none', {
   variants: {
     variant: {
       default:
@@ -71,7 +71,7 @@ const StatisticItem: React.FC<
   return (
     <div className={cn(statCardVariants({ variant }))}>
       <p className={cn(titleVariants({ variant }))}>{title}</p>
-      <FormattedText html={text} className={cn(textVariants({ variant }))} />
+      <BodyCopy className={cn(textVariants({ variant }))}>{text}</BodyCopy>
     </div>
   );
 };
