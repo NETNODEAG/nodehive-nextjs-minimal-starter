@@ -1,8 +1,8 @@
 import Link from 'next/link';
 import { Locale } from '@/nodehive/i18n-config';
 
-import LanguageSwitcher from '@/components/theme/global-layout/language-switcher';
-import Navigation from '@/components/theme/global-layout/navigation';
+import LanguageSwitcher from '@/components/theme/global-layout/language-switcher/language-switcher';
+import Navigation from '@/components/theme/global-layout/navigation/navigation';
 
 type HeaderProps = { lang: Locale };
 

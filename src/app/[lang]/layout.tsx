@@ -8,8 +8,8 @@ import { Locale } from '@/nodehive/i18n-config';
 
 import { helveticaNow, inter } from '@/lib/fonts';
 import { AuthProvider } from '@/components/providers/auth-provider';
-import Footer from '@/components/theme/global-layout/footer';
-import Header from '@/components/theme/global-layout/header';
+import Footer from '@/components/theme/global-layout/footer/footer';
+import Header from '@/components/theme/global-layout/header/header';
 
 const { spaceMetadata } = spaceConfig;
 
