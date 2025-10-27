@@ -8,7 +8,7 @@ import { spaceConfig } from '@/nodehive/space-config';
 import { DrupalNode } from '@/nodehive/types';
 
 import { absoluteUrl } from '@/lib/utils';
-import Node from '@/components/node/node1';
+import Node from '@/components/node/node';
 import SmartActionsButton from '@/components/nodehive/smart-actions/smart-actions-button';
 
 interface PageProps {

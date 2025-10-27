@@ -3,7 +3,7 @@ import { FunctionComponent } from 'react';
 import NodePage, { NodePageProps } from '@/components/node/page/node-page';
 import NodePuckPage, {
   NodePuckPageProps,
-} from '@/components/node/puck-page/NodePage';
+} from '@/components/node/puck-page/node-page';
 
 interface NodePropMap {
   'node--page': NodePageProps;
