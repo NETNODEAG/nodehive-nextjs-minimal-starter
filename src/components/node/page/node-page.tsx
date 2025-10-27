@@ -1,6 +1,6 @@
 import { DrupalNode, DrupalParagraph } from '@/nodehive/types';
 
-import Paragraph from '@/components/paragraph/Paragraph';
+import Paragraph from '@/components/paragraph/paragraph';
 
 export interface NodePageProps {
   node: DrupalNode;

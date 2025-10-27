@@ -1,6 +1,6 @@
 import { FunctionComponent } from 'react';
 
-import NodePage, { NodePageProps } from '@/components/node/page/NodePage';
+import NodePage, { NodePageProps } from '@/components/node/page/node-page';
 import NodePuckPage, {
   NodePuckPageProps,
 } from '@/components/node/puck-page/NodePage';

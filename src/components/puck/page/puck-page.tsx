@@ -3,7 +3,7 @@
 import { DrupalNode } from '@/nodehive/types';
 
 import config from '@/components/puck/page/puck.page.config';
-import PuckWrapper from '@/components/puck/PuckWrapper';
+import PuckWrapper from '@/components/puck/puck-wrapper';
 
 interface PuckPageProps {
   node: DrupalNode;

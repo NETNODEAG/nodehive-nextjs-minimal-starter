@@ -2,7 +2,7 @@ import React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 
 import { cn } from '@/lib/utils';
-import { FormattedText } from '@/components/layout/FormattedText';
+import { FormattedText } from '@/components/layout/formatted-text';
 
 const statisticsVariants = cva('mx-auto max-w-7xl');
 

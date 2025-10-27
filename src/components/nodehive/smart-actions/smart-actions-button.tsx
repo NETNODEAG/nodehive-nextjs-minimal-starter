@@ -1,10 +1,10 @@
 import { Locale } from '@/nodehive/i18n-config';
 
-import { AuthWrapper } from '@/components/auth/AuthWrapper';
-import LogoutForm from '@/components/nodehive/smart-actions/LogoutForm';
-import OpenVisualEditor from '@/components/nodehive/smart-actions/OpenVisualEditor';
-import RefreshPage from '@/components/nodehive/smart-actions/RefreshPage';
-import UserProfile from '@/components/nodehive/smart-actions/UserProfile';
+import { AuthWrapper } from '@/components/auth/auth-wrapper';
+import LogoutForm from '@/components/nodehive/smart-actions/logout-form';
+import OpenVisualEditor from '@/components/nodehive/smart-actions/open-visual-editor';
+import RefreshPage from '@/components/nodehive/smart-actions/refresh-page';
+import UserProfile from '@/components/nodehive/smart-actions/user-profile';
 import {
   Tooltip,
   TooltipContent,

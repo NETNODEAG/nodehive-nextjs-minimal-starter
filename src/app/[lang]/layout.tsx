@@ -8,9 +8,9 @@ import { Inter } from 'next/font/google';
 import localFont from 'next/font/local';
 import { Locale } from '@/nodehive/i18n-config';
 
-import { AuthProvider } from '@/components/providers/AuthProvider';
-import Footer from '@/components/theme/global-layout/Footer';
-import Header from '@/components/theme/global-layout/Header';
+import { AuthProvider } from '@/components/providers/auth-provider';
+import Footer from '@/components/theme/global-layout/footer';
+import Header from '@/components/theme/global-layout/header';
 
 const inter = Inter({ subsets: ['latin'] });
 const helvetica = localFont({

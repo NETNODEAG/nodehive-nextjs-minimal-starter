@@ -1,4 +1,4 @@
-import NodeMetadata from '@/components/nodehive/visual-editor/node/NodeMetadata';
+import NodeMetadata from '@/components/nodehive/visual-editor/node/node-metadata';
 
 type NodeWrapperProps = {
   entity: any;

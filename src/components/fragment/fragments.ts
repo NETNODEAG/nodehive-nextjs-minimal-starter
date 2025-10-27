@@ -1,4 +1,4 @@
-import FragmentText from '@/components/fragment/text/FragmentText';
+import FragmentText from '@/components/fragment/text/fragment-text';
 
 export const fragmentTypes = {
   'nodehive_fragment--text': FragmentText,

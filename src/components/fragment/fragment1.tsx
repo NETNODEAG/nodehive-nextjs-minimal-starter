@@ -1,7 +1,7 @@
 import { DrupalFragment } from '@/nodehive/types';
 import { ErrorBoundary } from 'react-error-boundary';
 
-import VisualEditorFragmentWrapper from '@/components/nodehive/visual-editor/fragment/FragmentWrapper';
+import VisualEditorFragmentWrapper from '@/components/nodehive/visual-editor/fragment/fragment-wrapper';
 import { fragmentTypes, isFragmentType } from './fragments';
 
 interface FragmentProps {

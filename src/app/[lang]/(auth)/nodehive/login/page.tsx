@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation';
 import { getUser } from '@/nodehive/auth';
 
-import LoginForm from '@/components/auth/LoginForm';
+import LoginForm from '@/components/auth/login-form';
 
 export default async function Page() {
   const user = await getUser();

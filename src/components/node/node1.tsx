@@ -1,6 +1,6 @@
 import { DrupalNode } from '@/nodehive/types';
 
-import NodeWrapper from '@/components/nodehive/visual-editor/node/NodeWrapper';
+import NodeWrapper from '@/components/nodehive/visual-editor/node/node-wrapper';
 import { isNodeType, nodeTypes } from './nodes';
 
 interface NodeProps {

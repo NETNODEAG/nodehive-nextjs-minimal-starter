@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { createServerClient } from '@/nodehive/client';
-import Debug from '@/nodehive/components/helpers/Debug';
+import Debug from '@/nodehive/components/helpers/debug';
 import { Locale } from '@/nodehive/i18n-config';
 
 interface NavigationProps {

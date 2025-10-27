@@ -1,7 +1,7 @@
 import { DrupalFragment } from '@/nodehive/types';
 
-import { AuthWrapper, NotLoggedIn } from '@/components/auth/AuthWrapper';
-import FragmentEditButton from '@/components/nodehive/visual-editor/fragment/FragmentEditButton';
+import { AuthWrapper, NotLoggedIn } from '@/components/auth/auth-wrapper';
+import FragmentEditButton from '@/components/nodehive/visual-editor/fragment/fragment-edit-button';
 
 type FragmentWrapperProps = {
   entity: DrupalFragment;
