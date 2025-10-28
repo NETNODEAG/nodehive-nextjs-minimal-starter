@@ -1,7 +1,6 @@
 'use client';
 
-import { DrupalNode } from '@/nodehive/types';
-
+import { DrupalNode } from '@/types/nodehive';
 import config from '@/components/puck/page/puck.page.config';
 import PuckWrapper from '@/components/puck/puck-wrapper';
 

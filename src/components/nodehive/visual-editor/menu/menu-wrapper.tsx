@@ -1,4 +1,4 @@
-import { AuthWrapper, NotLoggedIn } from '@/components/auth/auth-wrapper';
+import { AuthWrapper, NotLoggedIn } from '@/components/nodehive/auth-wrapper';
 import MenuEditButton from '@/components/nodehive/visual-editor/menu/menu-edit-button';
 
 type MenuWrapperProps = {

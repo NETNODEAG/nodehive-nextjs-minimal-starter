@@ -1,8 +1,8 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { getUser } from '@/nodehive/auth';
 import { User } from 'lucide-react';
 
+import { getUser } from '@/lib/auth';
 import { cn } from '@/lib/utils';
 
 export default async function UserProfile() {

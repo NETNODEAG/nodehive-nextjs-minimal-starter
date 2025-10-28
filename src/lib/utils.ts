@@ -1,6 +1,7 @@
-import { i18n, Locale } from '@/nodehive/i18n-config';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
+
+import { i18n, Locale } from '@/config/i18n-config';
 
 /**
  * Tailwind CSS classnames generator

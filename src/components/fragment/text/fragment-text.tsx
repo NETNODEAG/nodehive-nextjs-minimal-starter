@@ -1,5 +1,4 @@
-import { DrupalFragment } from '@/nodehive/types';
-
+import { DrupalFragment } from '@/types/nodehive';
 import BodyCopy from '@/components/theme/atoms-content/body-copy/body-copy';
 
 interface FragmentTextProps {

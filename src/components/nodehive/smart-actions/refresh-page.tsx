@@ -2,9 +2,9 @@
 
 import { useState } from 'react';
 import { usePathname } from 'next/navigation';
-import { Locale } from '@/nodehive/i18n-config';
 import { RefreshCcw } from 'lucide-react';
 
+import { Locale } from '@/config/i18n-config';
 import { cn } from '@/lib/utils';
 
 export default function RefreshPage({ lang }: { lang: Locale }) {

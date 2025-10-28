@@ -1,6 +1,6 @@
 'use server';
 
-import { getAuthToken } from '@/nodehive/auth';
+import { getAuthToken } from '@/lib/auth';
 
 // Define response type for better structure
 type MediaUploadResponse = {

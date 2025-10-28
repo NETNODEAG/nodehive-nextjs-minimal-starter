@@ -1,4 +1,4 @@
-import { Locale } from '@/nodehive/i18n-config';
+import { Locale } from '@/config/i18n-config';
 
 import 'server-only';
 

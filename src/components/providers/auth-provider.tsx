@@ -2,8 +2,12 @@
 
 import React, { useEffect, useState } from 'react';
 import { AuthContext } from '@/context/auth-context';
-import { getUserAction, saveAuthTokenAction } from '@/data/auth/server';
-import { NodeHiveUser } from '@/nodehive/types';
+import {
+  getUserAction,
+  saveAuthTokenAction,
+} from '@/data/nodehive/auth/server';
+
+import { NodeHiveUser } from '@/types/nodehive';
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<NodeHiveUser | null>(null);

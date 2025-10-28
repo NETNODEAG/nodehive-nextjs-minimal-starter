@@ -1,4 +1,4 @@
-import { DrupalParagraph } from '@/nodehive/types';
+import { DrupalParagraph } from '@/types/nodehive';
 
 export interface ParagraphTextProps {
   paragraph: DrupalParagraph;

@@ -1,6 +1,5 @@
-import { DrupalFragment } from '@/nodehive/types';
-
-import { AuthWrapper, NotLoggedIn } from '@/components/auth/auth-wrapper';
+import { DrupalFragment } from '@/types/nodehive';
+import { AuthWrapper, NotLoggedIn } from '@/components/nodehive/auth-wrapper';
 import FragmentEditButton from '@/components/nodehive/visual-editor/fragment/fragment-edit-button';
 
 type FragmentWrapperProps = {

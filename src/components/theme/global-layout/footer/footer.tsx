@@ -1,4 +1,4 @@
-import { createServerClient } from '@/nodehive/client';
+import { createServerClient } from '@/lib/nodehive-client';
 
 export default async function Footer() {
   const client = await createServerClient();

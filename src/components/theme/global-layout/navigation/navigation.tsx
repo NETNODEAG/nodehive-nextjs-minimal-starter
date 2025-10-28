@@ -1,7 +1,8 @@
 import Link from 'next/link';
-import { createServerClient } from '@/nodehive/client';
-import Debug from '@/nodehive/components/helpers/debug';
-import { Locale } from '@/nodehive/i18n-config';
+
+import { Locale } from '@/config/i18n-config';
+import { createServerClient } from '@/lib/nodehive-client';
+import Debug from '@/components/ui/atoms/debug/debug';
 
 interface NavigationProps {
   menuId: string;

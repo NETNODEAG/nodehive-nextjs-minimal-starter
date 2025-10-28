@@ -2,8 +2,9 @@ import 'server-only';
 
 import { cache } from 'react';
 import { cookies } from 'next/headers';
-import { createServerClient } from '@/nodehive/client';
-import { NodeHiveUser } from '@/nodehive/types';
+
+import { NodeHiveUser } from '@/types/nodehive';
+import { createServerClient } from '@/lib/nodehive-client';
 
 export const nodehiveAuthToken = `${process.env.NEXT_PUBLIC_NODEHIVE_SPACE_NAME}_auth-token`;
 

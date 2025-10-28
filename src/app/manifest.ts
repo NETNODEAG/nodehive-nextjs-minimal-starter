@@ -1,5 +1,6 @@
 import { MetadataRoute } from 'next';
-import { spaceConfig } from '@/nodehive/space-config';
+
+import { spaceConfig } from '@/config/space-config';
 
 export default function manifest(): MetadataRoute.Manifest {
   const { siteName, shortName, themeColor, spaceMetadata } = spaceConfig;

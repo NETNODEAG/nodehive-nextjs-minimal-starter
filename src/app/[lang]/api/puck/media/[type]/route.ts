@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
-import { createServerClient } from '@/nodehive/client';
 import { DrupalJsonApiParams } from 'drupal-jsonapi-params';
+
+import { createServerClient } from '@/lib/nodehive-client';
 
 interface RouteParams {
   params: Promise<{
@@ -67,7 +68,7 @@ export async function GET(request: Request, { params }: RouteParams) {
         'Content-Type': 'application/vnd.api+json',
         // Forward auth so JSON:API can include referenced files
         Authorization: `Bearer ${
-          (await (await import('@/nodehive/auth')).getAuthToken()) || ''
+          (await (await import('@/lib/auth')).getAuthToken()) || ''
         }`,
       },
     });

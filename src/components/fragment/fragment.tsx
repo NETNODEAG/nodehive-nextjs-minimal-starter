@@ -1,6 +1,6 @@
-import { DrupalFragment } from '@/nodehive/types';
 import { ErrorBoundary } from 'react-error-boundary';
 
+import { DrupalFragment } from '@/types/nodehive';
 import VisualEditorFragmentWrapper from '@/components/nodehive/visual-editor/fragment/fragment-wrapper';
 import { fragmentTypes, isFragmentType } from './fragments';
 

@@ -1,7 +1,7 @@
 'use client';
 
 import { FormEvent, useState } from 'react';
-import { uploadImageMedia } from '@/data/media/actions';
+import { uploadImageMedia } from '@/data/nodehive/media/actions';
 import { Button } from '@measured/puck';
 
 type MessageType = 'success' | 'error' | null;

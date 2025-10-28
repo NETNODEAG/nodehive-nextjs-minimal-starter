@@ -1,8 +1,9 @@
 'use server';
 
 import { redirect } from 'next/navigation';
-import { clearAuthToken, getUser, saveAuthToken } from '@/nodehive/auth';
-import { createServerClient } from '@/nodehive/client';
+
+import { clearAuthToken, getUser, saveAuthToken } from '@/lib/auth';
+import { createServerClient } from '@/lib/nodehive-client';
 
 /**
  * The login state

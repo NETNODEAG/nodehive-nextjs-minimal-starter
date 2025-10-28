@@ -1,11 +1,11 @@
-import Connector from '@/nodehive/connector';
-import { spaceConfig } from '@/nodehive/space-config';
+import { spaceConfig } from '@/config/space-config';
+import Connector from '@/components/nodehive/connector';
 
 import '@/styles/globals.css';
 
 import { Metadata } from 'next';
-import { Locale } from '@/nodehive/i18n-config';
 
+import { Locale } from '@/config/i18n-config';
 import { helveticaNow, inter } from '@/lib/fonts';
 import { AuthProvider } from '@/components/providers/auth-provider';
 import Footer from '@/components/theme/global-layout/footer/footer';

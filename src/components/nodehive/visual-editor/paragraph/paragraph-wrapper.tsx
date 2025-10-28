@@ -1,4 +1,4 @@
-import { AuthWrapper, NotLoggedIn } from '@/components/auth/auth-wrapper';
+import { AuthWrapper, NotLoggedIn } from '@/components/nodehive/auth-wrapper';
 import IframeWrapper from '@/components/nodehive/visual-editor/iframe-wrapper';
 import ParagraphEditButton from '@/components/nodehive/visual-editor/paragraph/paragraph-edit-button';
 

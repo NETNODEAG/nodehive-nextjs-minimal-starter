@@ -1,7 +1,7 @@
 import { headers } from 'next/headers';
 import Link from 'next/link';
-import { i18n, Locale } from '@/nodehive/i18n-config';
 
+import { i18n, Locale } from '@/config/i18n-config';
 import { cn } from '@/lib/utils';
 
 type LanguageSwitcherProps = {

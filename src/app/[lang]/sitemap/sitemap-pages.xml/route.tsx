@@ -1,10 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-
 import {
   createResponse,
   generateSitemap,
   getSitemapData,
-} from '@/lib/sitemap/get-sitemap';
+} from '@/data/nodehive/sitemap/get-sitemap';
 
 /**
  * The priority of this sitemap relative to other sitemaps.

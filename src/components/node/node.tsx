@@ -1,5 +1,4 @@
-import { DrupalNode } from '@/nodehive/types';
-
+import { DrupalNode } from '@/types/nodehive';
 import NodeWrapper from '@/components/nodehive/visual-editor/node/node-wrapper';
 import { isNodeType, nodeTypes } from './nodes';
 

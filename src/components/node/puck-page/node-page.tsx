@@ -1,5 +1,4 @@
-import { DrupalNode } from '@/nodehive/types';
-
+import { DrupalNode } from '@/types/nodehive';
 import PuckPage from '@/components/puck/page/puck-page';
 
 export interface NodePuckPageProps {

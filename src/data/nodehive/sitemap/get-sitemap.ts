@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
-import { createServerClient } from '@/nodehive/client';
 import { DrupalJsonApiParams } from 'drupal-jsonapi-params';
+
+import { createServerClient } from '@/lib/nodehive-client';
 
 /**
  * Create the response

@@ -1,4 +1,4 @@
-import { isAuthenticated } from '@/nodehive/auth';
+import { isAuthenticated } from '@/lib/auth';
 
 interface AuthWrapperProps {
   children: React.ReactNode;

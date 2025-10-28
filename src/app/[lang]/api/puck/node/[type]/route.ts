@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
-import { createServerClient } from '@/nodehive/client';
+
+import { createServerClient } from '@/lib/nodehive-client';
 
 interface RouteParams {
   params: Promise<{

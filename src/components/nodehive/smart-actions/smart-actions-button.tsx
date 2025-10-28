@@ -1,6 +1,5 @@
-import { Locale } from '@/nodehive/i18n-config';
-
-import { AuthWrapper } from '@/components/auth/auth-wrapper';
+import { Locale } from '@/config/i18n-config';
+import { AuthWrapper } from '@/components/nodehive/auth-wrapper';
 import LogoutForm from '@/components/nodehive/smart-actions/logout-form';
 import OpenVisualEditor from '@/components/nodehive/smart-actions/open-visual-editor';
 import RefreshPage from '@/components/nodehive/smart-actions/refresh-page';

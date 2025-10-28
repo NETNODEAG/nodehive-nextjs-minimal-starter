@@ -1,6 +1,6 @@
-import { DrupalParagraph } from '@/nodehive/types';
 import { ErrorBoundary } from 'react-error-boundary';
 
+import { DrupalParagraph } from '@/types/nodehive';
 import VisualEditorParagraphWrapper from '@/components/nodehive/visual-editor/paragraph/paragraph-wrapper';
 import { isParagraphType, paragraphTypes } from './paragraphs';
 

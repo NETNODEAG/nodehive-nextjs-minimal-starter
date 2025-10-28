@@ -1,6 +1,7 @@
 import { revalidatePath } from 'next/cache';
 import { NextRequest, NextResponse } from 'next/server';
-import { getAuthToken } from '@/nodehive/auth';
+
+import { getAuthToken } from '@/lib/auth';
 
 export async function PATCH(request: NextRequest) {
   const { path, type, data, nodeId, fieldName, lang } = await request.json();

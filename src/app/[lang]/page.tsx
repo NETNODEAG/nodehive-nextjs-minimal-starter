@@ -1,12 +1,12 @@
 import { Metadata } from 'next';
 import { unstable_noStore } from 'next/cache';
 import { notFound } from 'next/navigation';
-import { isAuthenticated } from '@/nodehive/auth';
-import { createServerClient } from '@/nodehive/client';
-import { Locale } from '@/nodehive/i18n-config';
-import { spaceConfig } from '@/nodehive/space-config';
-import { DrupalNode } from '@/nodehive/types';
 
+import { DrupalNode } from '@/types/nodehive';
+import { Locale } from '@/config/i18n-config';
+import { spaceConfig } from '@/config/space-config';
+import { isAuthenticated } from '@/lib/auth';
+import { createServerClient } from '@/lib/nodehive-client';
 import { absoluteUrl } from '@/lib/utils';
 import Node from '@/components/node/node';
 import SmartActionsButton from '@/components/nodehive/smart-actions/smart-actions-button';

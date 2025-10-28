@@ -1,5 +1,6 @@
-import { i18n } from '@/nodehive/i18n-config';
 import { NodeHiveClient, NodeHiveOptions } from 'nodehive-js';
+
+import { i18n } from '@/config/i18n-config';
 
 export const createServerClient = async () => {
   const baseUrl = process.env.NEXT_PUBLIC_DRUPAL_REST_BASE_URL;

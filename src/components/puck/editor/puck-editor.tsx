@@ -8,9 +8,9 @@ import '@measured/puck/puck.css';
 import { useEffect, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import useWindowSize from '@/hooks/use-window-size';
-import { DrupalNode } from '@/nodehive/types';
 import { ImperativePanelHandle } from 'react-resizable-panels';
 
+import { DrupalNode } from '@/types/nodehive';
 import ComponentItem from '@/components/puck/editor/component-item';
 import PuckHeader from '@/components/puck/editor/puck-header';
 import { H3 } from '@/components/theme/atoms-content/heading/heading';
