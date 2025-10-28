@@ -5,7 +5,7 @@ import Button from './button';
 const variantOptions = ['primary', 'secondary', 'outline', 'ghost'] as const;
 
 const meta = {
-  title: 'Atoms Content/Button',
+  title: 'UI /Button',
   component: Button,
   tags: ['autodocs'],
   args: {
