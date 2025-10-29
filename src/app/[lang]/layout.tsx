@@ -3,13 +3,14 @@ import Connector from '@/components/nodehive/connector';
 
 import '@/styles/globals.css';
 
+import { Suspense } from 'react';
 import { Metadata } from 'next';
 
-import { Locale } from '@/config/i18n-config';
 import { helveticaNow, inter } from '@/lib/fonts';
 import { AuthProvider } from '@/components/providers/auth-provider';
 import Footer from '@/components/theme/global-layout/footer/footer';
 import Header from '@/components/theme/global-layout/header/header';
+import HTML from '@/components/theme/global-layout/html/html';
 
 const { spaceMetadata } = spaceConfig;
 
@@ -33,31 +34,24 @@ interface LayoutProps {
   params: Promise<{ lang: string }>;
 }
 
-export default async function RootLayout(props: LayoutProps) {
-  const params = await props.params;
+export default function RootLayout(props: LayoutProps) {
+  const { children, params } = props;
 
-  const { children } = props;
-
-  const { lang } = params;
-  const locale = lang as Locale;
+  const langPromise = params.then((p) => p.lang);
 
   return (
-    <html lang={lang}>
+    <HTML langPromise={langPromise}>
       <body className={`${inter.variable} ${helveticaNow.variable} font-sans`}>
         <AuthProvider>
           <div className="relative flex min-h-screen flex-col">
-            <Header lang={locale} />
-
-            <div className="flex-[1_0_auto]" id="scroll-container">
-              <main className="">{children}</main>
-            </div>
-
+            <Header langPromise={langPromise} />
+            <main className="flex-[1_0_auto]">{children}</main>
             <Footer />
           </div>
 
           <Connector />
         </AuthProvider>
       </body>
-    </html>
+    </HTML>
   );
 }

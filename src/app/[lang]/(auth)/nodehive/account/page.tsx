@@ -3,12 +3,17 @@ import { redirect } from 'next/navigation';
 import { logout } from '@/data/nodehive/auth/server';
 import { getSpaceNodes } from '@/data/nodehive/nodes/get-space-nodes';
 
+import { i18n } from '@/config/i18n-config';
 import { getUser } from '@/lib/auth';
 
 interface PageProps {
   params: Promise<{
     lang: string;
   }>;
+}
+
+export async function generateStaticParams() {
+  return i18n.locales.map((lang) => ({ lang }));
 }
 
 export default async function Page(props: PageProps) {

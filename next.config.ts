@@ -12,6 +12,7 @@ const imageDomains = process.env.NEXT_IMAGE_DOMAINS
 
 const nextConfig: NextConfig = {
   reactCompiler: true,
+  cacheComponents: true,
   images: {
     remotePatterns: [...imageDomains],
     formats: ['image/avif', 'image/webp'],

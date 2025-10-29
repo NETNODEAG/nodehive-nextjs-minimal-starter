@@ -1,12 +1,10 @@
 import { Metadata } from 'next';
-import { unstable_noStore } from 'next/cache';
 import { notFound, redirect } from 'next/navigation';
+import getPage from '@/data/nodehive/page/get-page';
 
 import { DrupalNode } from '@/types/nodehive';
-import { Locale } from '@/config/i18n-config';
+import { i18n, Locale } from '@/config/i18n-config';
 import { spaceConfig } from '@/config/space-config';
-import { isAuthenticated } from '@/lib/auth';
-import { createServerClient } from '@/lib/nodehive-client';
 import { absoluteUrl } from '@/lib/utils';
 import Node from '@/components/node/node';
 import SmartActionsButton from '@/components/nodehive/smart-actions/smart-actions-button';
@@ -15,21 +13,16 @@ interface PageProps {
   params: Promise<{ slug: Array<string>; lang: Locale }>;
 }
 
+export async function generateStaticParams() {
+  return i18n.locales.map((lang) => ({ lang }));
+}
+
 export async function generateMetadata(props: PageProps): Promise<Metadata> {
-  // Disable caching when user is authenticated
-  const authenticated = await isAuthenticated();
-  if (authenticated) {
-    unstable_noStore();
-  }
-
   const { slug, lang } = await props.params;
-  const client = await createServerClient();
 
-  // Join the slug array into a string
   const slugString = slug.join('/');
 
-  // Retrieve a resource, utilizing its unique slug as the identifier
-  const entity = await client.getResourceBySlug(slugString, { lang });
+  const entity = await getPage(slugString, lang);
   const node = entity?.data;
 
   const { spaceMetadata } = spaceConfig;
@@ -77,34 +70,21 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
 }
 
 export default async function Page(props: PageProps) {
-  // Disable caching when user is authenticated
-  const authenticated = await isAuthenticated();
-  if (authenticated) {
-    unstable_noStore();
-  }
-
   const params = await props.params;
-  const client = await createServerClient();
-
   const { slug, lang } = params;
 
-  // Redirect to the 404 page using the notFound() function if no slug is received
   if (!slug) {
     notFound();
   }
 
-  // Join the slug array into a string
   const slugString = slug.join('/');
 
-  // Retrieve a resource, utilizing its unique slug as the identifier
-  const entity = await client.getResourceBySlug(slugString, { lang });
+  const entity = await getPage(slugString, lang);
 
-  // Redirect to the 404 page using the notFound() function if no entity is received
   if (!entity) {
     notFound();
   }
 
-  // Node data
   const node = entity?.data;
   const aliasPath = node?.path?.alias;
   const aliasLang = node?.langcode || lang;

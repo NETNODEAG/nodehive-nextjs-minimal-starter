@@ -37,16 +37,26 @@ export function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
   // Allow requests for static files to pass through
-  if (
-    pathname.startsWith('/css/') ||
-    pathname.startsWith('/metadata/') ||
-    pathname.startsWith('/images/') ||
-    pathname.startsWith('/icon') ||
-    pathname === '/favicon.ico' ||
-    pathname === '/manifest.webmanifest' ||
-    pathname === '/robots.txt'
-  ) {
-    return NextResponse.next();
+  // if (
+  //   pathname.startsWith('/css/') ||
+  //   pathname.startsWith('/metadata/') ||
+  //   pathname.startsWith('/images/') ||
+  //   pathname.startsWith('/icon') ||
+  //   pathname === '/favicon.ico' ||
+  //   pathname === '/manifest.webmanifest' ||
+  //   pathname === '/robots.txt'
+  // ) {
+  //   return NextResponse.next();
+  // }
+
+  // If not multilingual, just rewrite to default locale
+  if (!i18n.isMultilingual) {
+    return NextResponse.rewrite(
+      new URL(
+        `/${i18n.defaultLocale}${pathname.startsWith('/') ? '' : '/'}${pathname}`,
+        request.url
+      )
+    );
   }
 
   // Check if the pathname is missing a locale
@@ -99,6 +109,6 @@ export function proxy(request: NextRequest) {
 export const config = {
   matcher: [
     // Skip all internal paths (_next)
-    '/((?!api|_next/static|_next/image|favicon.ico|icon*.png|manifest.ts|robots.ts|robots.txt).*)',
+    '/((?!api|_next/static|_next/image|favicon.ico|icon*.png|manifest.ts|robots.ts|robots.txt|css/|metadata/|images/).*)',
   ],
 };

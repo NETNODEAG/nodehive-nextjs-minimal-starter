@@ -1,7 +1,7 @@
 import Link from 'next/link';
+import { getMainMenu } from '@/data/nodehive/menu/get-main-menu';
 
 import { Locale } from '@/config/i18n-config';
-import { createServerClient } from '@/lib/nodehive-client';
 import Debug from '@/components/ui/atoms/debug/debug';
 
 interface NavigationProps {
@@ -16,9 +16,7 @@ type NavigationItem = {
 };
 
 export default async function Navigation({ menuId, lang }: NavigationProps) {
-  const client = await createServerClient();
-
-  const navigation = await client.getMenuTree(menuId, { lang });
+  const navigation = await getMainMenu(menuId, lang);
 
   <Debug data={navigation} />;
   if (!navigation?.data?.length) {

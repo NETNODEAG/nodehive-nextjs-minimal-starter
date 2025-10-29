@@ -1,7 +1,5 @@
 import { NodeHiveClient, NodeHiveOptions } from 'nodehive-js';
 
-import { i18n } from '@/config/i18n-config';
-
 export const createServerClient = async () => {
   const baseUrl = process.env.NEXT_PUBLIC_DRUPAL_REST_BASE_URL;
   if (!baseUrl) {
@@ -10,7 +8,6 @@ export const createServerClient = async () => {
 
   const options: NodeHiveOptions = {
     baseUrl,
-    defaultLanguage: i18n.defaultLocale,
     debug: true,
     auth: {
       method: 'oauth',

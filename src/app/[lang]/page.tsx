@@ -1,12 +1,10 @@
 import { Metadata } from 'next';
-import { unstable_noStore } from 'next/cache';
 import { notFound } from 'next/navigation';
+import getPage from '@/data/nodehive/page/get-page';
 
 import { DrupalNode } from '@/types/nodehive';
-import { Locale } from '@/config/i18n-config';
+import { i18n, Locale } from '@/config/i18n-config';
 import { spaceConfig } from '@/config/space-config';
-import { isAuthenticated } from '@/lib/auth';
-import { createServerClient } from '@/lib/nodehive-client';
 import { absoluteUrl } from '@/lib/utils';
 import Node from '@/components/node/node';
 import SmartActionsButton from '@/components/nodehive/smart-actions/smart-actions-button';
@@ -17,32 +15,22 @@ interface RootPageProps {
   }>;
 }
 
+export async function generateStaticParams() {
+  return i18n.locales.map((lang) => ({ lang }));
+}
+
 export async function generateMetadata(
   props: RootPageProps
 ): Promise<Metadata> {
-  // Disable caching when user is authenticated
-  const authenticated = await isAuthenticated();
-  if (authenticated) {
-    unstable_noStore();
-  }
-
-  const params = await props.params;
-  const client = await createServerClient();
-
-  const { lang } = params;
+  const { lang } = await props.params;
+  const { spaceMetadata } = spaceConfig;
 
   if (!process.env.NODEHIVE_STARTPAGE_SLUG) {
-    return {};
+    return spaceMetadata;
   }
 
-  // Retrieve a resource, utilizing its unique slug as the identifier
-  const entity = await client.getResourceBySlug(
-    process.env.NODEHIVE_STARTPAGE_SLUG,
-    { lang }
-  );
+  const entity = await getPage(process.env.NODEHIVE_STARTPAGE_SLUG, lang);
   const node = entity?.data;
-
-  const { spaceMetadata } = spaceConfig;
 
   // Default metadata
   let seoTitle = spaceMetadata.openGraph.title;
@@ -87,33 +75,18 @@ export async function generateMetadata(
 }
 
 export default async function RootPage(props: RootPageProps) {
-  // Disable caching when user is authenticated
-  const authenticated = await isAuthenticated();
-  if (authenticated) {
-    unstable_noStore();
-  }
-
-  const params = await props.params;
-  const client = await createServerClient();
-
-  const { lang } = params;
+  const { lang } = await props.params;
 
   if (!process.env.NODEHIVE_STARTPAGE_SLUG) {
     notFound();
   }
 
-  // Retrieve a resource, utilizing its unique slug as the identifier
-  const entity = await client.getResourceBySlug(
-    process.env.NODEHIVE_STARTPAGE_SLUG,
-    { lang }
-  );
+  const entity = await getPage(process.env.NODEHIVE_STARTPAGE_SLUG, lang);
 
-  // Redirect to the 404 page using the notFound() function if no entity is received
   if (!entity) {
     notFound();
   }
 
-  // Node data
   const node = entity?.data;
 
   return (

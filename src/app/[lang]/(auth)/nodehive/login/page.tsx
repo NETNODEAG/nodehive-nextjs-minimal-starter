@@ -1,7 +1,12 @@
 import { redirect } from 'next/navigation';
 
+import { i18n } from '@/config/i18n-config';
 import { getUser } from '@/lib/auth';
 import LoginForm from '@/components/auth/login-form';
+
+export async function generateStaticParams() {
+  return i18n.locales.map((lang) => ({ lang }));
+}
 
 export default async function Page() {
   const user = await getUser();
