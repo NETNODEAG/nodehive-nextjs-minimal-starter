@@ -143,15 +143,15 @@ export default function ComponentItem({ name }: ComponentItemProps) {
               'flex cursor-grab items-center justify-between gap-2 rounded-md bg-white px-3 py-2.5 shadow-sm transition-all duration-150 hover:shadow-md'
             )}
           >
-            <div className="flex w-full items-center justify-center gap-2 @min-[180px]:justify-start">
+            <div className="flex w-full items-center gap-2">
               <div className="flex-shrink-0">
                 {COMPONENT_ICONS[name] || <BoxIcon className="size-4" />}
               </div>
-              <span className="hidden text-sm @min-[180px]:block">
+              <span className="truncate text-sm">
                 {COMPONENT_LABELS[name] || name}
               </span>
             </div>
-            <GripVerticalIcon className="hidden size-3 @min-[180px]:block" />
+            <GripVerticalIcon className="size-3 flex-shrink-0" />
           </div>
         </TooltipTrigger>
         <TooltipPortal>
