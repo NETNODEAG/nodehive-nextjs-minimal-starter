@@ -11,7 +11,7 @@ export const nodehiveAuthToken = `${process.env.NEXT_PUBLIC_NODEHIVE_SPACE_NAME}
 const fetchUserCached = cache(
   async (authToken: string): Promise<NodeHiveUser | null> => {
     const client = await createServerClient();
-    const user = await client.fetchUserDetails(authToken);
+    const user = await client.getUserDetails();
     // Check if user is empty object
     if (!user || (typeof user === 'object' && Object.keys(user).length === 0)) {
       return null;
@@ -21,15 +21,20 @@ const fetchUserCached = cache(
 );
 
 export const getUser = async (): Promise<NodeHiveUser | null> => {
-  const authToken = await getAuthToken();
+  return null;
+  // const authToken = await getAuthToken();
+  // const client = await createServerClient();
 
-  if (!authToken) return null;
+  // if (!authToken) return null;
 
-  try {
-    return await fetchUserCached(authToken);
-  } catch {
-    return null;
-  }
+  // console.log('authToken', authToken);
+  // console.log('decoded', decoded);
+
+  // try {
+  //   return await fetchUserCached(authToken);
+  // } catch {
+  //   return null;
+  // }
 };
 
 export const getAuthToken = async (): Promise<string | null> => {

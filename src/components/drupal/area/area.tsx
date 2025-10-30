@@ -1,5 +1,5 @@
 import { DrupalArea, DrupalFragment } from '@/types/nodehive';
-import Fragment from '@/components/fragment/fragment';
+import Fragment from '@/components/drupal/fragment/fragment';
 
 interface AreaProps {
   area: DrupalArea;

@@ -23,7 +23,8 @@ export default function PuckWrapper({
   fieldName,
   config,
 }: PuckWrapperProps) {
-  const { isLoggedIn, user } = useAuth();
+  // const { isLoggedIn, user } = useAuth();
+  const isLoggedIn = true; // TEMPORARY FIX FOR DEMO PURPOSES
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathName = usePathname();
@@ -72,12 +73,11 @@ export default function PuckWrapper({
           className={cn(
             'hover:border-primary relative border-2 border-transparent hover:border-dashed',
             {
-              'min-h-[56px]':
-                !puckData?.content || puckData?.content?.length === 0,
+              'min-h-14': !puckData?.content || puckData?.content?.length === 0,
             }
           )}
         >
-          <div className="sticky top-[var(--header-height)] right-0 z-50 h-0 cursor-pointer">
+          <div className="sticky top-(--header-height) right-0 z-50 h-0 cursor-pointer">
             <div className="absolute top-2 right-2">
               <Button onClick={openPuckEditor}>
                 <SquareDashedMousePointerIcon className="size-5 text-white" />

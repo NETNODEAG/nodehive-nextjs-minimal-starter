@@ -1,5 +1,5 @@
 import { DrupalNode, DrupalParagraph } from '@/types/nodehive';
-import Paragraph from '@/components/paragraph/paragraph';
+import Paragraph from '@/components/drupal/paragraph/paragraph';
 import Debug from '@/components/ui/atoms/debug/debug';
 
 export interface NodePageProps {

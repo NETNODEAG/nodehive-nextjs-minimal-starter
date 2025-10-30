@@ -1,25 +1,31 @@
 import { revalidatePath } from 'next/cache';
 import { NextRequest, NextResponse } from 'next/server';
 
+import { i18n } from '@/config/i18n-config';
 import { getAuthToken } from '@/lib/auth';
+import { createUserClient } from '@/lib/nodehive-client';
 
 export async function PATCH(request: NextRequest) {
   const { path, type, data, nodeId, fieldName, lang } = await request.json();
+  console.log('Publishing Puck data for node', nodeId, 'field', fieldName);
 
   const jsonApiType = type.replace('node--', '');
 
-  const userToken = await getAuthToken();
+  // const userToken = await getAuthToken();
 
-  if (!userToken) {
-    return NextResponse.json(
-      { status: 'error', message: 'User is not authenticated' },
-      { status: 401 }
-    );
-  }
+  // if (!userToken) {
+  //   return NextResponse.json(
+  //     { status: 'error', message: 'User is not authenticated' },
+  //     { status: 401 }
+  //   );
+  // }
   try {
-    const DRUPAL_BASE_URL = process.env.NEXT_PUBLIC_DRUPAL_REST_BASE_URL;
+    const baseUrl = process.env.NEXT_PUBLIC_DRUPAL_REST_BASE_URL;
 
-    const apiUrl = `${DRUPAL_BASE_URL}/${lang}/jsonapi/node/${jsonApiType}/${nodeId}`;
+    const isMultilingual = i18n.isMultilingual;
+    let endpoint = `/jsonapi/node/${jsonApiType}/${nodeId}`;
+    endpoint = isMultilingual ? `/${lang}${endpoint}` : endpoint;
+    const apiUrl = `${baseUrl}${endpoint}`;
 
     const payload = {
       data: {
@@ -30,12 +36,14 @@ export async function PATCH(request: NextRequest) {
         },
       },
     };
+    const client = createUserClient();
+    const { token } = await client.auth.refreshToken();
 
     const response = await fetch(apiUrl, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/vnd.api+json',
-        Authorization: `Bearer ${userToken}`,
+        Authorization: `Bearer ${token}`,
         Accept: 'application/vnd.api+json',
       },
       body: JSON.stringify(payload),

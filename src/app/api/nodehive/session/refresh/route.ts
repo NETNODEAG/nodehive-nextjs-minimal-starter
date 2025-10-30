@@ -67,3 +67,15 @@ export async function POST(request: NextRequest) {
 export async function GET(request: NextRequest) {
   return handleRefresh(request);
 }
+
+export async function PATCH(request: NextRequest) {
+  return handleRefresh(request);
+}
+
+export async function DELETE(request: NextRequest) {
+  return handleRefresh(request);
+}
+
+export async function PUT(request: NextRequest) {
+  return handleRefresh(request);
+}

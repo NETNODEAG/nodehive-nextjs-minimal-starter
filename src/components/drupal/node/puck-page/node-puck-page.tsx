@@ -1,5 +1,5 @@
 import { DrupalNode } from '@/types/nodehive';
-import PuckPage from '@/components/node/puck-page/puck-page';
+import PuckPage from '@/components/drupal/node/puck-page/puck-page';
 import Debug from '@/components/ui/atoms/debug/debug';
 
 export interface NodePuckPageProps {

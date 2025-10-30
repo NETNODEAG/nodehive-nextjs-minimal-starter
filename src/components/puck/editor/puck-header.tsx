@@ -90,7 +90,7 @@ export default function PuckHeader({
   };
 
   return (
-    <div className="mx-auto flex w-full justify-between gap-4 border-b border-gray-300 px-4 py-2">
+    <div className="col-span-full mx-auto flex w-full justify-between gap-4 border-b border-gray-300 px-4 py-2">
       <div className="flex gap-2">
         <button
           className={cn('cursor-pointer', {

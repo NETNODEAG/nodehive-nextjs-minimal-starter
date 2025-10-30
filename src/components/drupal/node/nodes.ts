@@ -1,9 +1,11 @@
 import { FunctionComponent } from 'react';
 
-import NodePage, { NodePageProps } from '@/components/node/page/node-page';
+import NodePage, {
+  NodePageProps,
+} from '@/components/drupal/node/page/node-page';
 import NodePuckPage, {
   NodePuckPageProps,
-} from '@/components/node/puck-page/node-puck-page';
+} from '@/components/drupal/node/puck-page/node-puck-page';
 
 interface NodePropMap {
   'node--page': NodePageProps;

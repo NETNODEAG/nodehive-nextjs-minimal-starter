@@ -1,7 +1,7 @@
 'use client';
 
 import { DrupalNode } from '@/types/nodehive';
-import config from '@/components/node/puck-page/puck.page.config';
+import config from '@/components/drupal/node/puck-page/puck.page.config';
 import PuckWrapper from '@/components/puck/puck-wrapper';
 
 interface PuckPageProps {

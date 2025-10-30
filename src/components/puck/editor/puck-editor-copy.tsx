@@ -37,7 +37,7 @@ export default function PuckEditor({
 }: PuckEditorProps) {
   const [isSaving, setIsSaving] = useState(false);
   const windowSize = useWindowSize();
-  const width = windowSize.width || 1;
+  const width = windowSize.width || 1440;
   const previewDefaultSize = (896 / width) * 100;
   const leftSidebarCollapsedSize = (80 / width) * 100;
   const rightSidebarMinSize = (300 / width) * 100;
@@ -103,18 +103,9 @@ export default function PuckEditor({
         data={data}
         overrides={{
           componentItem: ({ name }) => <ComponentItem name={name} />,
-          header: () => (
-            <PuckHeader
-              onSave={onSave}
-              isSaving={isSaving}
-              onClose={closePuckEditor}
-              leftPanelRef={leftPanelRef}
-              rightPanelRef={rightPanelRef}
-            />
-          ),
         }}
       >
-        {/* <PuckHeader
+        <PuckHeader
           onSave={onSave}
           isSaving={isSaving}
           onClose={closePuckEditor}
@@ -163,7 +154,7 @@ export default function PuckEditor({
               <Puck.Fields />
             </div>
           </ResizablePanel>
-        </ResizablePanelGroup> */}
+        </ResizablePanelGroup>
       </Puck>
     </motion.div>
   );

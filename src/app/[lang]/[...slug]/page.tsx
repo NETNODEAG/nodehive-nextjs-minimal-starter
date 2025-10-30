@@ -6,7 +6,7 @@ import { DrupalNode } from '@/types/nodehive';
 import { i18n, Locale } from '@/config/i18n-config';
 import { spaceConfig } from '@/config/space-config';
 import { absoluteUrl } from '@/lib/utils';
-import Node from '@/components/node/node';
+import Node from '@/components/drupal/node/node';
 import SmartActionsButton from '@/components/nodehive/smart-actions/smart-actions-button';
 
 interface PageProps {
