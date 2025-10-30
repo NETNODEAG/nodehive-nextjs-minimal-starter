@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import { cookies } from 'next/headers';
 import { notFound } from 'next/navigation';
 import getPage from '@/data/nodehive/page/get-page';
 
@@ -92,7 +93,6 @@ export default async function RootPage(props: RootPageProps) {
   return (
     <>
       <Node node={node as DrupalNode} />
-
       <SmartActionsButton lang={lang} />
     </>
   );

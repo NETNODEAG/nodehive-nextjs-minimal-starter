@@ -1,13 +1,13 @@
-import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { NextResponse } from 'next/server';
 import { match as matchLocale } from '@formatjs/intl-localematcher';
 import Negotiator from 'negotiator';
 
 import { i18n } from '@/config/i18n-config';
 
-const REFRESH_THRESHOLD_MS = 30_000;
 const spacePrefix = process.env.NEXT_PUBLIC_NODEHIVE_SPACE_NAME || 'nodehive';
-const EXPIRES_COOKIE = `${spacePrefix}_expires`;
+const TOKEN_COOKIE = `${spacePrefix}_access`;
+const REFRESH_TOKEN_COOKIE = `${spacePrefix}_refresh`;
 
 const NON_ENTITY_PATHS = [
   'static',
@@ -32,18 +32,15 @@ const getLocale = (request: NextRequest) => {
 };
 
 const shouldRefreshSession = (request: NextRequest): boolean => {
-  const expiresRaw = request.cookies.get(EXPIRES_COOKIE)?.value;
-  if (!expiresRaw) {
-    return false;
-  }
+  const token = request.cookies.get(TOKEN_COOKIE)?.value;
+  const refreshToken = request.cookies.get(REFRESH_TOKEN_COOKIE)?.value;
+  // Don't refresh if we don't have a refresh token
+  if (!refreshToken) return false;
 
-  const expiresAt = Number(expiresRaw);
-  if (!Number.isFinite(expiresAt)) {
-    return false;
-  }
+  // Don't refresh if we already have a valid token
+  if (token) return false;
 
-  const timeLeft = expiresAt - Date.now();
-  return timeLeft <= REFRESH_THRESHOLD_MS;
+  return true;
 };
 
 export async function proxy(request: NextRequest) {

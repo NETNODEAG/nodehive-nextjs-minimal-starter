@@ -1,10 +1,11 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import { logout } from '@/data/nodehive/auth/server';
+import { logout } from '@/data/nodehive/auth/actions';
 import { getSpaceNodes } from '@/data/nodehive/nodes/get-space-nodes';
 import { getUser } from '@/data/nodehive/user/get-user';
 
 import { i18n } from '@/config/i18n-config';
+import { createUserClient } from '@/lib/nodehive-client';
 import { H1 } from '@/components/theme/atoms-content/heading/heading';
 import Container from '@/components/theme/atoms-layout/container/container';
 import Button from '@/components/ui/atoms/button/button';
@@ -23,11 +24,14 @@ export default async function Page(props: PageProps) {
   const params = await props.params;
   const { lang } = params;
 
-  const user = await getUser();
+  const client = createUserClient();
+  const isLoggedIn = await client.isLoggedIn();
 
-  // if (!user) {
-  //   redirect('/nodehive/login');
-  // }
+  if (!isLoggedIn) {
+    redirect(`/nodehive/login`);
+  }
+
+  const user = await client.getUserDetails();
 
   const name = user?.name?.[0]?.value;
   const email = user?.mail?.[0]?.value;

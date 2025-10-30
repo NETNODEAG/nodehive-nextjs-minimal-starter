@@ -5,30 +5,16 @@ import { AuthenticationError } from 'nodehive-js';
 import { NextCookieStorage } from '@/lib/next-cookie-storage';
 import { createUserClient } from '@/lib/nodehive-client';
 
-const REFRESH_THRESHOLD_MS = 30_000;
-
 async function handleRefresh(request: NextRequest) {
   const storage = new NextCookieStorage();
-  const expiresRaw = await storage.get('token_expires_at');
+  const refreshToken = await storage.get('refresh_token');
+  console.log('Handle refresh, Refresh token:', refreshToken);
 
-  if (!expiresRaw) {
+  if (!refreshToken) {
     return NextResponse.json(
-      { ok: false, reason: 'no-expiry' },
+      { ok: false, reason: 'no-refresh-token' },
       { status: 400 }
     );
-  }
-
-  const expiresAt = Number(expiresRaw);
-  if (!Number.isFinite(expiresAt)) {
-    return NextResponse.json(
-      { ok: false, reason: 'invalid-expiry' },
-      { status: 400 }
-    );
-  }
-
-  const timeLeft = expiresAt - Date.now();
-  if (timeLeft > REFRESH_THRESHOLD_MS) {
-    return NextResponse.json({ ok: false, reason: 'not-needed' });
   }
 
   try {
@@ -41,7 +27,6 @@ async function handleRefresh(request: NextRequest) {
       console.log('NodeHive: session refreshed, redirecting to', nextPath);
       return NextResponse.redirect(new URL(nextPath, request.url));
     }
-
     return NextResponse.json({ ok: true });
   } catch (error) {
     if (error instanceof AuthenticationError) {

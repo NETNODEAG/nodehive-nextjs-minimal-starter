@@ -1,5 +1,5 @@
 import { cookies } from 'next/headers';
-import { StorageAdapter } from 'nodehive-js';
+import { CookieOptions, StorageAdapter } from 'nodehive-js';
 
 export class NextCookieStorage implements StorageAdapter {
   private readonly spacePrefix =
@@ -9,7 +9,6 @@ export class NextCookieStorage implements StorageAdapter {
     token: this.spacePrefix + '_access',
     refresh_token: this.spacePrefix + '_refresh',
     userDetails: this.spacePrefix + '_userDetails',
-    token_expires_at: `${this.spacePrefix}_expires`,
   };
 
   private resolveKey(key: string): string | null {
@@ -23,17 +22,24 @@ export class NextCookieStorage implements StorageAdapter {
     return cookieStore.get(name)?.value || null;
   }
 
-  async set(key: string, value: string): Promise<void> {
+  async set(
+    key: string,
+    value: string,
+    options?: CookieOptions
+  ): Promise<void> {
     const cookieStore = await cookies();
     const name = this.resolveKey(key);
     if (!name) return;
     cookieStore.set({
       name,
       value,
-      httpOnly: true,
-      sameSite: 'lax',
-      secure: process.env.NODE_ENV === 'production',
-      path: '/',
+      maxAge: options?.maxAge,
+      httpOnly: options?.httpOnly ?? true,
+      sameSite:
+        (options?.sameSite?.toLowerCase() as 'lax' | 'strict' | 'none') ??
+        'lax',
+      secure: options?.secure ?? process.env.NODE_ENV === 'production',
+      path: options?.path ?? '/',
     });
   }
 

@@ -1,7 +1,7 @@
 'use client';
 
 import { useActionState } from 'react';
-import { login, LoginState } from '@/data/nodehive/auth/server';
+import { login, LoginState } from '@/data/nodehive/auth/actions';
 
 import { cn } from '@/lib/utils';
 import Button from '@/components/ui/atoms/button/button';

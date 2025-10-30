@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation';
-import { getUser } from '@/data/nodehive/user/get-user';
 
 import { i18n } from '@/config/i18n-config';
+import { createUserClient } from '@/lib/nodehive-client';
 import LoginForm from '@/components/auth/login-form';
 import { H1 } from '@/components/theme/atoms-content/heading/heading';
 import Container from '@/components/theme/atoms-layout/container/container';
@@ -11,9 +11,10 @@ export async function generateStaticParams() {
 }
 
 export default async function Page() {
-  const user = await getUser();
+  const client = createUserClient();
+  const isLoggedIn = await client.isLoggedIn();
 
-  if (user) {
+  if (isLoggedIn) {
     redirect('/nodehive/account');
   }
 

@@ -23,8 +23,7 @@ export default function PuckWrapper({
   fieldName,
   config,
 }: PuckWrapperProps) {
-  // const { isLoggedIn, user } = useAuth();
-  const isLoggedIn = true; // TEMPORARY FIX FOR DEMO PURPOSES
+  const { isLoggedIn } = useAuth();
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathName = usePathname();

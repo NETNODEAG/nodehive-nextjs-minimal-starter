@@ -1,3 +1,4 @@
+import path from 'path';
 import { NextConfig } from 'next';
 
 const imageDomains = process.env.NEXT_IMAGE_DOMAINS
@@ -13,6 +14,8 @@ const imageDomains = process.env.NEXT_IMAGE_DOMAINS
 const nextConfig: NextConfig = {
   reactCompiler: true,
   cacheComponents: true,
+  // Needed for making npm link work
+  outputFileTracingRoot: path.join(__dirname, '../'),
   images: {
     remotePatterns: [...imageDomains],
     formats: ['image/avif', 'image/webp'],

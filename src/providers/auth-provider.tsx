@@ -1,21 +1,23 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { use, useEffect, useState } from 'react';
 import { AuthContext } from '@/context/auth-context';
-import {
-  getUserAction,
-  saveAuthTokenAction,
-} from '@/data/nodehive/auth/server';
 
 import { NodeHiveUser } from '@/types/nodehive';
 
-export function AuthProvider({ children }: { children: React.ReactNode }) {
+export function AuthProvider({
+  children,
+  isLoggedInPromise,
+}: {
+  children: React.ReactNode;
+  isLoggedInPromise: Promise<boolean>;
+}) {
   const [user, setUser] = useState<NodeHiveUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const isLoggedIn = use(isLoggedInPromise);
 
   const checkAuth = async () => {
     setIsLoading(true);
-    const user = await getUserAction();
     setUser(user);
     setIsLoading(false);
   };
@@ -23,8 +25,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const loginWithToken = async (token: string) => {
     try {
       setIsLoading(true);
-      await saveAuthTokenAction(token);
-      const user = await getUserAction();
+      // TODO Fix the automated login
+      // await saveAuthTokenAction(token);
+      // const user = await getUserAction();
       setUser(user);
     } catch (error) {
       console.error('Login failed:', error);
@@ -82,7 +85,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
   }, []);
 
-  const value = { user, isLoggedIn: !!user, isLoading };
+  const value = { user, isLoggedIn, isLoading };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

@@ -6,7 +6,6 @@ import '@/styles/globals.css';
 import { Suspense } from 'react';
 import { Metadata } from 'next';
 import AppProvider from '@/providers/app-provider';
-import { AuthProvider } from '@/providers/auth-provider';
 
 import { helveticaNow, inter } from '@/lib/fonts';
 import Footer from '@/components/theme/global-layout/footer/footer';

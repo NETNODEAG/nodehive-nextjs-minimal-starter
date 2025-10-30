@@ -1,6 +1,6 @@
 'use client';
 
-import { logout } from '@/data/nodehive/auth/server';
+import { logout } from '@/data/nodehive/auth/actions';
 import { LogOut } from 'lucide-react';
 import { useFormStatus } from 'react-dom';
 
