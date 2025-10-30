@@ -5,24 +5,10 @@ import Negotiator from 'negotiator';
 
 import { i18n } from '@/config/i18n-config';
 
-const getLocale = (request: NextRequest) => {
-  // Negotiator expects plain object so we need to transform headers
-  const negotiatorHeaders: Record<string, string> = {};
-  request.headers.forEach((value, key) => (negotiatorHeaders[key] = value));
+const REFRESH_THRESHOLD_MS = 30_000;
+const spacePrefix = process.env.NEXT_PUBLIC_NODEHIVE_SPACE_NAME || 'nodehive';
+const EXPIRES_COOKIE = `${spacePrefix}_expires`;
 
-  const locales: string[] = [...i18n.locales];
-
-  // Use negotiator and intl-localematcher to get best locale
-  const languages = new Negotiator({ headers: negotiatorHeaders }).languages(
-    locales
-  );
-
-  const locale = matchLocale(languages, locales, i18n.defaultLocale);
-
-  return locale;
-};
-
-// Paths that are handled by the Next.js app, not Drupal
 const NON_ENTITY_PATHS = [
   'static',
   '_next',
@@ -33,43 +19,64 @@ const NON_ENTITY_PATHS = [
   'api',
 ];
 
-export function proxy(request: NextRequest) {
-  const pathname = request.nextUrl.pathname;
+const getLocale = (request: NextRequest) => {
+  const negotiatorHeaders: Record<string, string> = {};
+  request.headers.forEach((value, key) => (negotiatorHeaders[key] = value));
 
-  // Allow requests for static files to pass through
-  // if (
-  //   pathname.startsWith('/css/') ||
-  //   pathname.startsWith('/metadata/') ||
-  //   pathname.startsWith('/images/') ||
-  //   pathname.startsWith('/icon') ||
-  //   pathname === '/favicon.ico' ||
-  //   pathname === '/manifest.webmanifest' ||
-  //   pathname === '/robots.txt'
-  // ) {
-  //   return NextResponse.next();
-  // }
+  const locales: string[] = [...i18n.locales];
+  const languages = new Negotiator({ headers: negotiatorHeaders }).languages(
+    locales
+  );
 
-  // If not multilingual, just rewrite to default locale
-  if (!i18n.isMultilingual) {
-    return NextResponse.rewrite(
-      new URL(
-        `/${i18n.defaultLocale}${pathname.startsWith('/') ? '' : '/'}${pathname}`,
-        request.url
-      )
-    );
+  return matchLocale(languages, locales, i18n.defaultLocale);
+};
+
+const shouldRefreshSession = (request: NextRequest): boolean => {
+  const expiresRaw = request.cookies.get(EXPIRES_COOKIE)?.value;
+  if (!expiresRaw) {
+    return false;
   }
 
-  // Check if the pathname is missing a locale
+  const expiresAt = Number(expiresRaw);
+  if (!Number.isFinite(expiresAt)) {
+    return false;
+  }
+
+  const timeLeft = expiresAt - Date.now();
+  return timeLeft <= REFRESH_THRESHOLD_MS;
+};
+
+export async function proxy(request: NextRequest) {
+  const pathname = request.nextUrl.pathname;
+
+  // Don't check refresh on the refresh endpoint itself
+  if (!pathname.startsWith('/api/nodehive/session/refresh')) {
+    // Check if session needs refresh
+    if (shouldRefreshSession(request)) {
+      console.log('NodeHive: redirecting to refresh session');
+
+      // Build refresh URL with return path
+      const refreshUrl = new URL('/api/nodehive/session/refresh', request.url);
+      refreshUrl.searchParams.set('next', pathname + request.nextUrl.search);
+
+      return NextResponse.redirect(refreshUrl);
+    }
+  }
+
+  if (!i18n.isMultilingual) {
+    const rewriteUrl = new URL(
+      `/${i18n.defaultLocale}${pathname.startsWith('/') ? '' : '/'}${pathname}`,
+      request.url
+    );
+    return NextResponse.rewrite(rewriteUrl);
+  }
+
   const pathnameIsMissingLocale = i18n.locales.every(
     (locale) => !pathname.startsWith(`/${locale}/`) && pathname !== `/${locale}`
   );
 
-  // Redirect if there is no locale
   if (pathnameIsMissingLocale) {
     const locale = getLocale(request);
-
-    // e.g. incoming request is /news
-    // The new URL is now /de/news
     return NextResponse.redirect(
       new URL(
         `/${locale}${pathname.startsWith('/') ? '' : '/'}${pathname}`,
@@ -83,7 +90,6 @@ export function proxy(request: NextRequest) {
     pathname
   );
 
-  // Check if the pathWithoutLocale matches any of the NON_ENTITY_PATHS
   const isNonEntityPath = NON_ENTITY_PATHS.some(
     (path) =>
       pathWithoutLocale.startsWith(`/${path}/`) ||
@@ -94,7 +100,6 @@ export function proxy(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // If no other conditions are met, proceed to the dynamic route [[...slug]]
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set('x-url', request.url);
   requestHeaders.set('x-pathname', pathname);
@@ -108,7 +113,6 @@ export function proxy(request: NextRequest) {
 
 export const config = {
   matcher: [
-    // Skip all internal paths (_next)
     '/((?!api|_next/static|_next/image|favicon.ico|icon*.png|manifest.ts|robots.ts|robots.txt|css/|metadata/|images/).*)',
   ],
 };

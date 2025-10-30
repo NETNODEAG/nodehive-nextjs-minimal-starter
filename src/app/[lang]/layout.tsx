@@ -46,10 +46,13 @@ export default function RootLayout(props: LayoutProps) {
           <div className="relative flex min-h-screen flex-col">
             <Header langPromise={langPromise} />
             <main className="flex-[1_0_auto]">{children}</main>
-            <Footer />
+            <Suspense>
+              <Footer />
+            </Suspense>
           </div>
-
-          <Connector />
+          <Suspense>
+            <Connector />
+          </Suspense>
         </AuthProvider>
       </body>
     </HTML>

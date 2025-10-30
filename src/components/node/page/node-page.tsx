@@ -1,5 +1,6 @@
 import { DrupalNode, DrupalParagraph } from '@/types/nodehive';
 import Paragraph from '@/components/paragraph/paragraph';
+import Debug from '@/components/ui/atoms/debug/debug';
 
 export interface NodePageProps {
   node: DrupalNode;
@@ -10,8 +11,9 @@ export default function NodePage({ node }: NodePageProps) {
   const paragraphs = node?.field_paragraphs;
 
   return (
-    <article data-node-type="Page">
+    <article data-node-type="page">
       <h1 className="mb-16 text-4xl font-bold sm:text-6xl">{title}</h1>
+      <Debug data={node} />
 
       {Array.isArray(paragraphs) && (
         <div className="space-y-16">
@@ -20,13 +22,6 @@ export default function NodePage({ node }: NodePageProps) {
           })}
         </div>
       )}
-
-      <details className="container mx-auto mt-10 mb-10 rounded-md bg-black p-4 text-xs text-slate-50">
-        <summary className="cursor-pointer font-bold">
-          Node API JSON Output
-        </summary>
-        <pre className="mt-8">{JSON.stringify(node, null, 2)}</pre>
-      </details>
     </article>
   );
 }

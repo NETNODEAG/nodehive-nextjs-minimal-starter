@@ -4,6 +4,7 @@ import { useActionState } from 'react';
 import { login, LoginState } from '@/data/nodehive/auth/server';
 
 import { cn } from '@/lib/utils';
+import Button from '@/components/ui/atoms/button/button';
 
 const initialState: LoginState = {};
 
@@ -12,7 +13,7 @@ export default function LoginForm() {
 
   return (
     <section>
-      <form action={dispatch} className="mx-auto max-w-2xl space-y-8">
+      <form action={dispatch} className="space-y-6">
         <div className="flex flex-col">
           <label htmlFor="email" className="text-sm font-bold">
             Email
@@ -54,7 +55,7 @@ export default function LoginForm() {
 
 function LoginButton({ isPending }: { isPending: boolean }) {
   return (
-    <button disabled={isPending} type="submit" className="btn-primary">
+    <Button type="submit">
       {isPending ? (
         <>
           <svg
@@ -80,6 +81,6 @@ function LoginButton({ isPending }: { isPending: boolean }) {
       ) : (
         <span>Login</span>
       )}
-    </button>
+    </Button>
   );
 }

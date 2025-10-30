@@ -2,9 +2,12 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { logout } from '@/data/nodehive/auth/server';
 import { getSpaceNodes } from '@/data/nodehive/nodes/get-space-nodes';
+import { getUser } from '@/data/nodehive/user/get-user';
 
 import { i18n } from '@/config/i18n-config';
-import { getUser } from '@/lib/auth';
+import { H1 } from '@/components/theme/atoms-content/heading/heading';
+import Container from '@/components/theme/atoms-layout/container/container';
+import Button from '@/components/ui/atoms/button/button';
 
 interface PageProps {
   params: Promise<{
@@ -22,9 +25,9 @@ export default async function Page(props: PageProps) {
 
   const user = await getUser();
 
-  if (!user) {
-    redirect('/nodehive/login');
-  }
+  // if (!user) {
+  //   redirect('/nodehive/login');
+  // }
 
   const name = user?.name?.[0]?.value;
   const email = user?.mail?.[0]?.value;
@@ -36,8 +39,8 @@ export default async function Page(props: PageProps) {
   const spaceCreateUrl = `${baseUrl}/${lang}/space/${spaceId}/create`;
 
   return (
-    <section className="container-wrapper space-y-8 py-16">
-      <h1>Account</h1>
+    <Container className="space-y-8 py-16">
+      <H1>Account</H1>
 
       <div className="space-y-4">
         <ul>
@@ -49,9 +52,7 @@ export default async function Page(props: PageProps) {
           </li>
           <li className="mt-8">
             <form action={logout}>
-              <button type="submit" className="text-sm font-bold uppercase">
-                Logout
-              </button>
+              <Button type="submit">Logout</Button>
             </form>
           </li>
         </ul>
@@ -188,6 +189,6 @@ export default async function Page(props: PageProps) {
           </div>
         )}
       </div>
-    </section>
+    </Container>
   );
 }

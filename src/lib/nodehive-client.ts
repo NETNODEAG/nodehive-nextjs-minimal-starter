@@ -1,14 +1,15 @@
-import { NodeHiveClient, NodeHiveOptions } from 'nodehive-js';
+import { NodeHiveClient, StorageAdapter } from 'nodehive-js';
 
-export const createServerClient = async () => {
-  const baseUrl = process.env.NEXT_PUBLIC_DRUPAL_REST_BASE_URL;
-  if (!baseUrl) {
-    throw new Error('NEXT_PUBLIC_DRUPAL_REST_BASE_URL is not defined');
-  }
+import { NextCookieStorage } from '@/lib/next-cookie-storage';
 
-  const options: NodeHiveOptions = {
-    baseUrl,
-    debug: true,
+const baseOptions = {
+  baseUrl: process.env.NEXT_PUBLIC_DRUPAL_REST_BASE_URL || '',
+  debug: false,
+};
+
+const buildServiceClient = () => {
+  return new NodeHiveClient({
+    ...baseOptions,
     auth: {
       method: 'oauth',
       oauth: {
@@ -17,9 +18,47 @@ export const createServerClient = async () => {
         clientSecret: process.env.NODEHIVE_OAUTH_FRONTEND_CLIENT_SECRET || '',
       },
     },
-  };
-
-  const nodehiveClient = new NodeHiveClient(options);
-
-  return nodehiveClient;
+  });
 };
+
+const buildUserClient = (storage: StorageAdapter) => {
+  return new NodeHiveClient({
+    ...baseOptions,
+    auth: {
+      method: 'oauth',
+      oauth: {
+        grantType: 'password',
+        clientId: process.env.NODEHIVE_OAUTH_USER_CLIENT_ID || '',
+        clientSecret: process.env.NODEHIVE_OAUTH_USER_CLIENT_SECRET || '',
+      },
+      storage: {
+        type: 'custom',
+        adapter: storage,
+      },
+    },
+  });
+};
+
+export const resolveNodehiveClient = async () => {
+  const storage = new NextCookieStorage();
+  const token = await storage.get('token');
+
+  if (!token) {
+    return { client: buildServiceClient(), authType: 'service' as const };
+  }
+
+  return { client: buildUserClient(storage), authType: 'user' as const };
+};
+
+export const createServerClient = async () => {
+  const { client, authType } = await resolveNodehiveClient();
+  console.log(`NodeHive: created server client with auth type '${authType}'`);
+  return client;
+};
+
+export const createUserClient = () => {
+  const storage = new NextCookieStorage();
+  return buildUserClient(storage);
+};
+
+export const createServiceClient = () => buildServiceClient();

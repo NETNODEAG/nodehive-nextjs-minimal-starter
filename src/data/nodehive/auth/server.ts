@@ -3,7 +3,7 @@
 import { redirect } from 'next/navigation';
 
 import { clearAuthToken, getUser, saveAuthToken } from '@/lib/auth';
-import { createServerClient } from '@/lib/nodehive-client';
+import { createUserClient } from '@/lib/nodehive-client';
 
 /**
  * The login state
@@ -23,22 +23,13 @@ export async function login(
   prevState: LoginState | undefined,
   formData: FormData
 ): Promise<LoginState> {
-  const client = await createServerClient();
+  const client = createUserClient();
 
   const email = formData.get('email') as string;
   const password = formData.get('password') as string;
 
   try {
-    // const { data: token, error: tokenError } = await client.getJWTAccessToken(
-    //   email,
-    //   password
-    // );
-
-    const { token, success } = await client.login(email, password, {
-      grantType: 'password',
-      clientId: process.env.NODEHIVE_OAUTH_USER_CLIENT_ID || '',
-      clientSecret: process.env.NODEHIVE_OAUTH_USER_CLIENT_SECRET || '',
-    });
+    const { success } = await client.login(email, password);
 
     if (!success) {
       return {
@@ -49,14 +40,6 @@ export async function login(
         },
       };
     }
-    await saveAuthToken(token);
-    return {
-      message: {
-        title: 'Login Successful',
-        text: 'You have been logged in successfully.',
-        type: 'success',
-      },
-    };
   } catch (e) {
     console.error(e);
 
@@ -68,6 +51,7 @@ export async function login(
       },
     };
   }
+  redirect('/nodehive/account');
 }
 
 /**
@@ -76,7 +60,8 @@ export async function login(
  * @returns {Promise}
  */
 export async function logout() {
-  await clearAuthToken();
+  const client = createUserClient();
+  await client.logout();
   redirect('/nodehive/login');
 }
 
