@@ -1,18 +1,24 @@
 import { cookies } from 'next/headers';
 import { CookieOptions, StorageAdapter } from 'nodehive-js';
 
-export class NextCookieStorage implements StorageAdapter {
-  private readonly spacePrefix =
-    process.env.NEXT_PUBLIC_NODEHIVE_SPACE_NAME || 'nodehive';
+type CookieKey = 'token' | 'refresh_token' | 'userDetails' | 'token_expires_at';
 
-  KEY_MAP: Record<string, string> = {
-    token: this.spacePrefix + '_access',
-    refresh_token: this.spacePrefix + '_refresh',
-    userDetails: this.spacePrefix + '_userDetails',
-  };
+type CookieKeyMap = Record<CookieKey, string>;
+
+export class NextCookieStorage implements StorageAdapter {
+  static cookieKeys(): CookieKeyMap {
+    const spacePrefix =
+      process.env.NEXT_PUBLIC_NODEHIVE_SPACE_NAME || 'nodehive';
+    return {
+      token: `${spacePrefix}_token`,
+      refresh_token: `${spacePrefix}_refresh_token`,
+      userDetails: `${spacePrefix}_userDetails`,
+      token_expires_at: `${spacePrefix}_token_expires_at`,
+    };
+  }
 
   private resolveKey(key: string): string | null {
-    return this.KEY_MAP[key] ?? null;
+    return NextCookieStorage.cookieKeys()[key as CookieKey] ?? null;
   }
 
   async get(key: string): Promise<string | null> {

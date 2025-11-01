@@ -1,13 +1,12 @@
-import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { NextResponse } from 'next/server';
 import { AuthenticationError } from 'nodehive-js';
 
-import { NextCookieStorage } from '@/lib/next-cookie-storage';
 import { createUserClient } from '@/lib/nodehive-client';
 
 async function handleRefresh(request: NextRequest) {
-  const storage = new NextCookieStorage();
-  const refreshToken = await storage.get('refresh_token');
+  const client = createUserClient();
+  const refreshToken = await client.auth.getRefreshToken();
   console.log('Handle refresh, Refresh token:', refreshToken);
 
   if (!refreshToken) {
@@ -18,7 +17,6 @@ async function handleRefresh(request: NextRequest) {
   }
 
   try {
-    const client = createUserClient();
     await client.auth.refreshToken();
 
     // Check if we should redirect back to the original page

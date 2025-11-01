@@ -4,10 +4,7 @@ import { match as matchLocale } from '@formatjs/intl-localematcher';
 import Negotiator from 'negotiator';
 
 import { i18n } from '@/config/i18n-config';
-
-const spacePrefix = process.env.NEXT_PUBLIC_NODEHIVE_SPACE_NAME || 'nodehive';
-const TOKEN_COOKIE = `${spacePrefix}_access`;
-const REFRESH_TOKEN_COOKIE = `${spacePrefix}_refresh`;
+import { NextCookieStorage } from '@/lib/next-cookie-storage';
 
 const NON_ENTITY_PATHS = [
   'static',
@@ -32,6 +29,8 @@ const getLocale = (request: NextRequest) => {
 };
 
 const shouldRefreshSession = (request: NextRequest): boolean => {
+  const TOKEN_COOKIE = NextCookieStorage.cookieKeys()['token'];
+  const REFRESH_TOKEN_COOKIE = NextCookieStorage.cookieKeys()['refresh_token'];
   const token = request.cookies.get(TOKEN_COOKIE)?.value;
   const refreshToken = request.cookies.get(REFRESH_TOKEN_COOKIE)?.value;
   // Don't refresh if we don't have a refresh token
@@ -48,7 +47,6 @@ export async function proxy(request: NextRequest) {
 
   // Don't check refresh on the refresh endpoint itself
   if (!pathname.startsWith('/api/nodehive/session/refresh')) {
-    // Check if session needs refresh
     if (shouldRefreshSession(request)) {
       console.log('NodeHive: redirecting to refresh session');
 

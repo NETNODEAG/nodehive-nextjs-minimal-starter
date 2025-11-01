@@ -35,6 +35,9 @@ const buildUserClient = (storage: StorageAdapter) => {
         type: 'custom',
         adapter: storage,
       },
+      session: {
+        refreshTokenMaxAge: 2592000, // 30 days
+      },
     },
   });
 };
