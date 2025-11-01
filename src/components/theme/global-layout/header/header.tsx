@@ -2,6 +2,7 @@ import { Suspense } from 'react';
 import Link from 'next/link';
 
 import { i18n, Locale } from '@/config/i18n-config';
+import Container from '@/components/theme/atoms-layout/container/container';
 import LanguageSwitcher from '@/components/theme/global-layout/language-switcher/language-switcher';
 import Navigation from '@/components/theme/global-layout/navigation/navigation';
 
@@ -13,7 +14,7 @@ export default async function Header({ langPromise }: HeaderProps) {
   const isMultilingual = i18n.isMultilingual;
   return (
     <header className="sticky top-0 z-20 bg-white shadow-xs">
-      <div className="container-wrapper">
+      <Container>
         <div className="flex h-[60px] items-center justify-between gap-4 py-2">
           <Link href={`/${isMultilingual ? lang : ''}`} className="font-bold">
             NodeHive Next.js Minimal Starter
@@ -25,7 +26,7 @@ export default async function Header({ langPromise }: HeaderProps) {
           )}
           {isMultilingual && <LanguageSwitcher lang={lang} />}
         </div>
-      </div>
+      </Container>
     </header>
   );
 }
