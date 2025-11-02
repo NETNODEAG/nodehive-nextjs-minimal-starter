@@ -1,24 +1,16 @@
 'use client';
 
-import { Config, Puck } from '@measured/puck';
+import { Button, Config, createUsePuck, Puck } from '@measured/puck';
 import { motion } from 'framer-motion';
 
 import '@measured/puck/puck.css';
 
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 import { usePathname } from 'next/navigation';
-import useWindowSize from '@/hooks/use-window-size';
-import { ImperativePanelHandle } from 'react-resizable-panels';
+import { Loader2Icon, XIcon } from 'lucide-react';
 
 import { DrupalNode } from '@/types/nodehive';
 import ComponentItem from '@/components/puck/editor/component-item';
-import PuckHeader from '@/components/puck/editor/puck-header';
-import { H3 } from '@/components/theme/atoms-content/heading/heading';
-import {
-  ResizableHandle,
-  ResizablePanel,
-  ResizablePanelGroup,
-} from '@/components/ui/atoms/resizable/resizable';
 
 type PuckEditorProps = {
   node: DrupalNode;
@@ -28,6 +20,8 @@ type PuckEditorProps = {
   closePuckEditor: () => void;
 };
 
+const usePuck = createUsePuck();
+
 export default function PuckEditor({
   node,
   fieldName,
@@ -36,17 +30,9 @@ export default function PuckEditor({
   closePuckEditor,
 }: PuckEditorProps) {
   const [isSaving, setIsSaving] = useState(false);
-  const windowSize = useWindowSize();
-  const width = windowSize.width || 1;
-  const previewDefaultSize = (896 / width) * 100;
-  const leftSidebarCollapsedSize = (80 / width) * 100;
-  const rightSidebarMinSize = (300 / width) * 100;
-  const sidebarMaxSize = (320 / width) * 100;
   const nodeData = node;
   const lang = nodeData?.langcode;
   const pathName = usePathname();
-  const leftPanelRef = useRef<ImperativePanelHandle | null>(null);
-  const rightPanelRef = useRef<ImperativePanelHandle | null>(null);
 
   const onSave = async (data: any) => {
     setIsSaving(true);
@@ -101,70 +87,48 @@ export default function PuckEditor({
       <Puck
         config={config}
         data={data}
+        headerTitle={nodeData.title || 'Page'}
         overrides={{
           componentItem: ({ name }) => <ComponentItem name={name} />,
-          header: () => (
-            <PuckHeader
-              onSave={onSave}
-              isSaving={isSaving}
-              onClose={closePuckEditor}
-              leftPanelRef={leftPanelRef}
-              rightPanelRef={rightPanelRef}
-            />
-          ),
+          headerActions: () => {
+            // eslint-disable-next-line react-hooks/rules-of-hooks
+            const appState = usePuck((s) => s.appState);
+            // eslint-disable-next-line react-hooks/rules-of-hooks
+            const dispatch = usePuck((s) => s.dispatch);
+            const previewMode = appState?.ui?.previewMode;
+            const togglePreviewMode = () => {
+              dispatch({
+                type: 'setUi',
+                ui: {
+                  previewMode: previewMode === 'edit' ? 'interactive' : 'edit',
+                },
+              });
+            };
+            return (
+              <>
+                <Button variant="secondary" onClick={togglePreviewMode}>
+                  Switch to {previewMode === 'edit' ? 'interactive' : 'edit'}
+                </Button>
+                <Button
+                  onClick={() => {
+                    onSave(appState.data);
+                  }}
+                >
+                  {isSaving && <Loader2Icon className="size-5 animate-spin" />}
+                  Save
+                </Button>
+                <button
+                  onClick={closePuckEditor}
+                  className="cursor-pointer"
+                  title="Close"
+                >
+                  <XIcon />
+                </button>
+              </>
+            );
+          },
         }}
-      >
-        {/* <PuckHeader
-          onSave={onSave}
-          isSaving={isSaving}
-          onClose={closePuckEditor}
-          leftPanelRef={leftPanelRef}
-          rightPanelRef={rightPanelRef}
-        />
-        <ResizablePanelGroup direction="horizontal">
-          <ResizablePanel
-            minSize={10}
-            maxSize={sidebarMaxSize}
-            collapsible
-            collapsedSize={leftSidebarCollapsedSize}
-            ref={leftPanelRef}
-            className="h-[calc(100dvh-var(--puck-header-height))]"
-          >
-            <div className="@container h-full space-y-12 overflow-auto p-4">
-              <div>
-                <H3 className="mb-4 hidden @min-[180px]:block">Komponenten</H3>
-                <Puck.Components />
-              </div>
-              <div>
-                <H3 className="mb-4 hidden @min-[180px]:block">Outline</H3>
-                <Puck.Outline />
-              </div>
-            </div>
-          </ResizablePanel>
-          <ResizableHandle />
-          <ResizablePanel
-            defaultSize={previewDefaultSize}
-            className="h-[calc(100dvh-var(--puck-header-height))]"
-          >
-            <div className="h-full">
-              <Puck.Preview id="puck-iframe" />
-            </div>
-          </ResizablePanel>
-          <ResizableHandle />
-          <ResizablePanel
-            collapsible
-            minSize={rightSidebarMinSize}
-            maxSize={sidebarMaxSize}
-            ref={rightPanelRef}
-            className="relative h-[calc(100dvh-var(--puck-header-height))]"
-          >
-            <div className="h-full overflow-auto p-4">
-              <H3 className="mb-4">Felder</H3>
-              <Puck.Fields />
-            </div>
-          </ResizablePanel>
-        </ResizablePanelGroup> */}
-      </Puck>
+      ></Puck>
     </motion.div>
   );
 }
