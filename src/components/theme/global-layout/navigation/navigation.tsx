@@ -2,35 +2,41 @@ import Link from 'next/link';
 import { getMainMenu } from '@/data/nodehive/menu/get-main-menu';
 
 import { Locale } from '@/config/i18n-config';
-import Debug from '@/components/ui/atoms/debug/debug';
 
 interface NavigationProps {
   menuId: string;
   lang: Locale;
 }
 
-type NavigationItem = {
-  id: string;
-  title: string;
-  url: string;
-};
-
 export default async function Navigation({ menuId, lang }: NavigationProps) {
   const navigation = await getMainMenu(menuId, lang);
 
-  <Debug data={navigation} />;
-  if (!navigation?.data?.length) {
-    return <>No menu for menu {menuId}</>;
+  if (!navigation?.length) {
+    return <>No menu for id: {menuId}</>;
   }
 
   return (
     <nav className="hidden md:block">
       <ul className="flex gap-8">
-        {navigation?.data?.map((item: NavigationItem) => (
-          <li key={item.id}>
-            <Link href={item.url} className="font-semibold">
+        {navigation?.map((item) => (
+          <li key={item.id} className="group relative">
+            <Link href={item.url} className="font-semibold hover:underline">
               {item.title}
             </Link>
+            {item.children && item.children.length > 0 && (
+              <ul className="absolute z-10 hidden space-y-2 bg-white px-2 py-2 shadow-md group-hover:block">
+                {item.children.map((child) => (
+                  <li key={child.id}>
+                    <Link
+                      href={child.url}
+                      className="font-semibold whitespace-nowrap hover:underline"
+                    >
+                      {child.title}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            )}
           </li>
         ))}
       </ul>

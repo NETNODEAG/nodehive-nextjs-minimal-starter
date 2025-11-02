@@ -14,10 +14,10 @@ export default async function Header({ langPromise }: HeaderProps) {
   const isMultilingual = i18n.isMultilingual;
   return (
     <header className="sticky top-0 z-20 bg-white shadow-xs">
-      <Container>
+      <Container className="max-w-360">
         <div className="flex h-[60px] items-center justify-between gap-4 py-2">
           <Link href={`/${isMultilingual ? lang : ''}`} className="font-bold">
-            NodeHive Next.js Minimal Starter
+            NodeHive Next.js Starter
           </Link>
           {mainMenuId && (
             <Suspense>

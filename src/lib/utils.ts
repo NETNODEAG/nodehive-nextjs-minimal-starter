@@ -1,6 +1,7 @@
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
+import { MenuItem } from '@/types/nodehive';
 import { i18n, Locale } from '@/config/i18n-config';
 
 /**
@@ -111,4 +112,33 @@ export function getLocaleFromPathname(pathname: string): Locale {
   return (i18n.locales as readonly string[]).includes(localeSegment)
     ? (localeSegment as Locale)
     : i18n.defaultLocale;
+}
+
+/**
+ * Build a tree structure from a flat array of menu items
+ * @param menuItems - The flat array of menu items
+ * @returns The tree structure of menu items
+ */
+export function buildMenuTree(menuItems: MenuItem[]): MenuItem[] {
+  const menuMap = new Map<string, MenuItem & { children: MenuItem[] }>();
+
+  for (const item of menuItems) {
+    menuMap.set(item.id, { ...item, children: [] });
+  }
+
+  const menuTree: MenuItem[] = [];
+
+  for (const item of menuItems) {
+    const currentItem = menuMap.get(item.id);
+    if (!currentItem) continue;
+    const parentId = currentItem.parent;
+    const parentItem = parentId ? menuMap.get(parentId) : undefined;
+    if (parentItem) {
+      parentItem.children.push(currentItem);
+    } else {
+      menuTree.push(currentItem);
+    }
+  }
+
+  return menuTree;
 }

@@ -279,3 +279,11 @@ export interface DrupalArea extends JsonApiResourceWithPath {
   label: string;
   default_langcode: boolean;
 }
+
+export type MenuItem = {
+  id: string;
+  title: string;
+  url: string;
+  parent: string;
+  children?: MenuItem[];
+};
