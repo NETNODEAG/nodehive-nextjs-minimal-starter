@@ -1,8 +1,15 @@
+import type { CustomFieldRender } from '@measured/puck';
+
 import { getLocaleFromPathname } from '@/lib/utils';
 import { DatePicker } from '@/components/puck/editor/date-picker/date-picker';
-import { MediaSelectorField } from '@/components/puck/editor/media-selector/media-selector-field';
+import {
+  MediaItem,
+  MediaSelectorField,
+} from '@/components/puck/editor/media-selector/media-selector-field';
 import TextEditor from '@/components/puck/editor/text-editor/text-editor';
-import VisualSettingsField from '@/components/puck/editor/visual-settings-field/visual-settings-field';
+import VisualSettingsField, {
+  VisualSettingsFieldProps,
+} from '@/components/puck/editor/visual-settings-field/visual-settings-field';
 
 export interface TextEditorFieldOptions {
   label?: string;
@@ -19,25 +26,15 @@ export const createTextEditorField = ({
     type: 'custom' as const,
     contentEditable: editorType === 'title' ? true : false,
     label,
-    render: ({
-      field,
-      value,
-      onChange,
-    }: {
-      field: any;
-      value: any;
-      onChange: any;
-    }) => {
-      return (
-        <TextEditor
-          label={field.label}
-          value={value}
-          onChange={onChange}
-          editorType={editorType}
-          showEnlargeButton={showEnlargeButton}
-        />
-      );
-    },
+    render: (({ field, value, onChange }) => (
+      <TextEditor
+        label={field.label ?? label}
+        value={value}
+        onChange={onChange}
+        editorType={editorType}
+        showEnlargeButton={showEnlargeButton}
+      />
+    )) satisfies CustomFieldRender<string>,
   };
 };
 
@@ -51,52 +48,39 @@ export const createDatePickerField = ({
   return {
     type: 'custom' as const,
     label,
-    render: ({
-      onChange,
-      value,
-      field,
-    }: {
-      onChange: any;
-      value: any;
-      field: any;
-    }) => {
-      return (
-        <DatePicker date={value} onChange={onChange} label={field.label} />
-      );
-    },
+    render: (({ field, value, onChange }) => (
+      <DatePicker
+        date={value}
+        onChange={onChange}
+        label={field.label ?? label}
+      />
+    )) satisfies CustomFieldRender<string>,
   };
 };
 
 export interface MediaSelectorFieldOptions {
   mediaTypes?: string[];
   label?: string;
+  fields?: string[]; // Array of property paths to save from API response
 }
 
 export const createMediaSelectorField = ({
   mediaTypes = ['image'],
   label = 'Media',
+  fields,
 }: MediaSelectorFieldOptions = {}) => {
   return {
     type: 'custom' as const,
     label,
-    render: ({
-      onChange,
-      value,
-      field,
-    }: {
-      onChange: any;
-      value: any;
-      field: any;
-    }) => {
-      return (
-        <MediaSelectorField
-          onChange={onChange}
-          value={value}
-          mediaTypes={mediaTypes}
-          label={field.label}
-        />
-      );
-    },
+    render: (({ onChange, value, field }) => (
+      <MediaSelectorField
+        onChange={onChange}
+        value={value}
+        mediaTypes={mediaTypes}
+        label={field.label ?? label}
+        fields={fields}
+      />
+    )) satisfies CustomFieldRender<MediaItem | null>,
   };
 };
 
@@ -114,17 +98,15 @@ export const createVisualSettingsField = ({
   return {
     type: 'custom' as const,
     label,
-    render: ({ value, onChange }: { value: any; onChange: any }) => {
-      return (
-        <VisualSettingsField
-          value={value}
-          onChange={onChange}
-          showSpacing={showSpacing}
-          showBackground={showBackground}
-          label={label}
-        />
-      );
-    },
+    render: (({ field, value, onChange }) => (
+      <VisualSettingsField
+        value={value}
+        onChange={onChange}
+        showSpacing={showSpacing}
+        showBackground={showBackground}
+        label={field.label ?? label}
+      />
+    )) satisfies CustomFieldRender<VisualSettingsFieldProps['value']>,
   };
 };
 
@@ -147,7 +129,14 @@ export const createColorSelectField = ({
   };
 };
 
-export interface NodeSelectorFieldOptions {
+export type NodeSelectorItem = {
+  title?: string | null;
+  [key: string]: unknown;
+};
+
+export interface NodeSelectorFieldOptions<
+  TItem extends NodeSelectorItem = NodeSelectorItem,
+> {
   nodeType: string;
   label?: string;
   locale?: string;
@@ -155,11 +144,13 @@ export interface NodeSelectorFieldOptions {
   showSearch?: boolean;
   initialQuery?: string;
   searchFields?: string[];
-  getItemSummary?: (item: any) => string;
-  mapRow?: (item: any) => any;
+  getItemSummary?: (item: TItem) => string;
+  mapRow?: (item: TItem) => TItem;
 }
 
-export const createNodeSelectorField = ({
+export const createNodeSelectorField = <
+  TItem extends NodeSelectorItem = NodeSelectorItem,
+>({
   nodeType,
   label = 'Node',
   placeholder = `Select ${nodeType}`,
@@ -168,14 +159,14 @@ export const createNodeSelectorField = ({
   searchFields = ['title'],
   getItemSummary,
   mapRow,
-}: NodeSelectorFieldOptions) => {
+}: NodeSelectorFieldOptions<TItem>) => {
   return {
     type: 'external' as const,
     label,
     placeholder,
     showSearch,
     initialQuery,
-    fetchList: async ({ query }: { query?: string } = {}) => {
+    fetchList: async ({ query }: { query?: string } = {}): Promise<TItem[]> => {
       const normalizedLocale = getLocaleFromPathname(window.location.pathname);
 
       const url = new URL(
@@ -197,17 +188,23 @@ export const createNodeSelectorField = ({
         throw new Error(`Failed to fetch ${nodeType} nodes`);
       }
 
-      const data = await response.json();
-      return data;
+      const data = (await response.json()) as unknown;
+
+      if (!Array.isArray(data)) {
+        throw new Error(`Invalid response format for ${nodeType} nodes`);
+      }
+
+      return data as TItem[];
     },
     getItemSummary:
       getItemSummary ||
-      ((item: any) => {
-        return item?.title;
+      ((item: TItem) => {
+        const summary = item?.title;
+        return typeof summary === 'string' ? summary : '';
       }),
     mapRow:
       mapRow ||
-      ((item: any) => {
+      ((item: TItem): TItem => {
         return item;
       }),
   };

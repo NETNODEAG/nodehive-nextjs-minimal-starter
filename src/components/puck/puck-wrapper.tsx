@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/context/auth-context';
-import { Button } from '@measured/puck';
+import { Button, Config } from '@measured/puck';
 import { AnimatePresence } from 'framer-motion';
 import { SquareDashedMousePointerIcon } from 'lucide-react';
 
@@ -15,7 +15,7 @@ import PuckRender from '@/components/puck/puck-render';
 type PuckWrapperProps = {
   node: DrupalNode;
   fieldName: string;
-  config: any;
+  config: Config;
 };
 
 export default function PuckWrapper({

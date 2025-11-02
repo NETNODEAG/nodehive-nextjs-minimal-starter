@@ -1,21 +1,20 @@
 'use client';
 
-import { Button, Config, createUsePuck, Puck } from '@measured/puck';
-import { motion } from 'framer-motion';
-
-import '@measured/puck/puck.css';
-
 import { useState } from 'react';
 import { usePathname } from 'next/navigation';
+import { Button, Config, createUsePuck, Data, Puck } from '@measured/puck';
+import { motion } from 'framer-motion';
 import { Loader2Icon, XIcon } from 'lucide-react';
 
 import { DrupalNode } from '@/types/nodehive';
 import ComponentItem from '@/components/puck/editor/component-item';
 
+import '@measured/puck/puck.css';
+
 type PuckEditorProps = {
   node: DrupalNode;
   fieldName: string;
-  data: any;
+  data: Partial<Data>;
   config: Config;
   closePuckEditor: () => void;
 };
@@ -34,7 +33,7 @@ export default function PuckEditor({
   const lang = nodeData?.langcode;
   const pathName = usePathname();
 
-  const onSave = async (data: any) => {
+  const onSave = async (data: Partial<Data>) => {
     setIsSaving(true);
 
     console.log('Attempting to save Puck data...', {

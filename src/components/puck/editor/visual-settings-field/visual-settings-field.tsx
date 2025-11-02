@@ -6,19 +6,19 @@ import { ChevronDownIcon, ChevronUpIcon } from 'lucide-react';
 import { BackgroundColor, SpacingSize } from '@/types/visual-settings';
 
 const spacingOptions = [
-  { label: 'Ohne', value: 'none' },
-  { label: 'Klein', value: 'small' },
-  { label: 'Gross', value: 'large' },
+  { label: 'None', value: 'none' },
+  { label: 'Small', value: 'small' },
+  { label: 'Large', value: 'large' },
 ];
 
 const backgroundColorOptions = [
-  { label: 'Weiss', value: 'white' },
-  { label: 'Grau', value: 'gray' },
-  { label: 'Blau', value: 'blue' },
-  { label: 'Grün', value: 'green' },
-  { label: 'Rot', value: 'red' },
+  { label: 'White', value: 'white' },
+  { label: 'Gray', value: 'gray' },
+  { label: 'Blue', value: 'blue' },
+  { label: 'Green', value: 'green' },
+  { label: 'Red', value: 'red' },
   { label: 'Orange', value: 'orange' },
-  { label: 'Lila', value: 'purple' },
+  { label: 'Purple', value: 'purple' },
 ];
 
 export type VisualSettingsFieldProps = {
@@ -27,7 +27,7 @@ export type VisualSettingsFieldProps = {
     bottomSpacing?: SpacingSize;
     backgroundColor?: BackgroundColor;
   };
-  onChange: (value: any) => void;
+  onChange: (value: VisualSettingsFieldProps['value']) => void;
   showSpacing?: boolean;
   showBackground?: boolean;
   label?: string;

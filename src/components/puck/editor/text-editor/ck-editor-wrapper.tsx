@@ -35,7 +35,7 @@ export default function CKEditorWrapper({
   autoFocus = false,
   editorType = 'default',
 }: CKEditorWrapperProps) {
-  const editorRef = useRef<any>(null);
+  const editorRef = useRef<ClassicEditor | null>(null);
 
   // Configure editor based on type
   const getEditorConfig = () => {
@@ -128,7 +128,9 @@ export default function CKEditorWrapper({
         }}
         onChange={(event, editor) => {
           const data = editor.getData();
-          onChange && onChange(data);
+          if (onChange) {
+            onChange(data);
+          }
         }}
       />
     </div>
