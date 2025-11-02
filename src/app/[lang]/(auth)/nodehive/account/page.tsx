@@ -23,6 +23,7 @@ export async function generateStaticParams() {
 export default async function Page(props: PageProps) {
   const params = await props.params;
   const { lang } = params;
+  const isMultilingual = i18n.isMultilingual;
 
   const client = createUserClient();
   const isLoggedIn = await client.isLoggedIn();
@@ -39,8 +40,14 @@ export default async function Page(props: PageProps) {
 
   const baseUrl = process.env.NEXT_PUBLIC_DRUPAL_BASE_URL;
   const spaceId = process.env.NEXT_PUBLIC_DRUPAL_NODEHIVE_SPACE_ID;
-  const spaceOverviewUrl = `${baseUrl}/${lang}/space/${spaceId}`;
-  const spaceCreateUrl = `${baseUrl}/${lang}/space/${spaceId}/create`;
+  const spaceOverviewPath = `/space/${spaceId}`;
+  const spaceCreatePath = `/space/${spaceId}/create`;
+  const spaceOverviewUrl = isMultilingual
+    ? `${baseUrl}/${lang}${spaceOverviewPath}`
+    : `${baseUrl}${spaceOverviewPath}`;
+  const spaceCreateUrl = isMultilingual
+    ? `${baseUrl}/${lang}${spaceCreatePath}`
+    : `${baseUrl}${spaceCreatePath}`;
 
   return (
     <Container className="space-y-8 py-16">
@@ -130,9 +137,12 @@ export default async function Page(props: PageProps) {
                 }
               );
 
-              const nodePath = node.path?.alias
-                ? `/${node.path.langcode}${node.path.alias}`
-                : `/${node.langcode}/node/${node.drupal_internal__nid}`;
+              const nodeAlias = node.path?.alias
+                ? node.path.alias
+                : `/node/${node.drupal_internal__nid}`;
+              const nodePath = isMultilingual
+                ? `/${lang}${nodeAlias}`
+                : `${nodeAlias}`;
 
               const contentType = node.type?.replace('node--', '') || 'unknown';
 
