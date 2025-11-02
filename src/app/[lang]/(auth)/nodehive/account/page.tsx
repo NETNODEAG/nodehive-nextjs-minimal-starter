@@ -2,7 +2,6 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { logout } from '@/data/nodehive/auth/actions';
 import { getSpaceNodes } from '@/data/nodehive/nodes/get-space-nodes';
-import { getUser } from '@/data/nodehive/user/get-user';
 
 import { i18n } from '@/config/i18n-config';
 import { createUserClient } from '@/lib/nodehive-client';
