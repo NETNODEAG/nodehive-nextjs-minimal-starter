@@ -11,12 +11,13 @@ export const buttonVariants = cva(
     variants: {
       variant: {
         primary:
-          'bg-primary hover:bg-primary/90 rounded-full border text-white',
+          'bg-primary hover:bg-primary/90 focus-visible:ring-primary rounded-full border text-white',
         secondary:
-          'bg-secondary border-secondary hover:bg-secondary/90 rounded-full border text-white',
+          'bg-secondary border-secondary hover:bg-secondary/90 focus-visible:ring-secondary rounded-full border text-white',
         outline:
-          'border-primary text-primary hover:bg-primary/10 rounded-full border bg-white',
-        ghost: 'rounded-full hover:bg-slate-100 hover:text-black',
+          'border-primary text-primary hover:bg-primary/10 focus-visible:ring-primary rounded-full border bg-white',
+        ghost:
+          'rounded-full hover:bg-slate-100 hover:text-black focus-visible:ring-slate-100',
       },
     },
     defaultVariants: { variant: 'primary' },
