@@ -1,5 +1,6 @@
 import { Suspense } from 'react';
 import { AuthProvider } from '@/providers/auth-provider';
+import { QueryProvider } from '@/providers/query-provider';
 
 import { createUserClient } from '@/lib/nodehive-client';
 
@@ -13,7 +14,7 @@ export default function AppProvider({
   return (
     <Suspense>
       <AuthProvider isLoggedInPromise={isLoggedInPromise}>
-        {children}
+        <QueryProvider>{children}</QueryProvider>
       </AuthProvider>
     </Suspense>
   );

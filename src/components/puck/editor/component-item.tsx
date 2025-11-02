@@ -3,28 +3,20 @@
 import React from 'react';
 import Image from 'next/image';
 import {
-  ArrowUp10Icon,
-  BarChart3Icon,
   BoxIcon,
   BoxSelectIcon,
-  ColumnsIcon,
-  DivideIcon,
-  FileTextIcon,
-  FilmIcon,
+  Columns2Icon,
   GridIcon,
   GripVerticalIcon,
   HeadingIcon,
+  IdCardIcon,
   ImageIcon,
-  LayoutTemplateIcon,
-  ListCollapseIcon,
-  MenuIcon,
-  MonitorIcon,
+  ListOrdered,
   MousePointerClickIcon,
-  QuoteIcon,
+  PlaySquareIcon,
   SpaceIcon,
-  SparklesIcon,
   TextIcon,
-  TimerIcon,
+  WallpaperIcon,
 } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
@@ -42,100 +34,51 @@ type ComponentItemProps = {
 
 // Component icon mapping
 const COMPONENT_ICONS: Record<string, React.ReactNode> = {
-  AccordionSection: <ListCollapseIcon className="size-4" />,
-  Banner: <ImageIcon className="size-4" />,
-  Datawrapper: <BarChart3Icon className="size-4" />,
-  LPHero: <MonitorIcon className="size-4" />,
-  Media: <FilmIcon className="size-4" />,
-  TextSection: <FileTextIcon className="size-4" />,
-  Countdown: <TimerIcon className="size-4" />,
-  Counter: <ArrowUp10Icon className="size-4" />,
-  CTA: <MousePointerClickIcon className="size-4" />,
-  Quote: <QuoteIcon className="size-4" />,
-  // TwoColumnsLayout: <ColumnsIcon className="size-4" />,
-  // ShareCard: <Share2Icon className="size-4" />,
-  // PersonCard: <UserCircleIcon className="size-4" />,
-  // CommentBox: <MessageSquareIcon className="size-4" />,
-  // SidebarAccordion: <ListCollapseIcon className="size-4" />,
-  // Persons: <UsersIcon className="size-4" />,
+  // Layout
+  Container: <BoxSelectIcon className="size-4" />,
   Grid: <GridIcon className="size-4" />,
-  Section: <BoxSelectIcon className="size-4" />,
+  TwoColumns: <Columns2Icon className="size-4" />,
   Space: <SpaceIcon className="size-4" />,
-  Divider: <DivideIcon className="size-4" />,
-  TwoColumns: <ColumnsIcon className="size-4" />,
+  // Content
   Heading: <HeadingIcon className="size-4" />,
-  Text: <TextIcon className="size-4" />,
-  Button: <MousePointerClickIcon className="size-4" />,
+  BodyCopy: <TextIcon className="size-4" />,
+  CallToAction: <MousePointerClickIcon className="size-4" />,
   Image: <ImageIcon className="size-4" />,
-  HeadingTemplate: <LayoutTemplateIcon className="size-4" />,
-  ImageTextTemplate: <LayoutTemplateIcon className="size-4" />,
-  Animation: <SparklesIcon className="size-4" />,
-  CountUp: <ArrowUp10Icon className="size-4" />,
-  AsideMenu: <MenuIcon className="size-4" />,
+  Video: <PlaySquareIcon className="size-4" />,
+  // Organisms
+  Card: <IdCardIcon className="size-4" />,
+  Statistics: <ListOrdered className="size-4" />,
+  // Sections
+  Hero: <WallpaperIcon className="size-4" />,
+  TwoColumnContent: <Columns2Icon className="size-4" />,
 };
 
-// Component preview images
-const COMPONENT_PREVIEWS: Record<string, string> = {
-  AccordionSection: '/images/previews/accordion-section.png',
-  Banner: '/images/previews/banner.png',
-  Datawrapper: '/images/previews/datawrapper.png',
-  LPHero: '/images/previews/lp-hero.png',
-  Media: '/images/previews/media.png',
-  TextSection: '/images/previews/text-section.png',
-  TwoColumnsLayout: '/images/previews/two-columns.png',
-  ShareCard: '/images/previews/share-card.png',
-  PersonCard: '/images/previews/person-card.png',
-  CommentBox: '/images/previews/comment-box.png',
-  Countdown: '/images/previews/countdown.png',
-  Counter: '/images/previews/counter.png',
-  CTA: '/images/previews/cta.png',
-  Quote: '/images/previews/quote.png',
-  SidebarAccordion: '/images/previews/sidebar-accordion.png',
-  Persons: '/images/previews/persons.png',
-  Heading: '/images/previews/heading.png', // TODO: Add actual preview
-  Text: '/images/previews/text.png', // TODO: Add actual preview
-  Button: '/images/previews/button.png', // TODO: Add actual preview
-  Image: '/images/previews/image.png', // TODO: Add actual preview
-  Grid: '/images/previews/grid.png', // TODO: Add actual preview
-  Section: '/images/previews/section.png', // TODO: Add actual preview
-  Space: '/images/previews/space.png', // TODO: Add actual preview
-  Divider: '/images/previews/divider.png', // TODO: Add actual preview
-  TwoColumns: '/images/previews/two-columns.png', // TODO: Add actual preview
-  AsideMenu: '/images/previews/aside-menu.png', // TODO: Add actual preview
-  HeadingTemplate: '/images/previews/heading-template.png', // TODO: Add actual preview
-  ImageTextTemplate: '/images/previews/image-text-template.png', // TODO: Add actual preview
-};
+// TODO add preview
+const COMPONENT_PREVIEWS: Record<string, string> = {};
 
 const COMPONENT_LABELS: Record<string, string> = {
-  AccordionSection: 'Akkordeon',
-  Banner: 'Banner',
-  Datawrapper: 'Datawrapper',
-  LPHero: 'Hero',
-  Media: 'Media',
-  TextSection: 'Text',
-  Quote: 'Zitat',
-  Countdown: 'Countdown',
-  Counter: 'Counter',
-  CTA: 'Call to Action',
-  Heading: 'Heading',
-  Text: 'Text',
-  Button: 'Button',
-  Section: 'Abschnitt',
-  Space: 'Abstand',
-  Divider: 'Trenner',
+  // Layout
+  Container: 'Container',
   Grid: 'Grid',
-  Image: 'Bild',
-  TwoColumns: 'Zwei Spalten',
-  HeadingTemplate: 'Heading Template',
-  ImageTextTemplate: 'Image-Text Template',
-  Animation: 'Animation',
-  CountUp: 'Count Up',
-  AsideMenu: 'Inhaltsverzeichnis',
+  TwoColumns: 'Two Columns',
+  Space: 'Space',
+  // Content
+  Heading: 'Heading',
+  BodyCopy: 'Text',
+  CallToAction: 'Call to Action',
+  Image: 'Image',
+  Video: 'Video',
+  // Organisms
+  Card: 'Card',
+  Statistics: 'Statistics',
+  // Sections
+  Hero: 'Hero',
+  TwoColumnContent: 'Two Columns Content',
 };
 
 export default function ComponentItem({ name }: ComponentItemProps) {
   return (
-    <TooltipProvider delayDuration={500}>
+    <TooltipProvider delayDuration={200}>
       <Tooltip>
         <TooltipTrigger asChild>
           <div
@@ -144,14 +87,14 @@ export default function ComponentItem({ name }: ComponentItemProps) {
             )}
           >
             <div className="flex w-full items-center gap-2">
-              <div className="flex-shrink-0">
+              <div className="shrink-0">
                 {COMPONENT_ICONS[name] || <BoxIcon className="size-4" />}
               </div>
               <span className="truncate text-sm">
                 {COMPONENT_LABELS[name] || name}
               </span>
             </div>
-            <GripVerticalIcon className="size-3 flex-shrink-0" />
+            <GripVerticalIcon className="size-3 shrink-0" />
           </div>
         </TooltipTrigger>
         <TooltipPortal>

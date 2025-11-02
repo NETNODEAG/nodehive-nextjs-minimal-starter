@@ -74,7 +74,9 @@ export const ImageConfig: ComponentConfig = {
 
   render: ({ image, imageStyle, aspectRatio, fit }) => {
     const imageAlt = image?.field_media_image?.meta?.alt || 'Image';
-    let imageSrc = image?.field_media_image?.uri;
+    let imageSrc =
+      image?.field_media_image?.uri ||
+      `${process.env.NEXT_PUBLIC_DRUPAL_BASE_URL}/sites/default/files/nodehive_login_screen.png`;
     const imageStyleUri = image?.field_media_image?.image_style_uri;
 
     if (imageStyle && imageStyleUri && imageStyleUri[imageStyle]) {

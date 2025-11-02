@@ -178,7 +178,7 @@ export function MediaSelectorField({
           <div className="rounded-md border border-gray-200">
             <div className="flex gap-4">
               <button
-                className="flex flex-grow cursor-pointer flex-col items-center justify-center gap-2 p-3 hover:bg-[#f7faff]"
+                className="flex grow cursor-pointer flex-col items-center justify-center gap-2 p-3 hover:bg-[#f7faff]"
                 onClick={() => setIsModalOpen(true)}
                 type="button"
               >
@@ -189,7 +189,7 @@ export function MediaSelectorField({
                     // Show file type icon for all non-image media types
                     return (
                       <div
-                        className={`flex aspect-square w-24 flex-shrink-0 items-center justify-center overflow-hidden rounded ${fileDisplay.bgColor}`}
+                        className={`flex aspect-square w-24 shrink-0 items-center justify-center overflow-hidden rounded ${fileDisplay.bgColor}`}
                       >
                         <span
                           className={`material-symbols-outlined ${fileDisplay.iconColor} text-4xl`}
@@ -204,8 +204,9 @@ export function MediaSelectorField({
                   ) {
                     // Only show thumbnails for actual image media types
                     return (
-                      <div className="aspect-square w-24 flex-shrink-0 overflow-hidden rounded">
+                      <div className="aspect-square w-24 shrink-0 overflow-hidden rounded">
                         <div className="relative h-full w-full">
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img
                             src={`/api/image-proxy?url=${value.thumbnailImage}`}
                             alt={value.name || ''}
@@ -217,7 +218,7 @@ export function MediaSelectorField({
                   } else {
                     // Fallback generic icon for unknown media types
                     return (
-                      <div className="flex aspect-square w-24 flex-shrink-0 items-center justify-center overflow-hidden rounded bg-gray-50">
+                      <div className="flex aspect-square w-24 shrink-0 items-center justify-center overflow-hidden rounded bg-gray-50">
                         <span className="material-symbols-outlined text-4xl text-gray-600">
                           attachment
                         </span>

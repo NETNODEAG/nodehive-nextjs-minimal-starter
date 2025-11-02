@@ -3,6 +3,8 @@ import { Config } from '@measured/puck';
 import { BodyCopyConfig } from '@/components/theme/atoms-content/body-copy/body-copy.config';
 import { CallToActionConfig } from '@/components/theme/atoms-content/call-to-action/call-to-action.config';
 import { HeadingConfig } from '@/components/theme/atoms-content/heading/heading.config';
+import { ImageConfig } from '@/components/theme/atoms-content/image/image.config';
+import { VideoConfig } from '@/components/theme/atoms-content/video/video.config';
 import { ContainerConfig } from '@/components/theme/atoms-layout/container/container.config';
 import { GridConfig } from '@/components/theme/atoms-layout/grid/grid.config';
 import { SpaceConfig } from '@/components/theme/atoms-layout/space/space.config';
@@ -27,20 +29,15 @@ export const config: Config = {
       title: 'Layout',
       components: ['Container', 'Grid', 'TwoColumns', 'Space'],
     },
-    components: {
+    content: {
       visible: true,
       title: 'Komponenten',
-      components: ['Heading', 'BodyCopy', 'CallToAction'],
+      components: ['Heading', 'BodyCopy', 'CallToAction', 'Image', 'Video'],
     },
     organisms: {
       visible: true,
       title: 'Organisms',
       components: ['Card', 'Statistics'],
-    },
-    templates: {
-      visible: false,
-      title: 'Templates',
-      components: [],
     },
   },
   components: {
@@ -49,10 +46,12 @@ export const config: Config = {
     Grid: GridConfig,
     TwoColumns: TwoColumnsConfig,
     Space: SpaceConfig,
-    // Components
+    // Content
     Heading: HeadingConfig,
     BodyCopy: BodyCopyConfig,
     CallToAction: CallToActionConfig,
+    Image: ImageConfig,
+    Video: VideoConfig,
     // Organisms
     Card: CardConfig,
     Statistics: StatisticsConfig,
