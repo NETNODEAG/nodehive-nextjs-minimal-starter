@@ -13,7 +13,7 @@ async function handleRefresh(request: NextRequest) {
 
   const preferHTML = (): boolean => {
     const accept = request.headers.get('accept');
-    if (!accept) return true;
+    if (!accept) return false;
     return accept.includes('text/html');
   };
 
