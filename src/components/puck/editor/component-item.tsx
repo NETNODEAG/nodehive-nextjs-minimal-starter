@@ -50,7 +50,6 @@ const COMPONENT_ICONS: Record<string, React.ReactNode> = {
   Statistics: <ListOrdered className="size-4" />,
   // Sections
   Hero: <WallpaperIcon className="size-4" />,
-  TwoColumnContent: <Columns2Icon className="size-4" />,
 };
 
 // TODO add preview
@@ -73,7 +72,6 @@ const COMPONENT_LABELS: Record<string, string> = {
   Statistics: 'Statistics',
   // Sections
   Hero: 'Hero',
-  TwoColumnContent: 'Two Columns Content',
 };
 
 export default function ComponentItem({ name }: ComponentItemProps) {

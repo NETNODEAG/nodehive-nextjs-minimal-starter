@@ -88,7 +88,7 @@ export default function PuckEditor({
         data={data}
         headerTitle={nodeData.title || 'Page'}
         overrides={{
-          componentItem: ({ name }) => <ComponentItem name={name} />,
+          drawerItem: ({ name }) => <ComponentItem name={name} />,
           headerActions: () => {
             // eslint-disable-next-line react-hooks/rules-of-hooks
             const appState = usePuck((s) => s.appState);

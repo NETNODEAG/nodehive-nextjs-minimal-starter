@@ -12,7 +12,6 @@ import { TwoColumnsConfig } from '@/components/theme/atoms-layout/two-columns/tw
 import { CardConfig } from '@/components/theme/organisms/card/card.config';
 import { StatisticsConfig } from '@/components/theme/organisms/statistics/statistics.config';
 import { HeroConfig } from '@/components/theme/sections/hero/hero.config';
-import { TwoColumnContentConfig } from '@/components/theme/sections/two-column-content/two-column-content.config';
 
 export const config: Config = {
   categories: {
@@ -22,7 +21,7 @@ export const config: Config = {
     sections: {
       visible: true,
       title: 'Sections',
-      components: ['Hero', 'TwoColumnContent'],
+      components: ['Hero'],
     },
     layout: {
       visible: true,
@@ -57,7 +56,6 @@ export const config: Config = {
     Statistics: StatisticsConfig,
     // Sections
     Hero: HeroConfig,
-    TwoColumnContent: TwoColumnContentConfig,
   },
   root: {
     fields: {},
