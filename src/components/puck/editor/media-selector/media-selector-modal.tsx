@@ -406,8 +406,8 @@ export function MediaSelectorModal({
                     onClick={() => setShowAddMedia(true)}
                   >
                     {mediaType === 'image'
-                      ? 'Bild hochladen'
-                      : 'Remote Video hochladen'}
+                      ? 'Upload Image'
+                      : 'Upload Remote Video'}
                   </Button>
                 </div>
               )}

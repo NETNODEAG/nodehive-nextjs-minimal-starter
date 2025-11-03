@@ -130,7 +130,7 @@ export function VideoUploadForm({
             e.stopPropagation();
           }}
         >
-          {isPending ? 'Lädt hoch...' : 'Video hochladen'}
+          {isPending ? 'Uploading...' : 'Upload Video'}
         </Button>
       </div>
     </form>

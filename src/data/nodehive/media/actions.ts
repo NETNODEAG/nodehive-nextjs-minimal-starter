@@ -1,6 +1,7 @@
 'use server';
 
 import { getAuthToken } from '@/lib/auth';
+import { createUserClient } from '@/lib/nodehive-client';
 
 // Define response type for better structure
 type MediaUploadResponse = {
@@ -22,10 +23,10 @@ export async function uploadImageMedia(
   const alt = (formData.get('alt') as string) || '';
   const name = (formData.get('name') as string) || file?.name || 'Image';
 
-  // Get the auth token
-  const userToken = await getAuthToken();
+  const client = createUserClient();
+  const token = await client.auth.getToken();
 
-  if (!userToken) {
+  if (!token) {
     return {
       success: false,
       message: 'Authentication required',
@@ -52,7 +53,7 @@ export async function uploadImageMedia(
         Accept: 'application/vnd.api+json',
         'Content-Type': 'application/octet-stream',
         'Content-Disposition': `attachment; filename="${file.name}"`,
-        Authorization: `Bearer ${userToken}`,
+        Authorization: `Bearer ${token}`,
       },
       body: fileBuffer,
     });
@@ -99,7 +100,7 @@ export async function uploadImageMedia(
         headers: {
           'Content-Type': 'application/vnd.api+json',
           Accept: 'application/vnd.api+json',
-          Authorization: `Bearer ${userToken}`,
+          Authorization: `Bearer ${token}`,
         },
       }
     );
@@ -140,10 +141,10 @@ export async function uploadRemoteVideoMedia(
   const videoUrl = formData.get('videoUrl') as string;
   const name = formData.get('name') as string;
 
-  // Get the auth token
-  const userToken = await getAuthToken();
+  const client = createUserClient();
+  const token = await client.auth.getToken();
 
-  if (!userToken) {
+  if (!token) {
     return {
       success: false,
       message: 'Authentication required',
@@ -178,7 +179,7 @@ export async function uploadRemoteVideoMedia(
         headers: {
           'Content-Type': 'application/vnd.api+json',
           Accept: 'application/vnd.api+json',
-          Authorization: `Bearer ${userToken}`,
+          Authorization: `Bearer ${token}`,
         },
       }
     );

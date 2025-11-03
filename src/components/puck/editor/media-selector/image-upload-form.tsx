@@ -148,7 +148,7 @@ export function ImageUploadForm({
             e.stopPropagation();
           }}
         >
-          {isPending ? 'Lädt hoch...' : 'Bild hochladen'}
+          {isPending ? 'Uploading...' : 'Upload Image'}
         </Button>
       </div>
     </form>

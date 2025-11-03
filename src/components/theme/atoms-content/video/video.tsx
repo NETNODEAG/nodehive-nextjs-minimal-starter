@@ -106,9 +106,14 @@ const getEmbedUrl = (videoUrl: string, options?: VideoProps['options']) => {
     if (urlObj.hostname.includes('vimeo.com')) {
       // Extract the video ID from Vimeo URL
       const parts = urlObj.pathname.split('/').filter(Boolean);
-      const vimeoId = parts[0]?.match(/^\d+$/) ? parts[0] : null;
-      const hash = parts[1]?.match(/^[a-zA-Z0-9]+$/) ? parts[1] : null;
-      const params = new URLSearchParams();
+      const vimeoId = parts.find((part) => /^\d+$/.test(part)) ?? null;
+      const idIndex = vimeoId ? parts.indexOf(vimeoId) : -1;
+      const nextSegment = idIndex >= 0 ? parts[idIndex + 1] : undefined;
+      const hash =
+        nextSegment && /^[a-zA-Z0-9]+$/.test(nextSegment) ? nextSegment : null;
+
+      if (!vimeoId) return null;
+      const params = new URLSearchParams(urlObj.searchParams);
       if (hash) {
         params.append('h', hash);
       }
