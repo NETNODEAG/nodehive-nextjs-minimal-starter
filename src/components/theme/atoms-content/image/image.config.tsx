@@ -4,20 +4,20 @@ import { createMediaSelectorField } from '@/components/puck/editor/field-utils';
 import Image from '@/components/theme/atoms-content/image/image';
 
 export const ImageConfig: ComponentConfig = {
-  label: 'Bild',
+  label: 'Image',
   fields: {
     image: createMediaSelectorField({
-      label: 'Bild',
+      label: 'Image',
       mediaTypes: ['image'],
     }),
     aspectRatio: {
-      label: 'Seitenverhältnis',
+      label: 'Aspect Ratio',
       type: 'select',
       options: [
         { label: '16:9 (Widescreen)', value: '16/9' },
         { label: '4:3 (Standard)', value: '4/3' },
         { label: '1:1 (Quadrat)', value: '1/1' },
-        { label: '3:2 (Foto)', value: '3/2' },
+        { label: '3:2 (Photo)', value: '3/2' },
         { label: '21:9 (Ultrawide)', value: '21/9' },
       ],
     },

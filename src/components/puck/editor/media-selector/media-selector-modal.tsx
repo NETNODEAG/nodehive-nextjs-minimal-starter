@@ -231,9 +231,9 @@ export function MediaSelectorModal({
           <DialogTitle>
             {showAddMedia
               ? mediaType === 'image'
-                ? 'Bild hinzufügen'
-                : 'Remote Video hinzufügen'
-              : 'Media auswählen'}
+                ? 'Add Image'
+                : 'Add Remote Video'
+              : 'Select Media'}
           </DialogTitle>
           <DialogDescription className="sr-only"></DialogDescription>
         </DialogHeader>
@@ -280,7 +280,7 @@ export function MediaSelectorModal({
                     htmlFor="mediaType"
                     className="block text-sm font-medium text-gray-700"
                   >
-                    Media Typ
+                    Media Type
                   </label>
                   <select
                     id="mediaType"
@@ -345,6 +345,7 @@ export function MediaSelectorModal({
                           // Only show thumbnails for actual image media types
                           return (
                             <div className="relative h-full w-full">
+                              {/*eslint-disable-next-line @next/next/no-img-element */}
                               <img
                                 src={`/api/image-proxy?url=${item.thumbnailImage}`}
                                 alt={item.name || ''}
