@@ -1,5 +1,4 @@
-import Link from 'next/link';
-
+import CallToAction from '@/components/theme/atoms-content/call-to-action/call-to-action';
 import Container from '@/components/theme/atoms-layout/container/container';
 
 export default function Forbidden() {
@@ -10,9 +9,9 @@ export default function Forbidden() {
 
         <p>You do not have permission to access this resource.</p>
 
-        <Link href="/" className="btn-primary">
+        <CallToAction href="/" variant={'button'}>
           Go Back Home
-        </Link>
+        </CallToAction>
       </section>
     </Container>
   );
