@@ -1,21 +1,24 @@
 import { NextResponse } from 'next/server';
+import { getMedia } from '@/data/nodehive/media/get-media';
 
-import { createServerClient } from '@/lib/nodehive-client';
+interface RouteParams {
+  params: Promise<{
+    lang: string;
+    type: string;
+    id: string;
+  }>;
+}
 
-export async function GET(
-  request: Request,
-  { params }: { params: Promise<{ id: string; type: string }> }
-) {
+export async function GET(request: Request, { params }: RouteParams) {
   try {
-    const client = await createServerClient();
-    const { id, type } = await params;
-    const media = await client.getMedia(id, type);
+    const { id, type, lang } = await params;
+    const media = await getMedia(id, type, lang);
 
     if (!media) {
       return NextResponse.json({ error: 'Media not found' }, { status: 404 });
     }
 
-    return NextResponse.json(media.data);
+    return NextResponse.json(media);
   } catch (error) {
     console.error('Error fetching media:', error);
     return NextResponse.json(

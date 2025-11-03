@@ -1,6 +1,7 @@
 const locales = ['en'] as const;
 
-const defaultLocale = process.env.NODEHIVE_DEFAULT_LANGUAGE as Locale;
+const defaultLocale = process.env
+  .NEXT_PUBLIC_NODEHIVE_DEFAULT_LANGUAGE as Locale;
 
 export const i18n = {
   defaultLocale: defaultLocale,

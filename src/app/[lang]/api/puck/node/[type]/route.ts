@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
-
-import { createServerClient } from '@/lib/nodehive-client';
+import { getNodes } from '@/data/nodehive/nodes/get-nodes';
 
 interface RouteParams {
   params: Promise<{
@@ -13,17 +12,16 @@ export async function GET(request: Request, { params }: RouteParams) {
   try {
     const { type, lang } = await params;
 
-    const client = await createServerClient();
-    const node = await client.getNodes(type, { lang });
+    const nodes = await getNodes(type, lang);
 
-    if (!node) {
+    if (!nodes) {
       return NextResponse.json(
         { error: `Nodes not found: ${type}` },
         { status: 404 }
       );
     }
 
-    return NextResponse.json(node.data);
+    return NextResponse.json(nodes);
   } catch (error) {
     console.error('Error fetching node:', error);
     return NextResponse.json(

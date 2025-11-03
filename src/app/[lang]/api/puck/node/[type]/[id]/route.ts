@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
-
-import { createServerClient } from '@/lib/nodehive-client';
+import { getNode } from '@/data/nodehive/nodes/get-node';
 
 interface RouteParams {
   params: Promise<{
@@ -14,8 +13,7 @@ export async function GET(request: Request, { params }: RouteParams) {
   try {
     const { type, id, lang } = await params;
 
-    const client = await createServerClient();
-    const node = await client.getNode(id, type, { lang });
+    const node = await getNode(id, type, lang);
 
     if (!node) {
       return NextResponse.json(

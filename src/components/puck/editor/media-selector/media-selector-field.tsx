@@ -54,13 +54,14 @@ export function MediaSelectorField({
       };
     }
 
-    if (media.type === 'media--image') {
-      return {
-        icon: 'image',
-        bgColor: 'bg-pink-50',
-        iconColor: 'text-pink-600',
-      };
-    }
+    // Disabled to show thumbnail image instead of generic icon
+    // if (media.type === 'media--image') {
+    //   return {
+    //     icon: 'image',
+    //     bgColor: 'bg-pink-50',
+    //     iconColor: 'text-pink-600',
+    //   };
+    // }
 
     // Handle document media types by extension
     if (media.type !== 'media--document') {
@@ -208,7 +209,7 @@ export function MediaSelectorField({
                         <div className="relative h-full w-full">
                           {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img
-                            src={`/api/image-proxy?url=${value.thumbnailImage}`}
+                            src={value.thumbnailImage}
                             alt={value.name || ''}
                             className="h-full w-full object-contain"
                           />

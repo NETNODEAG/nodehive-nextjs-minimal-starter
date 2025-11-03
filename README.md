@@ -75,7 +75,7 @@ NEXT_PUBLIC_FRONTEND_BASE_URL=<nextjs_frontend_url>
 NEXT_PUBLIC_NODEHIVE_SPACE_NAME="nodehive"
 NEXT_PUBLIC_DRUPAL_NODEHIVE_SPACE_ID=<drupal_nodehive_space_id>
 NODEHIVE_STARTPAGE_ID=<your_desired_node_id>
-NODEHIVE_DEFAULT_LANGUAGE=en
+NEXT_PUBLIC_NODEHIVE_DEFAULT_LANGUAGE=en
 ```
 
 Replace the placeholders with the appropriate values:

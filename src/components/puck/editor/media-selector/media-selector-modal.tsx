@@ -11,7 +11,7 @@ import {
   XIcon,
 } from 'lucide-react';
 
-import { cn } from '@/lib/utils';
+import { cn, getLocaleFromPathname } from '@/lib/utils';
 import {
   Dialog,
   DialogContent,
@@ -49,9 +49,10 @@ const fetchMedia = async ({
   }
   searchParams.append('offset', offset.toString());
   searchParams.append('limit', limit.toString());
-
+  // TODO: Improve the langauge loading
+  const language = getLocaleFromPathname(window.location.pathname);
   const response = await fetch(
-    `/api/puck/media/${type}?${searchParams.toString()}`
+    `/${language}/api/puck/media/${type}?${searchParams.toString()}`
   );
 
   if (!response.ok) {
@@ -347,7 +348,7 @@ export function MediaSelectorModal({
                             <div className="relative h-full w-full">
                               {/*eslint-disable-next-line @next/next/no-img-element */}
                               <img
-                                src={`/api/image-proxy?url=${item.thumbnailImage}`}
+                                src={item.thumbnailImage}
                                 alt={item.name || ''}
                                 sizes="220px"
                                 className="h-full w-full object-contain"

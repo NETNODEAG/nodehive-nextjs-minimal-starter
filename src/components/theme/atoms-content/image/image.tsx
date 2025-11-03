@@ -29,7 +29,15 @@ export default function Image({
         [aspectRatioClasses[aspectRatio!]]: aspectRatio,
       })}
     >
-      <NextImage src={src} alt={alt} fill objectFit={fit} />
+      <NextImage
+        src={src}
+        alt={alt}
+        fill
+        className={cn({
+          'object-cover': fit === 'cover',
+          'object-contain': fit === 'contain',
+        })}
+      />
     </div>
   );
 }

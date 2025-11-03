@@ -16,7 +16,7 @@ export const VideoConfig: ComponentConfig = {
     },
   },
   defaultProps: {
-    videoUrl: 'https://www.youtube.com/watch?v=261e5r_MuC0',
+    videoUrl: 'https://www.youtube.com/watch?v=Sa6fZzXvYgw',
   },
   resolveData(data, params) {
     const { props } = data;

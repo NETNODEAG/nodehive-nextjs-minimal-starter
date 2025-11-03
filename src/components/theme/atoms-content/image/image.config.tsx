@@ -22,7 +22,7 @@ export const ImageConfig: ComponentConfig = {
       ],
     },
     fit: {
-      label: 'Bildanpassung',
+      label: 'Image Fit',
       type: 'select',
       options: [
         { label: 'Cover', value: 'cover' },
@@ -55,7 +55,7 @@ export const ImageConfig: ComponentConfig = {
         });
 
         orderedFields.imageStyle = {
-          label: 'Bild Zuschnitt',
+          label: 'Image Style',
           type: 'select',
           options: styleOptions,
         };
@@ -63,11 +63,12 @@ export const ImageConfig: ComponentConfig = {
     }
 
     orderedFields.aspectRatio = params.fields.aspectRatio;
+    orderedFields.fit = params.fields.fit;
 
     return orderedFields;
   },
   defaultProps: {
-    imageStyle: '',
+    imageStyle: 'large',
     aspectRatio: '16/9',
     fit: 'cover',
   },

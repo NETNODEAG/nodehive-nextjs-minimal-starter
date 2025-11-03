@@ -16,17 +16,16 @@ export type VideoProps = {
 
 const addYoutubeOptionsToUrl = (
   embedUrl: string,
-  options: VideoProps['options']
+  options: VideoProps['options'],
+  params: URLSearchParams = new URLSearchParams()
 ) => {
-  if (!options) return embedUrl;
-  const params = new URLSearchParams();
-  if (options.autoplay !== undefined)
+  if (options?.autoplay !== undefined)
     params.append('autoplay', options.autoplay.toString());
-  if (options.loop !== undefined)
+  if (options?.loop !== undefined)
     params.append('loop', options.loop.toString());
 
   // YouTube uses "showinfo" for title display
-  if (options.title !== undefined)
+  if (options?.title !== undefined)
     params.append('showinfo', options.title.toString());
 
   const queryString = params.toString();
@@ -38,19 +37,18 @@ const addYoutubeOptionsToUrl = (
 
 const addVimeoOptionsToUrl = (
   embedUrl: string,
-  options: VideoProps['options']
+  options: VideoProps['options'],
+  params: URLSearchParams = new URLSearchParams()
 ) => {
-  if (!options) return embedUrl;
-  const params = new URLSearchParams();
-  if (options.autoplay !== undefined)
+  if (options?.autoplay !== undefined)
     params.append('autoplay', options.autoplay.toString());
-  if (options.loop !== undefined)
+  if (options?.loop !== undefined)
     params.append('loop', options.loop.toString());
-  if (options.background !== undefined)
+  if (options?.background !== undefined)
     params.append('background', options.background.toString());
-  if (options.byline !== undefined)
+  if (options?.byline !== undefined)
     params.append('byline', options.byline.toString());
-  if (options.title !== undefined)
+  if (options?.title !== undefined)
     params.append('title', options.title.toString());
 
   const queryString = params.toString();
@@ -77,7 +75,6 @@ const getEmbedUrl = (videoUrl: string, options?: VideoProps['options']) => {
     ) {
       embedUrl = `https://www.youtube-nocookie.com/embed/${urlObj.searchParams.get('v')}`;
       embedUrl = addYoutubeOptionsToUrl(embedUrl, options);
-
       return embedUrl;
     }
 
@@ -108,10 +105,15 @@ const getEmbedUrl = (videoUrl: string, options?: VideoProps['options']) => {
     // Vimeo Video
     if (urlObj.hostname.includes('vimeo.com')) {
       // Extract the video ID from Vimeo URL
-      const vimeoId = urlObj.pathname.split('/').pop();
+      const parts = urlObj.pathname.split('/').filter(Boolean);
+      const vimeoId = parts[0]?.match(/^\d+$/) ? parts[0] : null;
+      const hash = parts[1]?.match(/^[a-zA-Z0-9]+$/) ? parts[1] : null;
+      const params = new URLSearchParams();
+      if (hash) {
+        params.append('h', hash);
+      }
       embedUrl = `https://player.vimeo.com/video/${vimeoId}`;
-      embedUrl = addVimeoOptionsToUrl(embedUrl, options);
-
+      embedUrl = addVimeoOptionsToUrl(embedUrl, options, params);
       return embedUrl;
     }
 
@@ -131,7 +133,7 @@ export default function Video({
   onReady,
 }: VideoProps) {
   const embedUrl = getEmbedUrl(src, options);
-  const isYoutubeShort = src.includes('youtube.com/shorts/');
+  const isYoutubeShort = src?.includes('youtube.com/shorts/');
 
   if (!embedUrl) {
     return <p>Unsupported video format</p>;
