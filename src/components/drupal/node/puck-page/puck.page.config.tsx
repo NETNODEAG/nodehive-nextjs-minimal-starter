@@ -30,7 +30,7 @@ export const config: Config = {
     },
     content: {
       visible: true,
-      title: 'Komponenten',
+      title: 'Content',
       components: ['Heading', 'BodyCopy', 'CallToAction', 'Image', 'Video'],
     },
     organisms: {
