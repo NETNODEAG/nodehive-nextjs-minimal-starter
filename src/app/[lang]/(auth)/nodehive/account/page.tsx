@@ -5,6 +5,7 @@ import { getSpaceNodes } from '@/data/nodehive/nodes/get-space-nodes';
 
 import { i18n } from '@/config/i18n-config';
 import { createUserClient } from '@/lib/nodehive-client';
+import { cn } from '@/lib/utils';
 import { H1 } from '@/components/theme/atoms-content/heading/heading';
 import Container from '@/components/theme/atoms-layout/container/container';
 import Button from '@/components/ui/atoms/button/button';
@@ -159,6 +160,17 @@ export default async function Page(props: PageProps) {
                           </span>
                           <span className="text-sm text-gray-500">
                             Updated {lastEdited}
+                          </span>
+                          <span
+                            className={cn(
+                              'rounded-ful inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800 capitalize',
+                              {
+                                'bg-red-100 text-red-800':
+                                  node.status === false,
+                              }
+                            )}
+                          >
+                            {node.status ? 'Published' : 'Unpublished'}
                           </span>
                         </div>
                       </div>

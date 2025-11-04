@@ -28,6 +28,7 @@ export async function getSpaceNodes(language: string) {
       'drupal_internal__nid',
       'path',
       'langcode',
+      'status',
     ]);
     apiParams.addFields('node--article', [
       'title',
@@ -35,6 +36,7 @@ export async function getSpaceNodes(language: string) {
       'drupal_internal__nid',
       'path',
       'langcode',
+      'status',
     ]);
     apiParams.addFields('node--puck_page', [
       'title',
@@ -42,6 +44,7 @@ export async function getSpaceNodes(language: string) {
       'drupal_internal__nid',
       'path',
       'langcode',
+      'status',
     ]);
 
     // Sort by last edit date (most recent first)
