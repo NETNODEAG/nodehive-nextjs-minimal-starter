@@ -2,7 +2,6 @@ import { revalidatePath } from 'next/cache';
 import { NextRequest, NextResponse } from 'next/server';
 
 import { i18n } from '@/config/i18n-config';
-import { getAuthToken } from '@/lib/auth';
 import { createUserClient } from '@/lib/nodehive-client';
 
 export async function PATCH(request: NextRequest) {
@@ -10,15 +9,6 @@ export async function PATCH(request: NextRequest) {
   console.log('Publishing Puck data for node', nodeId, 'field', fieldName);
 
   const jsonApiType = type.replace('node--', '');
-
-  // const userToken = await getAuthToken();
-
-  // if (!userToken) {
-  //   return NextResponse.json(
-  //     { status: 'error', message: 'User is not authenticated' },
-  //     { status: 401 }
-  //   );
-  // }
   try {
     const baseUrl = process.env.NEXT_PUBLIC_DRUPAL_REST_BASE_URL;
 

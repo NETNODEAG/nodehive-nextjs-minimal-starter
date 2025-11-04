@@ -1,6 +1,6 @@
 'use server';
 
-import { redirect } from 'next/navigation';
+import { refresh } from 'next/cache';
 
 import { createUserClient } from '@/lib/nodehive-client';
 
@@ -11,13 +11,6 @@ export type LoginState = {
   message?: { title: string; text: string; type: string };
 };
 
-/**
- * Login
- * @param {LoginState} prevState - The previous state
- * @param {FormData} formData - The form data
- *
- * @returns {Promise}
- */
 export async function login(
   prevState: LoginState | undefined,
   formData: FormData
@@ -30,34 +23,34 @@ export async function login(
     const { success } = await client.login(email, password);
 
     if (!success) {
-      return {
-        message: {
-          title: 'Login Failed',
-          text: 'Invalid credentials. Please try again.',
-          type: 'error',
-        },
-      };
+      throw new Error('Invalid credentials');
     }
-  } catch (e) {
-    console.error(e);
+
+    refresh();
+    return {
+      message: {
+        title: 'Login Successful',
+        text: 'You are now logged in.',
+        type: 'success',
+      },
+    };
+  } catch (error) {
+    const message =
+      error instanceof Error
+        ? error.message
+        : 'Database error. Please try again later.';
     return {
       message: {
         title: 'Login Failed',
-        text: 'Database error. Please try again later.',
+        text: message,
         type: 'error',
       },
     };
   }
-  redirect('/nodehive/account');
 }
 
-/**
- * Logout
- *
- * @returns {Promise}
- */
-export async function logout() {
+export async function logout(): Promise<void> {
   const client = createUserClient();
   await client.logout();
-  redirect('/nodehive/login');
+  refresh();
 }

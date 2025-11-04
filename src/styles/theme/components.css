@@ -1,5 +1,6 @@
 @layer components {
-  .max-container {
+  /* example */
+  /* .max-container {
     @apply mx-auto w-full max-w-7xl;
-  }
+  } */
 }

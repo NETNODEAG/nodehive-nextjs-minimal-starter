@@ -1,11 +1,13 @@
-import { isAuthenticated } from '@/lib/auth';
+import { createUserClient } from '@/lib/nodehive-client';
 
 interface AuthWrapperProps {
   children: React.ReactNode;
 }
 
 export async function AuthWrapper({ children }: AuthWrapperProps) {
-  if (await isAuthenticated()) {
+  const client = createUserClient();
+  const isLoggedIn = await client.isLoggedIn();
+  if (isLoggedIn) {
     return children;
   }
 
@@ -13,7 +15,9 @@ export async function AuthWrapper({ children }: AuthWrapperProps) {
 }
 
 export async function NotLoggedIn({ children }: AuthWrapperProps) {
-  if (!(await isAuthenticated())) {
+  const client = createUserClient();
+  const isLoggedIn = await client.isLoggedIn();
+  if (!isLoggedIn) {
     return children;
   }
 

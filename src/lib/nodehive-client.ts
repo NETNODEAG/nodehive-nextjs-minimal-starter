@@ -43,14 +43,14 @@ const buildUserClient = (storage: StorageAdapter) => {
 };
 
 export const resolveNodehiveClient = async () => {
-  const storage = new NextCookieStorage();
-  const token = await storage.get('token');
+  const userClient = createUserClient();
+  const token = await userClient.auth.getToken();
 
   if (!token) {
     return { client: buildServiceClient(), authType: 'service' as const };
   }
 
-  return { client: buildUserClient(storage), authType: 'user' as const };
+  return { client: userClient, authType: 'user' as const };
 };
 
 export const createServerClient = async () => {

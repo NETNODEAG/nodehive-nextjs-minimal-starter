@@ -13,7 +13,7 @@ import {
 export default function SmartActionsButton({ lang }: { lang: Locale }) {
   return (
     <AuthWrapper>
-      <div className="fixed bottom-10 left-1/2 z-50 -translate-x-1/2">
+      <div className="fixed bottom-10 left-1/2 z-40 -translate-x-1/2">
         <div className="rounded-full bg-neutral-900 p-2 text-sm font-bold text-white shadow-[0_8px_40px_rgba(0,0,0,0.25)] shadow-white/20 backdrop-blur-2xl">
           <ul className="flex items-center gap-2">
             <li>
@@ -21,7 +21,9 @@ export default function SmartActionsButton({ lang }: { lang: Locale }) {
                 <TooltipTrigger>
                   <UserProfile />
                 </TooltipTrigger>
-                <TooltipContent>User Profile</TooltipContent>
+                <TooltipContent className="text-white">
+                  User Profile
+                </TooltipContent>
               </Tooltip>
             </li>
             <li>
@@ -29,7 +31,9 @@ export default function SmartActionsButton({ lang }: { lang: Locale }) {
                 <TooltipTrigger>
                   <OpenVisualEditor />
                 </TooltipTrigger>
-                <TooltipContent>Visual Editor</TooltipContent>
+                <TooltipContent className="text-white">
+                  Visual Editor
+                </TooltipContent>
               </Tooltip>
             </li>
             <li>
@@ -37,15 +41,15 @@ export default function SmartActionsButton({ lang }: { lang: Locale }) {
                 <TooltipTrigger>
                   <RefreshPage lang={lang} />
                 </TooltipTrigger>
-                <TooltipContent>Refresh</TooltipContent>
+                <TooltipContent className="text-white">Refresh</TooltipContent>
               </Tooltip>
             </li>
             <li>
               <Tooltip>
-                <TooltipTrigger>
+                <TooltipTrigger asChild>
                   <LogoutForm />
                 </TooltipTrigger>
-                <TooltipContent>Logout</TooltipContent>
+                <TooltipContent className="text-white">Logout</TooltipContent>
               </Tooltip>
             </li>
           </ul>

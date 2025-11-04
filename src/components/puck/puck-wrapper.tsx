@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { useAuth } from '@/context/auth-context';
 import { Button, Config } from '@measured/puck';
 import { AnimatePresence } from 'framer-motion';
 import { SquareDashedMousePointerIcon } from 'lucide-react';
@@ -16,14 +15,15 @@ type PuckWrapperProps = {
   node: DrupalNode;
   fieldName: string;
   config: Config;
+  isLoggedIn: boolean;
 };
 
 export default function PuckWrapper({
   node,
   fieldName,
   config,
+  isLoggedIn,
 }: PuckWrapperProps) {
-  const { isLoggedIn } = useAuth();
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathName = usePathname();
@@ -49,10 +49,7 @@ export default function PuckWrapper({
     setIsEditMode(true);
   };
 
-  // Check if user is logged in and has nodehive role
-  const canEdit = isLoggedIn;
-
-  if (!canEdit) {
+  if (!isLoggedIn) {
     return <PuckRender data={puckData} config={config} />;
   }
 

@@ -2,17 +2,18 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { User } from 'lucide-react';
 
-import { getUser } from '@/lib/auth';
+import { createUserClient } from '@/lib/nodehive-client';
 import { cn } from '@/lib/utils';
 
 export default async function UserProfile() {
-  const user = await getUser();
+  const client = createUserClient();
+  const user = await client.auth.getUserDetails();
 
   return (
     <Link
       href="/nodehive/account"
       className={cn(
-        'flex h-[32px] w-[32px] cursor-pointer items-center justify-center rounded-full border border-neutral-700 text-white transition-colors hover:border-neutral-700 hover:bg-neutral-700'
+        'flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border border-neutral-700 text-white transition-colors hover:border-neutral-700 hover:bg-neutral-700'
       )}
     >
       <span>

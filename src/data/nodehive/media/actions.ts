@@ -1,6 +1,5 @@
 'use server';
 
-import { getAuthToken } from '@/lib/auth';
 import { createUserClient } from '@/lib/nodehive-client';
 
 // Define response type for better structure

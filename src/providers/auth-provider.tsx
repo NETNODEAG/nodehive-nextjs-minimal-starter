@@ -1,44 +1,32 @@
 'use client';
 
-import React, { use, useEffect, useState } from 'react';
-import { AuthContext } from '@/context/auth-context';
+import React, { useEffect } from 'react';
+import { AuthContext, AuthContextType } from '@/context/auth-context';
 
-import { NodeHiveUser } from '@/types/nodehive';
+export interface AuthProviderProps extends AuthContextType {
+  children: React.ReactNode;
+}
 
 export function AuthProvider({
   children,
-  isLoggedInPromise,
-}: {
-  children: React.ReactNode;
-  isLoggedInPromise: Promise<boolean>;
-}) {
-  const [user, setUser] = useState<NodeHiveUser | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const isLoggedIn = use(isLoggedInPromise);
-
-  const checkAuth = async () => {
-    setIsLoading(true);
-    setUser(user);
-    setIsLoading(false);
-  };
-
+  isLoggedIn,
+  user,
+  expiresAt,
+}: AuthProviderProps) {
+  // TODO Fix the automated login
   const loginWithToken = async (token: string) => {
-    try {
-      setIsLoading(true);
-      // TODO Fix the automated login
-      // await saveAuthTokenAction(token);
-      // const user = await getUserAction();
-      setUser(user);
-    } catch (error) {
-      console.error('Login failed:', error);
-    } finally {
-      setIsLoading(false);
-    }
+    // try {
+    //   setIsLoading(true);
+    //   TODO Fix the automated login
+    //   await saveAuthTokenAction(token);
+    //   const user = await getUserAction();
+    //   setUser(user);
+    // } catch (error) {
+    //   console.error('Login failed:', error);
+    // } finally {
+    //   setIsLoading(false);
+    // }
   };
-
-  useEffect(() => {
-    checkAuth();
-  }, []);
 
   useEffect(() => {
     const isInIframe =
@@ -85,7 +73,11 @@ export function AuthProvider({
     };
   }, []);
 
-  const value = { user, isLoggedIn, isLoading };
+  const ctx = {
+    user: user,
+    isLoggedIn: isLoggedIn,
+    expiresAt: expiresAt,
+  };
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return <AuthContext.Provider value={ctx}>{children}</AuthContext.Provider>;
 }

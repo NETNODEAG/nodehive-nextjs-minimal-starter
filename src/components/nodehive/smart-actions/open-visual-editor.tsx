@@ -32,7 +32,7 @@ export default function OpenVisualEditor() {
         <div
           onClick={openFrontend}
           className={cn(
-            'flex h-[32px] w-[32px] items-center justify-center rounded-full text-white transition-colors hover:bg-neutral-700',
+            'flex h-8 w-8 items-center justify-center rounded-full text-white transition-colors hover:bg-neutral-700',
             'cursor-pointer'
           )}
         >
@@ -43,7 +43,7 @@ export default function OpenVisualEditor() {
         <div
           onClick={openBackend}
           className={cn(
-            'flex h-[32px] w-[32px] items-center justify-center rounded-full text-white transition-colors hover:bg-neutral-700',
+            'flex h-8 w-8 items-center justify-center rounded-full text-white transition-colors hover:bg-neutral-700',
             'cursor-pointer'
           )}
         >

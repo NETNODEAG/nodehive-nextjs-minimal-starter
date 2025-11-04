@@ -5,9 +5,9 @@ import { createContext, useContext } from 'react';
 import { NodeHiveUser } from '@/types/nodehive';
 
 export interface AuthContextType {
-  user: NodeHiveUser | null;
-  isLoggedIn: boolean;
-  isLoading: boolean;
+  user: Promise<NodeHiveUser | null>;
+  isLoggedIn: Promise<boolean>;
+  expiresAt: Promise<number | null>;
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(

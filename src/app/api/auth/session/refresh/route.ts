@@ -7,15 +7,9 @@ import { createUserClient } from '@/lib/nodehive-client';
 async function handleRefresh(request: NextRequest) {
   const client = createUserClient();
   const refreshToken = await client.auth.getRefreshToken();
+  console.log('handle token refresh');
   // Redirect path after refresh
   const nextPath = request.nextUrl.searchParams.get('next');
-  console.log('Handle refresh', refreshToken);
-
-  const preferHTML = (): boolean => {
-    const accept = request.headers.get('accept');
-    if (!accept) return false;
-    return accept.includes('text/html');
-  };
 
   const handleFailure = async (
     reason: 'no-refresh-token' | 'auth-error' | 'exception',
@@ -24,17 +18,13 @@ async function handleRefresh(request: NextRequest) {
     try {
       await client.logout();
     } catch (error) {
-      console.error('Nodehive: failed to logout', error);
+      console.error('logout failed', error);
     }
 
-    if (preferHTML()) {
-      const loginUrl = new URL('/nodehive/login', request.url);
-      if (nextPath) {
-        loginUrl.searchParams.set('next', nextPath);
-      }
-      return NextResponse.redirect(loginUrl);
+    if (nextPath) {
+      console.log('session refresh failed, redirecting to', nextPath);
+      return NextResponse.redirect(new URL(nextPath, request.url));
     }
-
     return NextResponse.json({ ok: false, reason }, { status });
   };
 
@@ -46,17 +36,17 @@ async function handleRefresh(request: NextRequest) {
     await client.auth.refreshToken();
 
     if (nextPath) {
-      console.log('NodeHive: session refreshed, redirecting to', nextPath);
+      console.log('session refreshed, redirecting to', nextPath);
       return NextResponse.redirect(new URL(nextPath, request.url));
     }
     return NextResponse.json({ ok: true });
   } catch (error) {
     if (error instanceof AuthenticationError) {
-      console.error('NodeHive: refresh rejected', error);
+      console.error('refresh rejected', error);
       return handleFailure('auth-error', 401);
     }
 
-    console.error('NodeHive: session refresh failed', error);
+    console.error('session refresh failed', error);
     return handleFailure('exception', 500);
   }
 }

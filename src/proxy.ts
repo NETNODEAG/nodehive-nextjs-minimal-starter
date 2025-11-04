@@ -46,12 +46,12 @@ export async function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
   // Don't check refresh on the refresh endpoint itself
-  if (!pathname.startsWith('/api/nodehive/session/refresh')) {
+  if (!pathname.startsWith('/api/auth/session/refresh')) {
     if (shouldRefreshSession(request)) {
-      console.log('NodeHive: redirecting to refresh session');
+      console.log('Proxy: redirecting to refresh session');
 
       // Build refresh URL with return path
-      const refreshUrl = new URL('/api/nodehive/session/refresh', request.url);
+      const refreshUrl = new URL('/api/auth/session/refresh', request.url);
       refreshUrl.searchParams.set('next', pathname + request.nextUrl.search);
 
       return NextResponse.redirect(refreshUrl);

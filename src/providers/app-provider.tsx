@@ -1,21 +1,9 @@
-import { Suspense } from 'react';
-import { AuthProvider } from '@/providers/auth-provider';
 import { QueryProvider } from '@/providers/query-provider';
 
-import { createUserClient } from '@/lib/nodehive-client';
-
-export default function AppProvider({
-  children,
-}: {
+type AppProviderProps = {
   children: React.ReactNode;
-}) {
-  const client = createUserClient();
-  const isLoggedInPromise = client.auth.isLoggedIn();
-  return (
-    <Suspense>
-      <AuthProvider isLoggedInPromise={isLoggedInPromise}>
-        <QueryProvider>{children}</QueryProvider>
-      </AuthProvider>
-    </Suspense>
-  );
+};
+
+export default function AppProvider({ children }: AppProviderProps) {
+  return <QueryProvider>{children}</QueryProvider>;
 }

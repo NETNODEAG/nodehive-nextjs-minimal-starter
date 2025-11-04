@@ -1,7 +1,6 @@
 @import 'tailwindcss';
 @import './theme/utilities.css';
 @import './theme/components.css';
-@import './theme/puck.css';
 @import './theme/ckeditor.css';
 
 @plugin '@tailwindcss/forms' {
