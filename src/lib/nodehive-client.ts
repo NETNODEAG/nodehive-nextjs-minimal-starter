@@ -1,4 +1,4 @@
-import { NodeHiveClient, StorageAdapter } from 'nodehive-js';
+import { NodeHiveClient } from 'nodehive-js';
 
 import { NextCookieStorage } from '@/lib/next-cookie-storage';
 
@@ -7,21 +7,25 @@ const baseOptions = {
   debug: false,
 };
 
-const buildServiceClient = () => {
-  return new NodeHiveClient({
-    ...baseOptions,
-    auth: {
-      method: 'oauth',
-      oauth: {
-        grantType: 'client_credentials',
-        clientId: process.env.NODEHIVE_OAUTH_FRONTEND_CLIENT_ID || '',
-        clientSecret: process.env.NODEHIVE_OAUTH_FRONTEND_CLIENT_SECRET || '',
-      },
-    },
-  });
+export const resolveNodehiveClient = async () => {
+  const storage = new NextCookieStorage();
+  const token = await storage.get('token');
+
+  if (!token) {
+    return { client: createServiceClient(), type: 'service' as const };
+  }
+
+  return { client: createUserClient(), type: 'user' as const };
 };
 
-const buildUserClient = (storage: StorageAdapter) => {
+export const createServerClient = async () => {
+  const { client, type } = await resolveNodehiveClient();
+  console.log(`NodeHive: created server client with type: '${type}'`);
+  return client;
+};
+
+export const createUserClient = () => {
+  const storage = new NextCookieStorage();
   return new NodeHiveClient({
     ...baseOptions,
     auth: {
@@ -42,26 +46,16 @@ const buildUserClient = (storage: StorageAdapter) => {
   });
 };
 
-export const resolveNodehiveClient = async () => {
-  const userClient = createUserClient();
-  const token = await userClient.auth.getToken();
-
-  if (!token) {
-    return { client: buildServiceClient(), authType: 'service' as const };
-  }
-
-  return { client: userClient, authType: 'user' as const };
+export const createServiceClient = () => {
+  return new NodeHiveClient({
+    ...baseOptions,
+    auth: {
+      method: 'oauth',
+      oauth: {
+        grantType: 'client_credentials',
+        clientId: process.env.NODEHIVE_OAUTH_FRONTEND_CLIENT_ID || '',
+        clientSecret: process.env.NODEHIVE_OAUTH_FRONTEND_CLIENT_SECRET || '',
+      },
+    },
+  });
 };
-
-export const createServerClient = async () => {
-  const { client, authType } = await resolveNodehiveClient();
-  console.log(`NodeHive: created server client with auth type '${authType}'`);
-  return client;
-};
-
-export const createUserClient = () => {
-  const storage = new NextCookieStorage();
-  return buildUserClient(storage);
-};
-
-export const createServiceClient = () => buildServiceClient();
