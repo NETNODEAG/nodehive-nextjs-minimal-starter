@@ -22,71 +22,45 @@ export const HeroConfig: ComponentConfig = {
         { label: 'Light', value: 'light' },
       ],
     },
-    primaryCtaText: {
-      type: 'text',
-      label: 'Primary CTA Text',
-    },
-    primaryCtaHref: {
-      type: 'text',
-      label: 'Primary CTA Link',
-    },
-    primaryCtaVariant: {
-      type: 'select',
-      label: 'Primary CTA Style',
-      options: [
-        { label: 'Link', value: 'link' },
-        { label: 'Button', value: 'button' },
-        { label: 'Button Outline', value: 'buttonOutline' },
-      ],
-    },
-    primaryCtaSize: {
-      type: 'select',
-      label: 'Primary CTA Size',
-      options: [
-        { label: 'Small', value: 'small' },
-        { label: 'Big', value: 'big' },
-      ],
-    },
-    primaryCtaTarget: {
-      type: 'select',
-      label: 'Primary CTA Target',
-      options: [
-        { label: 'Same Window', value: '_self' },
-        { label: 'New Window', value: '_blank' },
-      ],
-    },
-    secondaryCtaText: {
-      type: 'text',
-      label: 'Secondary CTA Text',
-    },
-    secondaryCtaHref: {
-      type: 'text',
-      label: 'Secondary CTA Link',
-    },
-    secondaryCtaVariant: {
-      type: 'select',
-      label: 'Secondary CTA Style',
-      options: [
-        { label: 'Link', value: 'link' },
-        { label: 'Button', value: 'button' },
-        { label: 'Button Outline', value: 'buttonOutline' },
-      ],
-    },
-    secondaryCtaSize: {
-      type: 'select',
-      label: 'Secondary CTA Size',
-      options: [
-        { label: 'Small', value: 'small' },
-        { label: 'Big', value: 'big' },
-      ],
-    },
-    secondaryCtaTarget: {
-      type: 'select',
-      label: 'Secondary CTA Target',
-      options: [
-        { label: 'Same Window', value: '_self' },
-        { label: 'New Window', value: '_blank' },
-      ],
+    cta: {
+      type: 'array',
+      label: 'Call to Actions',
+      max: 3,
+      arrayFields: {
+        text: {
+          type: 'text',
+          label: 'Text',
+        },
+        variant: {
+          type: 'select',
+          label: 'Style',
+          options: [
+            { label: 'Link', value: 'link' },
+            { label: 'Button', value: 'button' },
+            { label: 'Button Outline', value: 'buttonOutline' },
+          ],
+        },
+        size: {
+          type: 'select',
+          label: 'Size',
+          options: [
+            { label: 'Small', value: 'small' },
+            { label: 'Big', value: 'big' },
+          ],
+        },
+        target: {
+          type: 'select',
+          label: 'Target',
+          options: [
+            { label: 'Same Window', value: '_self' },
+            { label: 'New Window', value: '_blank' },
+          ],
+        },
+        href: {
+          type: 'text',
+          label: 'Link',
+        },
+      },
     },
   },
   defaultProps: {
@@ -94,59 +68,46 @@ export const HeroConfig: ComponentConfig = {
     description:
       'Build amazing experiences with our powerful tools and intuitive design system.',
     background: 'none',
-    primaryCtaText: 'Get Started',
-    primaryCtaHref: '#',
-    primaryCtaVariant: 'button',
-    primaryCtaSize: 'big',
-    primaryCtaTarget: '_self',
-    secondaryCtaText: 'Learn More',
-    secondaryCtaHref: '#',
-    secondaryCtaVariant: 'buttonOutline',
-    secondaryCtaSize: 'big',
-    secondaryCtaTarget: '_self',
+    cta: [
+      {
+        text: 'Get Started',
+        variant: 'button',
+        size: 'big',
+        target: '_self',
+        href: '#',
+      },
+    ],
   },
-  render: ({
-    title,
-    description,
-    background,
-    primaryCtaText,
-    primaryCtaHref,
-    primaryCtaVariant,
-    primaryCtaSize,
-    primaryCtaTarget,
-    secondaryCtaText,
-    secondaryCtaHref,
-    secondaryCtaVariant,
-    secondaryCtaSize,
-    secondaryCtaTarget,
-  }) => {
-    const primaryCta = primaryCtaText
-      ? {
-          text: primaryCtaText,
-          href: primaryCtaHref,
-          variant: primaryCtaVariant,
-          size: primaryCtaSize,
-          target: primaryCtaTarget,
-        }
-      : undefined;
+  render: ({ title, description, background, cta }) => {
+    console.log(cta);
+    // const primaryCta = primaryCtaText
+    //   ? {
+    //       text: primaryCtaText,
+    //       href: primaryCtaHref,
+    //       variant: primaryCtaVariant,
+    //       size: primaryCtaSize,
+    //       target: primaryCtaTarget,
+    //     }
+    //   : undefined;
 
-    const secondaryCta = secondaryCtaText
-      ? {
-          text: secondaryCtaText,
-          href: secondaryCtaHref,
-          variant: secondaryCtaVariant,
-          size: secondaryCtaSize,
-          target: secondaryCtaTarget,
-        }
-      : undefined;
+    // const secondaryCta = secondaryCtaText
+    //   ? {
+    //       text: secondaryCtaText,
+    //       href: secondaryCtaHref,
+    //       variant: secondaryCtaVariant,
+    //       size: secondaryCtaSize,
+    //       target: secondaryCtaTarget,
+    //     }
+    //   : undefined;
 
     return (
       <Hero
         title={title}
         description={description}
         background={background}
-        primaryCta={primaryCta}
-        secondaryCta={secondaryCta}
+        // cta={}
+        // primaryCta={primaryCta}
+        // secondaryCta={secondaryCta}
       />
     );
   },
