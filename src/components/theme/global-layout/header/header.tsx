@@ -6,10 +6,10 @@ import Container from '@/components/theme/atoms-layout/container/container';
 import LanguageSwitcher from '@/components/theme/global-layout/language-switcher/language-switcher';
 import Navigation from '@/components/theme/global-layout/navigation/navigation';
 
-type HeaderProps = { langPromise: Promise<string> };
+type HeaderProps = { lang: string };
 
-export default async function Header({ langPromise }: HeaderProps) {
-  const lang = (await langPromise) as Locale;
+export default async function Header({ lang: langProp }: HeaderProps) {
+  const lang = langProp as Locale;
   const mainMenuId = process.env.NODEHIVE_MAIN_MENU;
   const isMultilingual = i18n.isMultilingual;
   return (

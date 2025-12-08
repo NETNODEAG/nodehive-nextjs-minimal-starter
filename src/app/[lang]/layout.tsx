@@ -8,9 +8,10 @@ import { Metadata } from 'next';
 import AppProvider from '@/providers/app-provider';
 
 import { helveticaNow, inter } from '@/lib/fonts';
+import SessionExpiredToast from '@/components/auth/session-expired-toast';
 import Footer from '@/components/theme/global-layout/footer/footer';
 import Header from '@/components/theme/global-layout/header/header';
-import HTML from '@/components/theme/global-layout/html/html';
+import { Toaster } from '@/components/ui/atoms/toaster/toaster';
 
 const { spaceMetadata } = spaceConfig;
 
@@ -34,17 +35,16 @@ interface LayoutProps {
   params: Promise<{ lang: string }>;
 }
 
-export default function RootLayout(props: LayoutProps) {
+export default async function RootLayout(props: LayoutProps) {
   const { children, params } = props;
-
-  const langPromise = params.then((p) => p.lang);
+  const { lang } = await params;
 
   return (
-    <HTML langPromise={langPromise}>
+    <html lang={lang}>
       <body className={`${inter.variable} ${helveticaNow.variable} font-sans`}>
         <AppProvider>
           <div className="relative flex min-h-screen flex-col">
-            <Header langPromise={langPromise} />
+            <Header lang={lang} />
             <main className="flex-[1_0_auto]">{children}</main>
             <Suspense>
               <Footer />
@@ -53,8 +53,12 @@ export default function RootLayout(props: LayoutProps) {
           <Suspense>
             <Connector />
           </Suspense>
+          <Toaster position="top-center" />
+          <Suspense>
+            <SessionExpiredToast />
+          </Suspense>
         </AppProvider>
       </body>
-    </HTML>
+    </html>
   );
 }

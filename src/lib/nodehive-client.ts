@@ -1,32 +1,31 @@
+import { cache } from 'react';
 import { NodeHiveClient } from 'nodehive-js';
 
+import { NodeHiveConfig } from '@/config/jsonapi-config';
 import { NextCookieStorage } from '@/lib/next-cookie-storage';
 
 const baseOptions = {
   baseUrl: process.env.NEXT_PUBLIC_DRUPAL_REST_BASE_URL || '',
   debug: false,
+  config: NodeHiveConfig,
 };
 
-export const resolveNodehiveClient = async () => {
+let serviceClient: NodeHiveClient | null = null;
+
+export const createServerClient = cache(async () => {
   const storage = new NextCookieStorage();
   const token = await storage.get('token');
 
-  if (!token) {
-    return { client: createServiceClient(), type: 'service' as const };
+  if (token) {
+    return createUserClient();
   }
 
-  return { client: createUserClient(), type: 'user' as const };
-};
-
-export const createServerClient = async () => {
-  const { client, type } = await resolveNodehiveClient();
-  console.log(`NodeHive: created server client with type: '${type}'`);
-  return client;
-};
+  return createServiceClient();
+});
 
 export const createUserClient = () => {
   const storage = new NextCookieStorage();
-  return new NodeHiveClient({
+  const userClient = new NodeHiveClient({
     ...baseOptions,
     auth: {
       method: 'oauth',
@@ -44,10 +43,17 @@ export const createUserClient = () => {
       },
     },
   });
+  console.log(`Created user client`);
+  return userClient;
 };
 
 export const createServiceClient = () => {
-  return new NodeHiveClient({
+  if (serviceClient) {
+    console.log(`Used existing service client`);
+    return serviceClient;
+  }
+
+  serviceClient = new NodeHiveClient({
     ...baseOptions,
     auth: {
       method: 'oauth',
@@ -58,4 +64,6 @@ export const createServiceClient = () => {
       },
     },
   });
+  console.log('Created service client');
+  return serviceClient;
 };
