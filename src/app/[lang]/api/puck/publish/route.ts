@@ -27,7 +27,25 @@ export async function PATCH(request: NextRequest) {
       },
     };
     const client = createUserClient();
-    const { token } = await client.auth.refreshToken();
+    let token = null;
+    try {
+      token = await client.auth.getToken();
+    } catch (error) {
+      console.error('Error getting token', error);
+    }
+
+    if (!token) {
+      try {
+        const response = await client.auth.refreshToken();
+        token = response.token;
+      } catch (error) {
+        console.error('Error refreshing token', error);
+      }
+    }
+
+    if (!token) {
+      throw new Error('Unable to retrieve authentication token');
+    }
 
     const response = await fetch(apiUrl, {
       method: 'PATCH',

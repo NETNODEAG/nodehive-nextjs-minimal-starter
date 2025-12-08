@@ -47,21 +47,16 @@ export function MediaSelectorField({
     }
 
     if (media.type === 'media--video') {
-      return {
-        icon: 'video_file',
-        bgColor: 'bg-indigo-50',
-        iconColor: 'text-indigo-600',
-      };
+      return null; // will show thumbnail
     }
 
-    // Disabled to show thumbnail image instead of generic icon
-    // if (media.type === 'media--image') {
-    //   return {
-    //     icon: 'image',
-    //     bgColor: 'bg-pink-50',
-    //     iconColor: 'text-pink-600',
-    //   };
-    // }
+    if (media.type === 'media--image') {
+      return null; // Will show thumbnail
+    }
+
+    if (media.type === 'media--remote_video') {
+      return null; // Will show thumbnail
+    }
 
     // Handle document media types by extension
     if (media.type !== 'media--document') {
@@ -177,7 +172,7 @@ export function MediaSelectorField({
       <div className="w-full">
         {value ? (
           <div className="rounded-md border border-gray-200">
-            <div className="flex gap-4">
+            <div className="flex gap-3">
               <button
                 className="flex grow cursor-pointer flex-col items-center justify-center gap-2 p-3 hover:bg-[#f7faff]"
                 onClick={() => setIsModalOpen(true)}
@@ -187,10 +182,9 @@ export function MediaSelectorField({
                   const fileDisplay = getFileDisplay(value);
 
                   if (fileDisplay) {
-                    // Show file type icon for all non-image media types
                     return (
                       <div
-                        className={`flex aspect-square w-24 shrink-0 items-center justify-center overflow-hidden rounded ${fileDisplay.bgColor}`}
+                        className={`flex aspect-square w-10 shrink-0 items-center justify-center overflow-hidden rounded ${fileDisplay.bgColor}`}
                       >
                         <span
                           className={`material-symbols-outlined ${fileDisplay.iconColor} text-4xl`}
@@ -201,11 +195,12 @@ export function MediaSelectorField({
                     );
                   } else if (
                     value.thumbnailImage &&
-                    value.type === 'media--image'
+                    (value.type === 'media--image' ||
+                      value.type === 'media--remote_video' ||
+                      value.type === 'media--video')
                   ) {
-                    // Only show thumbnails for actual image media types
                     return (
-                      <div className="aspect-square w-24 shrink-0 overflow-hidden rounded">
+                      <div className="aspect-square w-10 shrink-0 overflow-hidden rounded">
                         <div className="relative h-full w-full">
                           {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img
@@ -219,8 +214,8 @@ export function MediaSelectorField({
                   } else {
                     // Fallback generic icon for unknown media types
                     return (
-                      <div className="flex aspect-square w-24 shrink-0 items-center justify-center overflow-hidden rounded bg-gray-50">
-                        <span className="material-symbols-outlined text-4xl text-gray-600">
+                      <div className="flex aspect-square w-10 shrink-0 items-center justify-center overflow-hidden rounded bg-gray-50">
+                        <span className="material-symbols-outlined text-gray-600">
                           attachment
                         </span>
                       </div>
@@ -228,7 +223,7 @@ export function MediaSelectorField({
                   }
                 })()}
 
-                <div className="max-w-24 text-xs font-medium break-all">
+                <div className="max-w-3xs text-xs font-medium break-all">
                   {value?.name}
                 </div>
               </button>

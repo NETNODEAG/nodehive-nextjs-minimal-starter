@@ -2,12 +2,30 @@
 
 import { useState } from 'react';
 import { usePathname } from 'next/navigation';
-import { Button, Config, createUsePuck, Data, Puck } from '@measured/puck';
-import { motion } from 'framer-motion';
-import { Loader2Icon, XIcon } from 'lucide-react';
+import {
+  ActionBar,
+  Button,
+  ComponentData,
+  Config,
+  Content,
+  createUsePuck,
+  Data,
+  Puck,
+  PuckAction,
+} from '@measured/puck';
+import {
+  ArrowLeftRightIcon,
+  LayoutTemplateIcon,
+  Loader2Icon,
+  SaveIcon,
+  XIcon,
+} from 'lucide-react';
+import { toast } from 'sonner';
 
 import { DrupalNode } from '@/types/nodehive';
 import ComponentItem from '@/components/puck/editor/component-item';
+import ComponentTemplateModal from '@/components/puck/editor/template-selector/component-template-modal';
+import { TemplateSelectorModal } from '@/components/puck/editor/template-selector/template-selector-modal';
 
 import '@measured/puck/puck.css';
 
@@ -32,88 +50,139 @@ export default function PuckEditor({
   const nodeData = node;
   const lang = nodeData?.langcode;
   const pathName = usePathname();
+  const [isTemplateSelectorModalOpen, setIsTemplateSelectorModalOpen] =
+    useState(false);
+  const [isContentTemplateModalOpen, setIsContentTemplateModalOpen] =
+    useState(false);
+  const [templateContent, setTemplateContent] = useState<Content | null>(null);
 
   const onSave = async (data: Partial<Data>) => {
     setIsSaving(true);
 
-    console.log('Attempting to save Puck data...', {
-      lang,
-      fieldName,
-      nodeId: nodeData.id,
-      type: nodeData?.type,
-    });
+    try {
+      const response = await fetch(`/${lang}/api/puck/publish`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          data: data,
+          fieldName: fieldName,
+          nodeId: nodeData.id,
+          path: pathName,
+          type: nodeData?.type,
+          lang: lang,
+        }),
+      });
 
-    const response = await fetch(`/${lang}/api/puck/publish`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        data: data,
-        fieldName: fieldName,
-        nodeId: nodeData.id,
-        path: pathName,
-        type: nodeData?.type,
-        lang: lang,
-      }),
-    });
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(`Failed to publish Puck data: ${errorData.message}`);
+      }
 
-    console.log('Publish response:', response.status, response.statusText);
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      console.error('Failed to publish Puck data:', errorData);
-      setIsSaving(false);
-      return;
+      toast.success('Successfully saved page');
+    } catch (error) {
+      console.error('Failed to publish Puck data:', error);
+      toast.error('Failed to save page');
     }
 
-    const result = await response.json();
-    console.log('Successfully published:', result);
     setIsSaving(false);
   };
 
+  const togglePreviewMode = ({
+    isPreviewMode,
+    dispatch,
+  }: {
+    isPreviewMode: boolean;
+    dispatch: (action: PuckAction) => void;
+  }) => {
+    dispatch({
+      type: 'setUi',
+      ui: {
+        previewMode: isPreviewMode ? 'edit' : 'interactive',
+      },
+    });
+  };
+
+  const handleComponentTemplateSaveAction = (
+    selectedItem: ComponentData | null
+  ) => {
+    setTemplateContent(selectedItem ? [selectedItem] : null);
+    setIsContentTemplateModalOpen(true);
+  };
+
   return (
-    <motion.div
-      className="fixed inset-0 z-50 border border-t border-b border-gray-300 bg-white"
-      initial={{ y: '100%' }}
-      animate={{ y: 0 }}
-      exit={{ y: '100%' }}
-      transition={{
-        duration: 0.3,
-        ease: 'easeInOut',
-      }}
-    >
+    <>
       <Puck
         config={config}
         data={data}
         headerTitle={nodeData.title || 'Page'}
         overrides={{
           drawerItem: ({ name }) => <ComponentItem name={name} />,
+          actionBar: ({ children, label }) => {
+            // eslint-disable-next-line react-hooks/rules-of-hooks
+            const selectedItem = usePuck((s) => s.selectedItem);
+            return (
+              <>
+                <ActionBar label={label}>
+                  <ActionBar.Group>
+                    <ActionBar.Action
+                      label="Save as template"
+                      onClick={() =>
+                        handleComponentTemplateSaveAction(selectedItem)
+                      }
+                    >
+                      <SaveIcon className="size-[16px]" />
+                    </ActionBar.Action>
+                    {children}
+                  </ActionBar.Group>
+                </ActionBar>
+              </>
+            );
+          },
           headerActions: () => {
             // eslint-disable-next-line react-hooks/rules-of-hooks
             const appState = usePuck((s) => s.appState);
             // eslint-disable-next-line react-hooks/rules-of-hooks
             const dispatch = usePuck((s) => s.dispatch);
-            const previewMode = appState?.ui?.previewMode;
-            const togglePreviewMode = () => {
-              dispatch({
-                type: 'setUi',
-                ui: {
-                  previewMode: previewMode === 'edit' ? 'interactive' : 'edit',
-                },
-              });
-            };
+            const mode = appState?.ui?.previewMode;
+            const isPreviewMode = mode === 'interactive';
             return (
               <>
-                <Button variant="secondary" onClick={togglePreviewMode}>
-                  Switch to {previewMode === 'edit' ? 'interactive' : 'edit'}
+                <Button
+                  variant="secondary"
+                  onClick={() => {
+                    setIsTemplateSelectorModalOpen(true);
+                  }}
+                >
+                  <LayoutTemplateIcon className="size-3" />
+                  Templates
+                </Button>
+                <TemplateSelectorModal
+                  isOpen={isTemplateSelectorModalOpen}
+                  onClose={() => setIsTemplateSelectorModalOpen(false)}
+                  fragmentType="puck_template"
+                  dataField="field_puck_template_data"
+                  iconField="field_media"
+                  appState={appState}
+                  dispatch={dispatch}
+                  config={config}
+                />
+                <Button
+                  variant="secondary"
+                  onClick={() => {
+                    togglePreviewMode({ isPreviewMode, dispatch });
+                  }}
+                >
+                  <ArrowLeftRightIcon className="size-3" />{' '}
+                  {isPreviewMode ? 'Edit' : 'Interactive'} mode
                 </Button>
                 <Button
                   onClick={() => {
                     onSave(appState.data);
                   }}
                 >
-                  {isSaving && <Loader2Icon className="size-5 animate-spin" />}
+                  {isSaving && <Loader2Icon className="size-3 animate-spin" />}
                   Save
                 </Button>
                 <button
@@ -128,6 +197,13 @@ export default function PuckEditor({
           },
         }}
       ></Puck>
-    </motion.div>
+      <ComponentTemplateModal
+        content={templateContent}
+        isOpen={isContentTemplateModalOpen}
+        setIsOpen={setIsContentTemplateModalOpen}
+        fragmentType="puck_template"
+        dataField="field_puck_template_data"
+      />
+    </>
   );
 }

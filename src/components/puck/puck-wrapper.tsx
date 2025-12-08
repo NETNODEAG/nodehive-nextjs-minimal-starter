@@ -1,15 +1,22 @@
 'use client';
 
 import { useState } from 'react';
+import dynamic from 'next/dynamic';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { Button, Config } from '@measured/puck';
-import { AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { SquareDashedMousePointerIcon } from 'lucide-react';
 
 import { DrupalNode } from '@/types/nodehive';
 import { cn } from '@/lib/utils';
-import PuckEditor from '@/components/puck/editor/puck-editor';
 import PuckRender from '@/components/puck/puck-render';
+
+const LazyPuckEditor = dynamic(
+  () => import('@/components/puck/editor/puck-editor'),
+  {
+    ssr: false,
+  }
+);
 
 type PuckWrapperProps = {
   node: DrupalNode;
@@ -54,20 +61,17 @@ export default function PuckWrapper({
   }
 
   return (
-    <AnimatePresence>
-      {isEditMode ? (
-        <PuckEditor
-          key={`puck-editor-${fieldName}`}
-          fieldName={fieldName}
-          node={node}
-          data={puckData}
-          config={config}
-          closePuckEditor={closePuckEditor}
-        />
-      ) : (
+    <div
+      style={
+        {
+          '--puck-font-family': 'var(--font-sans)',
+        } as React.CSSProperties
+      }
+    >
+      {!isEditMode && (
         <div
           className={cn(
-            'hover:border-primary relative border-2 border-transparent hover:border-dashed',
+            'hover:outline-primary relative -outline-offset-1 hover:outline-1 hover:outline-dashed',
             {
               'min-h-14': !puckData?.content || puckData?.content?.length === 0,
             }
@@ -84,6 +88,26 @@ export default function PuckWrapper({
           <PuckRender data={puckData} config={config} />
         </div>
       )}
-    </AnimatePresence>
+      <motion.div
+        className="fixed inset-0 z-50 border border-t border-b border-gray-300 bg-white"
+        initial={{ y: '100%' }}
+        animate={{ y: isEditMode ? 0 : '100%' }}
+        transition={{
+          duration: 0.3,
+          ease: 'easeInOut',
+        }}
+      >
+        {isEditMode && (
+          <LazyPuckEditor
+            key={`puck-editor-${fieldName}`}
+            fieldName={fieldName}
+            node={node}
+            data={puckData}
+            config={config}
+            closePuckEditor={closePuckEditor}
+          />
+        )}
+      </motion.div>
+    </div>
   );
 }
