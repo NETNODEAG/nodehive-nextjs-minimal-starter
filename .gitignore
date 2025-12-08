@@ -46,3 +46,6 @@ next-env.d.ts
 
 # storybook
 /storybook-static/
+
+# ai
+.claude
