@@ -1,8 +1,29 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
-import { AuthenticationError } from 'nodehive-js';
+import { AuthenticationError, NodeHiveClient } from 'nodehive-js';
 
 import { createUserClient } from '@/lib/nodehive-client';
+
+const MAX_RETRIES = 3;
+const BACKOFF_MS = 200;
+
+const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+async function refreshWithRetries(client: NodeHiveClient) {
+  for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+    try {
+      console.log(`Attempt ${attempt} to refresh token`);
+      await client.auth.refreshToken();
+      return;
+    } catch (error) {
+      console.warn(`Refresh attempt ${attempt} failed`, error);
+      if (attempt === MAX_RETRIES) {
+        throw error;
+      }
+      await wait(BACKOFF_MS * 2 ** (attempt - 1));
+    }
+  }
+}
 
 async function handleRefresh(request: NextRequest) {
   const client = createUserClient();
@@ -23,7 +44,9 @@ async function handleRefresh(request: NextRequest) {
 
     if (nextPath) {
       console.log('session refresh failed, redirecting to', nextPath);
-      return NextResponse.redirect(new URL(nextPath, request.url));
+      const redirectUrl = new URL(nextPath, request.url);
+      redirectUrl.searchParams.set('session', 'expired');
+      return NextResponse.redirect(redirectUrl);
     }
     return NextResponse.json({ ok: false, reason }, { status });
   };
@@ -33,7 +56,7 @@ async function handleRefresh(request: NextRequest) {
   }
 
   try {
-    await client.auth.refreshToken();
+    await refreshWithRetries(client);
 
     if (nextPath) {
       console.log('session refreshed, redirecting to', nextPath);

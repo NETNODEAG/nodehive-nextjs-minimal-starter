@@ -31,31 +31,39 @@ const getLocale = (request: NextRequest) => {
 const shouldRefreshSession = (request: NextRequest): boolean => {
   const TOKEN_COOKIE = NextCookieStorage.cookieKeys()['token'];
   const REFRESH_TOKEN_COOKIE = NextCookieStorage.cookieKeys()['refresh_token'];
+  const EXPIRES_AT_COOKIE = NextCookieStorage.cookieKeys()['token_expires_at'];
   const token = request.cookies.get(TOKEN_COOKIE)?.value;
   const refreshToken = request.cookies.get(REFRESH_TOKEN_COOKIE)?.value;
-  // Don't refresh if we don't have a refresh token
+  const expiresAt = request.cookies.get(EXPIRES_AT_COOKIE)?.value;
+
+  // Need a refresh token to do anything
   if (!refreshToken) return false;
 
-  // Don't refresh if we already have a valid token
-  if (token) return false;
+  const expiresAtNumber = expiresAt ? Number(expiresAt) : null;
+  const tokenExpiresSoon =
+    typeof expiresAtNumber === 'number' &&
+    Number.isFinite(expiresAtNumber) &&
+    expiresAtNumber <= Date.now() + 60_000;
 
-  return true;
+  // Refresh if we have no token or it's about to expire
+  if (!token || tokenExpiresSoon) {
+    return true;
+  }
+
+  return false;
 };
 
 export async function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
-  // Don't check refresh on the refresh endpoint itself
-  if (!pathname.startsWith('/api/auth/session/refresh')) {
-    if (shouldRefreshSession(request)) {
-      console.log('Proxy: redirecting to refresh session');
+  if (shouldRefreshSession(request)) {
+    console.log('Proxy: redirecting to refresh session');
 
-      // Build refresh URL with return path
-      const refreshUrl = new URL('/api/auth/session/refresh', request.url);
-      refreshUrl.searchParams.set('next', pathname + request.nextUrl.search);
+    // Build refresh URL with return path
+    const refreshUrl = new URL('/api/auth/session/refresh', request.url);
+    refreshUrl.searchParams.set('next', pathname + request.nextUrl.search);
 
-      return NextResponse.redirect(refreshUrl);
-    }
+    return NextResponse.redirect(refreshUrl);
   }
 
   if (!i18n.isMultilingual) {
