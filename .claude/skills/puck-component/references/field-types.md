@@ -221,22 +221,6 @@ fields: {
 }
 ```
 
-### Visual Settings
-
-Spacing and background controls:
-
-```tsx
-import { createVisualSettingsField } from '@/components/puck/editor/field-utils';
-
-fields: {
-  visual: createVisualSettingsField({
-    showSpacing: true,
-    showBackground: true,
-    label: 'Visual Settings',
-  }),
-}
-```
-
 ### Date Picker
 
 Calendar date selection:
@@ -267,21 +251,21 @@ fields: {
 }
 ```
 
-### Color Select
+### Checkbox Group
 
-Dropdown with color mapping:
+Multi-select checkbox options:
 
 ```tsx
-import { createColorSelectField } from '@/components/puck/editor/field-utils';
+import { createCheckboxGroupField } from '@/components/puck/editor/field-utils';
 
 fields: {
-  color: createColorSelectField({
-    label: 'Background Color',
-    mapping: {
-      white: 'bg-white',
-      gray: 'bg-gray-100',
-      primary: 'bg-primary',
-    },
+  features: createCheckboxGroupField({
+    label: 'Features',
+    options: [
+      { label: 'Feature A', value: 'feature-a' },
+      { label: 'Feature B', value: 'feature-b' },
+    ],
+    helperText: 'Select which features to enable',
   }),
 }
 ```

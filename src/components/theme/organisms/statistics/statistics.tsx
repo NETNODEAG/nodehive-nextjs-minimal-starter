@@ -60,9 +60,7 @@ export interface StatisticItemProps {
 
 export interface StatisticsProps extends React.HTMLAttributes<HTMLElement> {
   variant?: 'default' | 'bordered' | 'subtle';
-  stat1?: StatisticItemProps;
-  stat2?: StatisticItemProps;
-  stat3?: StatisticItemProps;
+  items?: StatisticItemProps[];
 }
 
 const StatisticItem: React.FC<
@@ -77,9 +75,7 @@ const StatisticItem: React.FC<
 };
 
 const Statistics: React.FC<StatisticsProps> = ({
-  stat1,
-  stat2,
-  stat3,
+  items = [],
   variant = 'default',
   className,
   ...props
@@ -88,9 +84,9 @@ const Statistics: React.FC<StatisticsProps> = ({
     <section data-component-type="Statistics" {...props}>
       <div className={cn(statisticsVariants(), className)}>
         <div className={cn(gridVariants())}>
-          {stat1 && <StatisticItem {...stat1} variant={variant} />}
-          {stat2 && <StatisticItem {...stat2} variant={variant} />}
-          {stat3 && <StatisticItem {...stat3} variant={variant} />}
+          {items.map((item, index) => (
+            <StatisticItem key={index} {...item} variant={variant} />
+          ))}
         </div>
       </div>
     </section>

@@ -1,15 +1,13 @@
 import type { CustomFieldRender } from '@measured/puck';
 
 import { getLocaleFromPathname } from '@/lib/utils';
+import { CheckboxGroupField } from '@/components/puck/editor/checkbox-group/checkbox-group-field';
 import { DatePicker } from '@/components/puck/editor/date-picker/date-picker';
 import {
   MediaItem,
   MediaSelectorField,
 } from '@/components/puck/editor/media-selector/media-selector-field';
 import TextEditor from '@/components/puck/editor/text-editor/text-editor';
-import VisualSettingsField, {
-  VisualSettingsFieldProps,
-} from '@/components/puck/editor/visual-settings-field/visual-settings-field';
 
 export interface TextEditorFieldOptions {
   label?: string;
@@ -84,48 +82,29 @@ export const createMediaSelectorField = ({
   };
 };
 
-export interface VisualSettingsFieldOptions {
-  showSpacing?: boolean;
-  showBackground?: boolean;
+export interface CheckboxGroupFieldOptions {
   label?: string;
+  options: Array<{ label: string; value: string }>;
+  helperText?: string;
 }
 
-export const createVisualSettingsField = ({
-  showSpacing = true,
-  showBackground = true,
-  label = 'Visual Settings',
-}: VisualSettingsFieldOptions = {}) => {
+export const createCheckboxGroupField = ({
+  label = 'Options',
+  options,
+  helperText,
+}: CheckboxGroupFieldOptions) => {
   return {
     type: 'custom' as const,
     label,
     render: (({ field, value, onChange }) => (
-      <VisualSettingsField
+      <CheckboxGroupField
+        label={field.label ?? label}
+        options={options}
         value={value}
         onChange={onChange}
-        showSpacing={showSpacing}
-        showBackground={showBackground}
-        label={field.label ?? label}
+        helperText={helperText}
       />
-    )) satisfies CustomFieldRender<VisualSettingsFieldProps['value']>,
-  };
-};
-
-export interface ColorSelectFieldOptions {
-  mapping: Record<string, string>;
-  label?: string;
-}
-
-export const createColorSelectField = ({
-  mapping,
-  label = 'Color',
-}: ColorSelectFieldOptions) => {
-  return {
-    type: 'select' as const,
-    label,
-    options: Object.keys(mapping).map((key) => ({
-      label: key.charAt(0).toUpperCase() + key.slice(1),
-      value: key,
-    })),
+    )) satisfies CustomFieldRender<string[]>,
   };
 };
 

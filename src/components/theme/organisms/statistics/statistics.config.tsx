@@ -14,10 +14,12 @@ export const StatisticsConfig: ComponentConfig = {
         { label: 'Subtle', value: 'subtle' },
       ],
     },
-    stat1: {
-      type: 'object',
-      label: 'Statistic 1',
-      objectFields: {
+    items: {
+      type: 'array',
+      label: 'Statistics',
+      min: 1,
+      max: 6,
+      arrayFields: {
         title: {
           type: 'text',
           label: 'Title',
@@ -27,54 +29,31 @@ export const StatisticsConfig: ComponentConfig = {
           label: 'Text (HTML)',
         },
       },
-    },
-    stat2: {
-      type: 'object',
-      label: 'Statistic 2',
-      objectFields: {
-        title: {
-          type: 'text',
-          label: 'Title',
-        },
-        text: {
-          type: 'textarea',
-          label: 'Text (HTML)',
-        },
+      defaultItemProps: {
+        title: 'New Stat',
+        text: '<p>Description</p>',
       },
-    },
-    stat3: {
-      type: 'object',
-      label: 'Statistic 3',
-      objectFields: {
-        title: {
-          type: 'text',
-          label: 'Title',
-        },
-        text: {
-          type: 'textarea',
-          label: 'Text (HTML)',
-        },
-      },
+      getItemSummary: (item) => item.title || 'Statistic',
     },
   },
   defaultProps: {
     variant: 'default',
-    stat1: {
-      title: '250k',
-      text: '<p>Transactions <strong>every 24 hours</strong></p>',
-    },
-    stat2: {
-      title: '$119T',
-      text: '<p>Assets under <strong>holding</strong></p>',
-    },
-    stat3: {
-      title: '46,000',
-      text: '<p>New users <strong>annually</strong></p>',
-    },
+    items: [
+      {
+        title: '250k',
+        text: '<p>Transactions <strong>every 24 hours</strong></p>',
+      },
+      {
+        title: '$119T',
+        text: '<p>Assets under <strong>holding</strong></p>',
+      },
+      {
+        title: '46,000',
+        text: '<p>New users <strong>annually</strong></p>',
+      },
+    ],
   },
-  render: ({ variant, stat1, stat2, stat3 }) => {
-    return (
-      <Statistics variant={variant} stat1={stat1} stat2={stat2} stat3={stat3} />
-    );
+  render: ({ variant, items }) => {
+    return <Statistics variant={variant} items={items} />;
   },
 };

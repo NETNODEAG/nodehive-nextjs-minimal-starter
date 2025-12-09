@@ -10,18 +10,20 @@ const meta = {
   tags: ['autodocs'],
   args: {
     variant: 'default',
-    stat1: {
-      title: '98%',
-      text: '<p>Customer satisfaction rating reported across platforms.</p>',
-    },
-    stat2: {
-      title: '24/7',
-      text: '<p>Support coverage to keep your digital presence running smoothly.</p>',
-    },
-    stat3: {
-      title: '120+',
-      text: '<p>Successful launches delivered by the team this year.</p>',
-    },
+    items: [
+      {
+        title: '98%',
+        text: '<p>Customer satisfaction rating reported across platforms.</p>',
+      },
+      {
+        title: '24/7',
+        text: '<p>Support coverage to keep your digital presence running smoothly.</p>',
+      },
+      {
+        title: '120+',
+        text: '<p>Successful launches delivered by the team this year.</p>',
+      },
+    ],
   },
   argTypes: {
     variant: {
