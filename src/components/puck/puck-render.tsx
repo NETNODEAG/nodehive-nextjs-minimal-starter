@@ -22,12 +22,10 @@ export default function PuckRender({ data, config }: PuckRenderProps) {
   }, [data, config]);
 
   return (
-    <div className="[&>div]:space-y-16">
-      <Render
-        config={config}
-        data={resolvedData}
-        metadata={{ isResolved: isResolved }}
-      />
-    </div>
+    <Render
+      config={config}
+      data={resolvedData}
+      metadata={{ isResolved: isResolved }}
+    />
   );
 }
