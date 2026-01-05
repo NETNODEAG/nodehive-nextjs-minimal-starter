@@ -3,13 +3,14 @@
 import { useState } from 'react';
 import dynamic from 'next/dynamic';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { Button, Config } from '@measured/puck';
+import { Config } from '@measured/puck';
 import { motion } from 'framer-motion';
 import { SquareDashedMousePointerIcon } from 'lucide-react';
 
 import { DrupalNode } from '@/types/nodehive';
 import { cn } from '@/lib/utils';
 import PuckRender from '@/components/puck/puck-render';
+import Button from '@/components/ui/atoms/button/button';
 
 const LazyPuckEditor = dynamic(
   () => import('@/components/puck/editor/puck-editor'),
@@ -79,7 +80,7 @@ export default function PuckWrapper({
         >
           <div className="sticky top-(--header-height) right-0 z-50 h-0 cursor-pointer">
             <div className="absolute top-2 right-2">
-              <Button onClick={openPuckEditor}>
+              <Button onClick={openPuckEditor} className="flex gap-2">
                 <SquareDashedMousePointerIcon className="size-5 text-white" />
                 Edit
               </Button>
