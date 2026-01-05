@@ -46,7 +46,6 @@
   "devDependencies": {
     "@ianvs/prettier-plugin-sort-imports": "^4.7.0",
     "@playwright/test": "^1.56.1",
-    "@storybook/nextjs": "^9.1.15",
     "@svgr/webpack": "^8.1.0",
     "@tailwindcss/postcss": "^4.1.16",
     "@types/negotiator": "^0.6.4",
@@ -64,6 +63,9 @@
     "prettier": "^3.6.2",
     "prettier-plugin-tailwindcss": "^0.7.1",
     "tailwindcss": "^4.1.16",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "eslint-plugin-storybook": "^10.1.11",
+    "@storybook/nextjs": "^10.1.11",
+    "storybook": "^10.1.11"
   }
 }
