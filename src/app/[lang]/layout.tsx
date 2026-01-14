@@ -5,8 +5,10 @@ import '@/styles/globals.css';
 
 import { Suspense } from 'react';
 import { Metadata } from 'next';
+import { getDictionary } from '@/dictionaries';
 import AppProvider from '@/providers/app-provider';
 
+import type { Locale } from '@/config/i18n-config';
 import { helveticaNow, inter } from '@/lib/fonts';
 import SessionExpiredToast from '@/components/auth/session-expired-toast';
 import Footer from '@/components/theme/global-layout/footer/footer';
@@ -38,11 +40,12 @@ interface LayoutProps {
 export default async function RootLayout(props: LayoutProps) {
   const { children, params } = props;
   const { lang } = await params;
+  const dictionary = await getDictionary(lang as Locale);
 
   return (
     <html lang={lang}>
       <body className={`${inter.variable} ${helveticaNow.variable} font-sans`}>
-        <AppProvider>
+        <AppProvider dictionary={dictionary}>
           <div className="relative flex min-h-screen flex-col">
             <Header lang={lang} />
             <main className="flex-[1_0_auto]">{children}</main>

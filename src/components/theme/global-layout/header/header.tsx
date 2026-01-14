@@ -24,7 +24,11 @@ export default async function Header({ lang: langProp }: HeaderProps) {
               <Navigation menuId={mainMenuId} lang={lang} />
             </Suspense>
           )}
-          {isMultilingual && <LanguageSwitcher lang={lang} />}
+          {isMultilingual && (
+            <Suspense>
+              <LanguageSwitcher lang={lang} />
+            </Suspense>
+          )}
         </div>
       </Container>
     </header>
