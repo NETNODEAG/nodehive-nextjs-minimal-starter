@@ -2,12 +2,14 @@ import nextVitals from 'eslint-config-next/core-web-vitals';
 import nextTs from 'eslint-config-next/typescript';
 import eslintConfigPrettier from 'eslint-config-prettier/flat';
 import checkFile from 'eslint-plugin-check-file';
+import reactNoManualMemo from 'eslint-plugin-react-no-manual-memo';
 import { defineConfig, globalIgnores } from 'eslint/config';
 
 const eslintConfig = defineConfig([
   ...nextVitals,
   ...nextTs,
   eslintConfigPrettier,
+  reactNoManualMemo.configs['flat/recommended'],
   {
     plugins: {
       'check-file': checkFile,
