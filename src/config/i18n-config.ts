@@ -1,4 +1,4 @@
-const locales = ['en', 'de'] as const;
+const locales = ['en'] as const;
 
 const defaultLocale = process.env
   .NEXT_PUBLIC_NODEHIVE_DEFAULT_LANGUAGE as Locale;

@@ -193,12 +193,8 @@ export function MediaSelectorField({
                         </span>
                       </div>
                     );
-                  } else if (
-                    value.thumbnailImage &&
-                    (value.type === 'media--image' ||
-                      value.type === 'media--remote_video' ||
-                      value.type === 'media--video')
-                  ) {
+                  } else if (value.thumbnailImage) {
+                    // Show thumbnail image for any media type that has one
                     return (
                       <div className="aspect-square w-10 shrink-0 overflow-hidden rounded">
                         <div className="relative h-full w-full">
@@ -212,7 +208,7 @@ export function MediaSelectorField({
                       </div>
                     );
                   } else {
-                    // Fallback generic icon for unknown media types
+                    // Fallback generic icon for media without thumbnails
                     return (
                       <div className="flex aspect-square w-10 shrink-0 items-center justify-center overflow-hidden rounded bg-gray-50">
                         <span className="material-symbols-outlined text-gray-600">

@@ -339,11 +339,8 @@ export function MediaSelectorModal({
                               </span>
                             </div>
                           );
-                        } else if (
-                          item.thumbnailImage &&
-                          item.type === 'media--image'
-                        ) {
-                          // Only show thumbnails for actual image media types
+                        } else if (item.thumbnailImage) {
+                          // Show thumbnail image for any media type that has one
                           return (
                             <div className="relative h-full w-full">
                               {/*eslint-disable-next-line @next/next/no-img-element */}
@@ -356,7 +353,7 @@ export function MediaSelectorModal({
                             </div>
                           );
                         } else {
-                          // Fallback generic icon for unknown media types
+                          // Fallback generic icon for media without thumbnails
                           return (
                             <div className="flex h-full w-full items-center justify-center bg-gray-50">
                               <span className="material-symbols-outlined text-6xl text-gray-600">
