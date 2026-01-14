@@ -27,7 +27,7 @@ import ComponentItem from '@/components/puck/editor/component-item';
 import ComponentTemplateModal from '@/components/puck/editor/template-selector/component-template-modal';
 import { TemplateSelectorModal } from '@/components/puck/editor/template-selector/template-selector-modal';
 
-import '@measured/puck/puck.css';
+import '@measured/puck/no-external.css';
 
 type PuckEditorProps = {
   node: DrupalNode;
