@@ -1,4 +1,4 @@
-import { ComponentConfig } from '@measured/puck';
+import { ComponentConfig } from '@puckeditor/core';
 
 import { createMediaSelectorField } from '@/components/puck/editor/field-utils';
 import Video from '@/components/theme/atoms-content/video/video';

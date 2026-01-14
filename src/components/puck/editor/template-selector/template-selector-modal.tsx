@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
-import { AppState, Button, Config, PuckAction } from '@measured/puck';
+import { AppState, Button, Config, PuckAction } from '@puckeditor/core';
 import { useQuery } from '@tanstack/react-query';
 import {
   ChevronLeftIcon,

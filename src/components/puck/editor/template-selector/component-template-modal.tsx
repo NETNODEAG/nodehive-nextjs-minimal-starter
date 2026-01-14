@@ -1,6 +1,6 @@
 'use client';
 
-import { Content } from '@measured/puck';
+import { Content } from '@puckeditor/core';
 
 import { TemplateForm } from '@/components/puck/editor/template-selector/template-form';
 import {

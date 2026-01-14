@@ -168,7 +168,7 @@ article: {
 Implement custom field UI.
 
 ```tsx
-import type { CustomFieldRender } from '@measured/puck';
+import type { CustomFieldRender } from '@puckeditor/core';
 
 myField: {
   type: 'custom',

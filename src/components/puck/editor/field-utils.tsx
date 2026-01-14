@@ -1,4 +1,4 @@
-import type { CustomFieldRender } from '@measured/puck';
+import type { CustomFieldRender } from '@puckeditor/core';
 
 import { getLocaleFromPathname } from '@/lib/utils';
 import { CheckboxGroupField } from '@/components/puck/editor/checkbox-group/checkbox-group-field';

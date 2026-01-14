@@ -16,7 +16,7 @@
     "@ckeditor/ckeditor5-react": "^11.0.0",
     "@formatjs/intl-localematcher": "^0.7.1",
     "@iframe-resizer/react": "^5.5.7",
-    "@measured/puck": "^0.20.2",
+    "@puckeditor/core": "^0.21.0",
     "@radix-ui/react-dialog": "^1.1.15",
     "@radix-ui/react-popover": "^1.1.15",
     "@radix-ui/react-tooltip": "^1.2.8",

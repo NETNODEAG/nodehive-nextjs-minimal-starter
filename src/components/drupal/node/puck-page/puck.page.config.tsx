@@ -1,4 +1,4 @@
-import { Config } from '@measured/puck';
+import { Config } from '@puckeditor/core';
 
 import { BodyCopyConfig } from '@/components/theme/atoms-content/body-copy/body-copy.config';
 import { CallToActionConfig } from '@/components/theme/atoms-content/call-to-action/call-to-action.config';

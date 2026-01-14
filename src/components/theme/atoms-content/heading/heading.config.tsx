@@ -1,4 +1,4 @@
-import { ComponentConfig } from '@measured/puck';
+import { ComponentConfig } from '@puckeditor/core';
 
 import { Heading } from '@/components/theme/atoms-content/heading/heading';
 

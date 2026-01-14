@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Config, Render, resolveAllData } from '@measured/puck';
+import { Config, Render, resolveAllData } from '@puckeditor/core';
 
 export interface PuckRenderProps {
   data: any;

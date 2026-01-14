@@ -1,6 +1,6 @@
 'use client';
 
-import { FieldLabel } from '@measured/puck';
+import { FieldLabel } from '@puckeditor/core';
 
 type CheckboxOption = {
   label: string;

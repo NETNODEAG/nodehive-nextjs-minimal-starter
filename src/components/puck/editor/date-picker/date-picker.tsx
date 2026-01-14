@@ -1,6 +1,6 @@
 'use client';
 
-import { FieldLabel } from '@measured/puck';
+import { FieldLabel } from '@puckeditor/core';
 import { format } from 'date-fns';
 import { de } from 'date-fns/locale';
 import { CalendarIcon } from 'lucide-react';

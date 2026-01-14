@@ -1,7 +1,7 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import { FieldLabel } from '@measured/puck';
+import { FieldLabel } from '@puckeditor/core';
 import { TextIcon } from 'lucide-react';
 
 // Disable server-side rendering for the CKEditor component

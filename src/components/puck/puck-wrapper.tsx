@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import dynamic from 'next/dynamic';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { Config } from '@measured/puck';
+import { Config } from '@puckeditor/core';
 import { motion } from 'framer-motion';
 import { SquareDashedMousePointerIcon } from 'lucide-react';
 

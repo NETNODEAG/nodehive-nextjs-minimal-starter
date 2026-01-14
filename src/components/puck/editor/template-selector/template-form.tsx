@@ -2,7 +2,7 @@
 
 import { FormEvent, useState } from 'react';
 import { saveTemplate } from '@/data/nodehive/fragment/actions';
-import { Button, Content } from '@measured/puck';
+import { Button, Content } from '@puckeditor/core';
 import { toast } from 'sonner';
 
 type MessageType = 'success' | 'error' | null;

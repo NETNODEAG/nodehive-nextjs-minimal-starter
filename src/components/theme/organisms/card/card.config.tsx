@@ -1,4 +1,4 @@
-import { ComponentConfig } from '@measured/puck';
+import { ComponentConfig } from '@puckeditor/core';
 import dynamicIconImports from 'lucide-react/dynamicIconImports';
 
 import Card from '@/components/theme/organisms/card/card';
