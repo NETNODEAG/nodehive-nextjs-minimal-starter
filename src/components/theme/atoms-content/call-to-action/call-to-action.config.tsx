@@ -33,7 +33,6 @@ export const CallToActionConfig: ComponentConfig = {
     text: {
       type: 'text',
       label: 'Text',
-      contentEditable: true,
     },
     href: {
       type: 'text',

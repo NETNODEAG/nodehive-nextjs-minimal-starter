@@ -13,7 +13,6 @@
     "build-storybook": "storybook build"
   },
   "dependencies": {
-    "@ckeditor/ckeditor5-react": "^11.0.0",
     "@formatjs/intl-localematcher": "^0.7.1",
     "@iframe-resizer/react": "^5.5.7",
     "@puckeditor/core": "^0.21.0",

@@ -1,6 +1,5 @@
 import { ComponentConfig } from '@puckeditor/core';
 
-import { createTextEditorField } from '@/components/puck/editor/field-utils';
 import BodyCopy from '@/components/theme/atoms-content/body-copy/body-copy';
 
 export const BodyCopyConfig: ComponentConfig = {
@@ -17,9 +16,10 @@ export const BodyCopyConfig: ComponentConfig = {
         { value: '2xl', label: '2X Large' },
       ],
     },
-    text: createTextEditorField({
+    text: {
+      type: 'richtext',
       label: 'Text',
-    }),
+    },
   },
   defaultProps: {
     size: 'base',

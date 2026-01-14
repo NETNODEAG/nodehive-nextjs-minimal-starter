@@ -8,7 +8,6 @@ export const HeadingConfig: ComponentConfig = {
     text: {
       type: 'text',
       label: 'Text',
-      contentEditable: true,
     },
     size: {
       type: 'select',
