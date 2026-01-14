@@ -43,7 +43,7 @@ Content from Drupal is rendered through a component registry pattern:
   - Registry: `fragments.ts`
 
 ### Puck Page Builder
-Visual page editing via `@measured/puck`:
+Visual page editing via `@puckeditor/core`:
 
 - Config: `src/components/drupal/node/puck-page/puck.page.config.tsx`
 - Components are organized by category: sections, layout, content, organisms

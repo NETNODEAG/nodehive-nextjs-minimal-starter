@@ -1,4 +1,4 @@
-import type { SlotComponent } from '@measured/puck';
+import type { SlotComponent } from '@puckeditor/core';
 import type { Meta, StoryObj } from '@storybook/react';
 
 import Grid from './grid';

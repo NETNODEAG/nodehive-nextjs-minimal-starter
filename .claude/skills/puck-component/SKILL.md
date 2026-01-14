@@ -74,7 +74,7 @@ export default MyComponent;
 ## Step 2: Create Puck Config
 
 ```tsx
-import { ComponentConfig } from '@measured/puck';
+import { ComponentConfig } from '@puckeditor/core';
 import MyComponent from './my-component';
 
 export const MyComponentConfig: ComponentConfig = {

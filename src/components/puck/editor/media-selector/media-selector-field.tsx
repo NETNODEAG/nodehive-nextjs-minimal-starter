@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Button, FieldLabel } from '@measured/puck';
+import { Button, FieldLabel } from '@puckeditor/core';
 import { ImageIcon, Trash2 } from 'lucide-react';
 
 import { extractFields } from '@/lib/extract-fields';

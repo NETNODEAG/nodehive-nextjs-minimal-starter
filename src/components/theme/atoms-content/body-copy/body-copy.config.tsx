@@ -1,4 +1,4 @@
-import { ComponentConfig } from '@measured/puck';
+import { ComponentConfig } from '@puckeditor/core';
 
 import { createTextEditorField } from '@/components/puck/editor/field-utils';
 import BodyCopy from '@/components/theme/atoms-content/body-copy/body-copy';

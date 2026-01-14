@@ -1,4 +1,4 @@
-import { ComponentConfig } from '@measured/puck';
+import { ComponentConfig } from '@puckeditor/core';
 
 import Grid from '@/components/theme/atoms-layout/grid/grid';
 

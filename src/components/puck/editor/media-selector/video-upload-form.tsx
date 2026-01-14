@@ -2,7 +2,7 @@
 
 import { FormEvent, useState } from 'react';
 import { uploadRemoteVideoMedia } from '@/data/nodehive/media/actions';
-import { Button } from '@measured/puck';
+import { Button } from '@puckeditor/core';
 
 type MessageType = 'success' | 'error' | null;
 

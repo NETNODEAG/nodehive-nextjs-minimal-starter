@@ -1,4 +1,4 @@
-import { SlotComponent } from '@measured/puck';
+import { SlotComponent } from '@puckeditor/core';
 
 import { cn } from '@/lib/utils';
 
