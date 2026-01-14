@@ -8,7 +8,6 @@ export const HeroConfig: ComponentConfig = {
     title: {
       type: 'text',
       label: 'Title',
-      contentEditable: true,
     },
     description: {
       type: 'textarea',

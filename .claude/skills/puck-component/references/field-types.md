@@ -24,7 +24,6 @@ description: {
   type: 'textarea',
   label: 'Description',
   placeholder: 'Enter description...',
-  contentEditable: true,
 }
 ```
 
@@ -163,6 +162,20 @@ article: {
 }
 ```
 
+### richtext
+
+WYSIWYG rich text editor (TipTap-based).
+
+```tsx
+content: {
+  type: 'richtext',
+  label: 'Content',
+  contentEditable: true, // optional: enables inline canvas editing
+}
+```
+
+Supports formatting: bold, italic, underline, strike, headings, lists, links, blockquotes, code blocks, and text alignment.
+
 ### custom
 
 Implement custom field UI.
@@ -201,22 +214,6 @@ fields: {
   image: createMediaSelectorField({
     label: 'Image',
     mediaTypes: ['image'], // 'image', 'video', 'document'
-  }),
-}
-```
-
-### Rich Text Editor
-
-CKEditor-based rich text:
-
-```tsx
-import { createTextEditorField } from '@/components/puck/editor/field-utils';
-
-fields: {
-  content: createTextEditorField({
-    label: 'Content',
-    editorType: 'default', // or 'title' for contentEditable
-    showEnlargeButton: true,
   }),
 }
 ```

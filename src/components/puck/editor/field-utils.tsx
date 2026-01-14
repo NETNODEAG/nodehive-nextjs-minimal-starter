@@ -7,34 +7,6 @@ import {
   MediaItem,
   MediaSelectorField,
 } from '@/components/puck/editor/media-selector/media-selector-field';
-import TextEditor from '@/components/puck/editor/text-editor/text-editor';
-
-export interface TextEditorFieldOptions {
-  label?: string;
-  editorType?: 'default' | 'title';
-  showEnlargeButton?: boolean;
-}
-
-export const createTextEditorField = ({
-  label = 'Text',
-  editorType = 'default',
-  showEnlargeButton = true,
-}: TextEditorFieldOptions = {}) => {
-  return {
-    type: 'custom' as const,
-    contentEditable: editorType === 'title' ? true : false,
-    label,
-    render: (({ field, value, onChange }) => (
-      <TextEditor
-        label={field.label ?? label}
-        value={value}
-        onChange={onChange}
-        editorType={editorType}
-        showEnlargeButton={showEnlargeButton}
-      />
-    )) satisfies CustomFieldRender<string>,
-  };
-};
 
 export interface DatePickerFieldOptions {
   label?: string;

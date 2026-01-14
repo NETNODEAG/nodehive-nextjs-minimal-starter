@@ -20,12 +20,10 @@ export const CardConfig: ComponentConfig = {
     title: {
       type: 'text',
       label: 'Title',
-      contentEditable: true,
     },
     description: {
       type: 'textarea',
       label: 'Description',
-      contentEditable: true,
     },
     icon: {
       type: 'select',
