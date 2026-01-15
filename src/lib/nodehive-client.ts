@@ -33,6 +33,7 @@ export const createUserClient = () => {
         grantType: 'password',
         clientId: process.env.NODEHIVE_OAUTH_USER_CLIENT_ID || '',
         clientSecret: process.env.NODEHIVE_OAUTH_USER_CLIENT_SECRET || '',
+        scope: 'admin',
       },
       storage: {
         type: 'custom',
