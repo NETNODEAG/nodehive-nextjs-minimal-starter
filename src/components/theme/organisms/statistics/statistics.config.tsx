@@ -5,15 +5,6 @@ import Statistics from '@/components/theme/organisms/statistics/statistics';
 export const StatisticsConfig: ComponentConfig = {
   label: 'Statistics',
   fields: {
-    variant: {
-      type: 'radio',
-      label: 'Style',
-      options: [
-        { label: 'Default', value: 'default' },
-        { label: 'Bordered', value: 'bordered' },
-        { label: 'Subtle', value: 'subtle' },
-      ],
-    },
     items: {
       type: 'array',
       label: 'Statistics',
@@ -25,8 +16,8 @@ export const StatisticsConfig: ComponentConfig = {
           label: 'Title',
         },
         text: {
-          type: 'textarea',
-          label: 'Text (HTML)',
+          type: 'richtext',
+          label: 'Text',
         },
       },
       defaultItemProps: {
@@ -34,6 +25,15 @@ export const StatisticsConfig: ComponentConfig = {
         text: '<p>Description</p>',
       },
       getItemSummary: (item) => item.title || 'Statistic',
+    },
+    variant: {
+      type: 'radio',
+      label: 'Style',
+      options: [
+        { label: 'Default', value: 'default' },
+        { label: 'Bordered', value: 'bordered' },
+        { label: 'Subtle', value: 'subtle' },
+      ],
     },
   },
   defaultProps: {

@@ -23,6 +23,11 @@ export const config: Config = {
       title: 'Sections',
       components: ['Hero'],
     },
+    organisms: {
+      visible: true,
+      title: 'Organisms',
+      components: ['Card', 'Statistics'],
+    },
     layout: {
       visible: true,
       title: 'Layout',
@@ -32,11 +37,6 @@ export const config: Config = {
       visible: true,
       title: 'Content',
       components: ['Heading', 'BodyCopy', 'CallToAction', 'Image', 'Video'],
-    },
-    organisms: {
-      visible: true,
-      title: 'Organisms',
-      components: ['Card', 'Statistics'],
     },
   },
   components: {
