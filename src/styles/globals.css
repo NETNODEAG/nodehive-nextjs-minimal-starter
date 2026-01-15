@@ -1,7 +1,6 @@
 @import 'tailwindcss';
 @import './theme/utilities.css';
 @import './theme/components.css';
-@import './theme/ckeditor.css';
 
 @plugin '@tailwindcss/forms' {
   strategy: 'base';
@@ -18,4 +17,9 @@
 @theme inline {
   --font-sans: var(--font-inter);
   --font-heading: var(--font-helvetica-now);
+}
+
+/* Fix Puck richtext dropdown z-index */
+[data-radix-popper-content-wrapper] {
+  z-index: 100 !important;
 }

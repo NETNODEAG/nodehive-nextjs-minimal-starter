@@ -5,6 +5,10 @@ import BodyCopy from '@/components/theme/atoms-content/body-copy/body-copy';
 export const BodyCopyConfig: ComponentConfig = {
   label: 'Body Copy',
   fields: {
+    text: {
+      type: 'richtext',
+      label: 'Text',
+    },
     size: {
       label: 'Size',
       type: 'select',
@@ -15,10 +19,6 @@ export const BodyCopyConfig: ComponentConfig = {
         { value: 'xl', label: 'Extra Large' },
         { value: '2xl', label: '2X Large' },
       ],
-    },
-    text: {
-      type: 'richtext',
-      label: 'Text',
     },
   },
   defaultProps: {
