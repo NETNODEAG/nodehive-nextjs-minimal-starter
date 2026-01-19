@@ -58,7 +58,7 @@ export function TemplateForm({
       setMessageType('error');
       setMessage('Failed to save template');
       toast.error('Failed to save template');
-      console.error('Failed to save tempalte:', error);
+      console.error('Failed to save template:', error);
     }
 
     setIsPending(false);

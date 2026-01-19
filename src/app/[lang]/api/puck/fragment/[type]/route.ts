@@ -19,7 +19,7 @@ export async function GET(request: Request, { params }: RouteParams) {
     const response = await getFragments(type, lang, query, offset, limit);
     return NextResponse.json(response);
   } catch (error) {
-    console.error('Error fetching media:', error);
+    console.error('Error fetching fragments:', error);
     return NextResponse.json(
       { error: 'An unexpected error occurred' },
       { status: 500 }
