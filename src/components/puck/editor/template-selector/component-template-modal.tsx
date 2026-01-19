@@ -11,12 +11,13 @@ import {
   DialogTitle,
 } from '@/components/ui/atoms/dialog/dialog';
 
-type ContentTempalteModalProps = {
+type ContentTemplateModalProps = {
   content: Content | null;
   isOpen: boolean;
   setIsOpen: (arg: boolean) => void;
   fragmentType: string;
   dataField: string;
+  onTemplateSaved?: () => void;
 };
 
 export default function ComponentTemplateModal({
@@ -25,11 +26,18 @@ export default function ComponentTemplateModal({
   setIsOpen,
   fragmentType,
   dataField,
-}: ContentTempalteModalProps) {
+  onTemplateSaved,
+}: ContentTemplateModalProps) {
   if (!content) return null;
+
+  const handleTemplateSaved = () => {
+    setIsOpen(false);
+    onTemplateSaved?.();
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && setIsOpen(false)}>
-      <DialogContent className="max-h-dvh max-w-3xl overflow-y-auto xl:max-w-5xl">
+      <DialogContent className="max-h-dvh max-w-lg overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Create new component template</DialogTitle>
           <DialogDescription>
@@ -39,7 +47,7 @@ export default function ComponentTemplateModal({
         <TemplateForm
           content={content}
           onCancel={() => setIsOpen(false)}
-          onTemplateSaved={() => setIsOpen(false)}
+          onTemplateSaved={handleTemplateSaved}
           fragmentType={fragmentType}
           dataField={dataField}
         />

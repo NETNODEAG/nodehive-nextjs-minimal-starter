@@ -13,19 +13,14 @@ import {
   Puck,
   PuckAction,
 } from '@puckeditor/core';
-import {
-  ArrowLeftRightIcon,
-  LayoutTemplateIcon,
-  Loader2Icon,
-  SaveIcon,
-  XIcon,
-} from 'lucide-react';
+import { useQueryClient } from '@tanstack/react-query';
+import { ArrowLeftRightIcon, Loader2Icon, SaveIcon, XIcon } from 'lucide-react';
 import { toast } from 'sonner';
 
 import { DrupalNode } from '@/types/nodehive';
 import ComponentItem from '@/components/puck/editor/component-item';
 import ComponentTemplateModal from '@/components/puck/editor/template-selector/component-template-modal';
-import { TemplateSelectorModal } from '@/components/puck/editor/template-selector/template-selector-modal';
+import { createTemplatesPlugin } from '@/components/puck/plugins/templates-plugin';
 
 import '@puckeditor/core/no-external.css';
 
@@ -50,11 +45,12 @@ export default function PuckEditor({
   const nodeData = node;
   const lang = nodeData?.langcode;
   const pathName = usePathname();
-  const [isTemplateSelectorModalOpen, setIsTemplateSelectorModalOpen] =
-    useState(false);
+  const queryClient = useQueryClient();
   const [isContentTemplateModalOpen, setIsContentTemplateModalOpen] =
     useState(false);
   const [templateContent, setTemplateContent] = useState<Content | null>(null);
+
+  const plugins = [createTemplatesPlugin({ config })];
 
   const onSave = async (data: Partial<Data>) => {
     setIsSaving(true);
@@ -117,6 +113,7 @@ export default function PuckEditor({
         config={config}
         data={data}
         headerTitle={nodeData.title || 'Page'}
+        plugins={plugins}
         overrides={{
           drawerItem: ({ name }) => <ComponentItem name={name} />,
           actionBar: ({ children, label }) => {
@@ -152,25 +149,6 @@ export default function PuckEditor({
                 <Button
                   variant="secondary"
                   onClick={() => {
-                    setIsTemplateSelectorModalOpen(true);
-                  }}
-                >
-                  <LayoutTemplateIcon className="size-3" />
-                  Templates
-                </Button>
-                <TemplateSelectorModal
-                  isOpen={isTemplateSelectorModalOpen}
-                  onClose={() => setIsTemplateSelectorModalOpen(false)}
-                  fragmentType="puck_template"
-                  dataField="field_puck_template_data"
-                  iconField="field_media"
-                  appState={appState}
-                  dispatch={dispatch}
-                  config={config}
-                />
-                <Button
-                  variant="secondary"
-                  onClick={() => {
                     togglePreviewMode({ isPreviewMode, dispatch });
                   }}
                 >
@@ -203,6 +181,9 @@ export default function PuckEditor({
         setIsOpen={setIsContentTemplateModalOpen}
         fragmentType="puck_template"
         dataField="field_puck_template_data"
+        onTemplateSaved={() =>
+          queryClient.invalidateQueries({ queryKey: ['templates-plugin'] })
+        }
       />
     </>
   );

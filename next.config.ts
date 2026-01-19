@@ -21,6 +21,8 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: [...imageDomains],
     formats: ['image/avif', 'image/webp'],
+    // Allow images from local development domains (e.g., DDEV) that resolve to private IPs
+    dangerouslyAllowLocalIP: process.env.NODE_ENV === 'development',
   },
   staticPageGenerationTimeout: 120,
   turbopack: { rules: { '*.svg': { loaders: ['@svgr/webpack'], as: '*.js' } } },
