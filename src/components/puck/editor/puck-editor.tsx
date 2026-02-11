@@ -23,6 +23,7 @@ import { DrupalNode } from '@/types/nodehive';
 import { absoluteUrl, isRelative } from '@/lib/utils';
 import ComponentItem from '@/components/puck/editor/component-item';
 import ComponentTemplateModal from '@/components/puck/editor/template-selector/component-template-modal';
+import { createAiChatPlugin } from '@/components/puck/plugins/ai-chat-plugin';
 import { createSectionsPlugin } from '@/components/puck/plugins/sections-plugin';
 import { createTemplatesPlugin } from '@/components/puck/plugins/templates-plugin';
 
@@ -110,6 +111,7 @@ export default function PuckEditor({
   };
 
   const plugins = [
+    createAiChatPlugin({ config, nodeId: nodeData.id }),
     createSectionsPlugin({ config }),
     blocksPlugin(),
     outlinePlugin(),
