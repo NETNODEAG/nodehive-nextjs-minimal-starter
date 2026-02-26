@@ -11,30 +11,41 @@ const baseOptions = {
 };
 
 let serviceClient: NodeHiveClient | null = null;
+let debugServiceClient: NodeHiveClient | null = null;
+
+type ClientOptions = {
+  debug?: boolean;
+};
 
 export const createServerClient = cache(async () => {
   const storage = new NextCookieStorage();
   const token = await storage.get('token');
 
   if (token) {
-    return createUserClient();
+    return createUserClient({ debug: true });
   }
 
-  return createServiceClient();
+  return createServiceClient({ debug: true });
 });
 
-export const createUserClient = () => {
+export const createUserClient = (options: ClientOptions = {}) => {
   const storage = new NextCookieStorage();
+  const debug = options.debug ?? baseOptions.debug;
+  const userOauthConfig = {
+    grantType: 'password' as const,
+    clientId: process.env.NODEHIVE_OAUTH_USER_CLIENT_ID || '',
+    clientSecret: process.env.NODEHIVE_OAUTH_USER_CLIENT_SECRET || '',
+    ...(process.env.NODEHIVE_OAUTH_USER_SCOPE
+      ? { scope: process.env.NODEHIVE_OAUTH_USER_SCOPE }
+      : {}),
+  };
+
   const userClient = new NodeHiveClient({
     ...baseOptions,
+    debug,
     auth: {
       method: 'oauth',
-      oauth: {
-        grantType: 'password',
-        clientId: process.env.NODEHIVE_OAUTH_USER_CLIENT_ID || '',
-        clientSecret: process.env.NODEHIVE_OAUTH_USER_CLIENT_SECRET || '',
-        scope: 'admin',
-      },
+      oauth: userOauthConfig,
       storage: {
         type: 'custom',
         adapter: storage,
@@ -48,14 +59,18 @@ export const createUserClient = () => {
   return userClient;
 };
 
-export const createServiceClient = () => {
-  if (serviceClient) {
+export const createServiceClient = (options: ClientOptions = {}) => {
+  const debug = options.debug ?? baseOptions.debug;
+  const cachedClient = debug ? debugServiceClient : serviceClient;
+
+  if (cachedClient) {
     console.log(`Used existing service client`);
-    return serviceClient;
+    return cachedClient;
   }
 
-  serviceClient = new NodeHiveClient({
+  const client = new NodeHiveClient({
     ...baseOptions,
+    debug,
     auth: {
       method: 'oauth',
       oauth: {
@@ -65,6 +80,13 @@ export const createServiceClient = () => {
       },
     },
   });
+
+  if (debug) {
+    debugServiceClient = client;
+  } else {
+    serviceClient = client;
+  }
+
   console.log('Created service client');
-  return serviceClient;
+  return client;
 };

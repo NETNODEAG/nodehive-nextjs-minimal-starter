@@ -2,12 +2,23 @@ import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import { AuthenticationError, NodeHiveClient } from 'nodehive-js';
 
+import { NextCookieStorage } from '@/lib/next-cookie-storage';
 import { createUserClient } from '@/lib/nodehive-client';
 
 const MAX_RETRIES = 3;
 const BACKOFF_MS = 200;
 
 const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+async function clearAuthCookies() {
+  const storage = new NextCookieStorage();
+  await Promise.all([
+    storage.remove('token'),
+    storage.remove('refresh_token'),
+    storage.remove('userDetails'),
+    storage.remove('token_expires_at'),
+  ]);
+}
 
 async function refreshWithRetries(client: NodeHiveClient) {
   for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
@@ -40,6 +51,11 @@ async function handleRefresh(request: NextRequest) {
       await client.logout();
     } catch (error) {
       console.error('logout failed', error);
+    }
+    try {
+      await clearAuthCookies();
+    } catch (error) {
+      console.error('failed to clear auth cookies', error);
     }
 
     if (nextPath) {

@@ -11,6 +11,7 @@ const NON_ENTITY_PATHS = [
   '_next',
   'sitemap',
   'sitemap.xml',
+  'manifest.webmanifest',
   'forbidden',
   'not-found',
   'api',
@@ -116,6 +117,6 @@ export async function proxy(request: NextRequest) {
 
 export const config = {
   matcher: [
-    '/((?!api|[a-z]{2}/api|_next/static|_next/image|favicon.ico|icon*.png|manifest.ts|robots.ts|robots.txt|css/|metadata/|images/).*)',
+    '/((?!api|[a-z]{2}/api|_next/static|_next/image|favicon.ico|icon*.png|manifest.ts|manifest.webmanifest|robots.ts|robots.txt|css/|metadata/|images/).*)',
   ],
 };
