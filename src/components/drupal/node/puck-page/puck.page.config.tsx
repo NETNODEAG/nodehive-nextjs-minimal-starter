@@ -11,6 +11,7 @@ import { SpaceConfig } from '@/components/theme/atoms-layout/space/space.config'
 import { TwoColumnsConfig } from '@/components/theme/atoms-layout/two-columns/two-columns.config';
 import { CardConfig } from '@/components/theme/organisms/card/card.config';
 import { StatisticsConfig } from '@/components/theme/organisms/statistics/statistics.config';
+import { ContentSectionConfig } from '@/components/theme/sections/content-section/content-section.config';
 import { HeroConfig } from '@/components/theme/sections/hero/hero.config';
 
 export const config: Config = {
@@ -19,9 +20,9 @@ export const config: Config = {
       visible: false,
     },
     sections: {
-      visible: true,
+      visible: false,
       title: 'Sections',
-      components: ['Hero'],
+      components: ['Hero', 'ContentSection'],
     },
     organisms: {
       visible: true,
@@ -56,6 +57,7 @@ export const config: Config = {
     Statistics: StatisticsConfig,
     // Sections
     Hero: HeroConfig,
+    ContentSection: ContentSectionConfig,
   },
   root: {
     fields: {},

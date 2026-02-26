@@ -8,10 +8,12 @@ export const HeroConfig: ComponentConfig = {
     title: {
       type: 'text',
       label: 'Title',
+      contentEditable: true,
     },
     description: {
-      type: 'textarea',
+      type: 'richtext',
       label: 'Description',
+      contentEditable: true,
     },
     background: {
       type: 'select',
@@ -78,35 +80,16 @@ export const HeroConfig: ComponentConfig = {
     ],
   },
   render: ({ title, description, background, cta }) => {
-    console.log(cta);
-    // const primaryCta = primaryCtaText
-    //   ? {
-    //       text: primaryCtaText,
-    //       href: primaryCtaHref,
-    //       variant: primaryCtaVariant,
-    //       size: primaryCtaSize,
-    //       target: primaryCtaTarget,
-    //     }
-    //   : undefined;
-
-    // const secondaryCta = secondaryCtaText
-    //   ? {
-    //       text: secondaryCtaText,
-    //       href: secondaryCtaHref,
-    //       variant: secondaryCtaVariant,
-    //       size: secondaryCtaSize,
-    //       target: secondaryCtaTarget,
-    //     }
-    //   : undefined;
+    const primaryCta = cta?.[0]?.text ? cta[0] : undefined;
+    const secondaryCta = cta?.[1]?.text ? cta[1] : undefined;
 
     return (
       <Hero
         title={title}
         description={description}
         background={background}
-        // cta={}
-        // primaryCta={primaryCta}
-        // secondaryCta={secondaryCta}
+        primaryCta={primaryCta}
+        secondaryCta={secondaryCta}
       />
     );
   },

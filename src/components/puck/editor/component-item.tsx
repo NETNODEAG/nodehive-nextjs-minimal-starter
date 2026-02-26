@@ -6,6 +6,7 @@ import {
   BoxIcon,
   BoxSelectIcon,
   Columns2Icon,
+  FileTextIcon,
   GridIcon,
   GripVerticalIcon,
   HeadingIcon,
@@ -50,6 +51,7 @@ const COMPONENT_ICONS: Record<string, React.ReactNode> = {
   Statistics: <ListOrdered className="size-4" />,
   // Sections
   Hero: <WallpaperIcon className="size-4" />,
+  ContentSection: <FileTextIcon className="size-4" />,
 };
 
 // TODO add preview
@@ -72,6 +74,7 @@ const COMPONENT_LABELS: Record<string, string> = {
   Statistics: 'Statistics',
   // Sections
   Hero: 'Hero',
+  ContentSection: 'Content Section',
 };
 
 export default function ComponentItem({ name }: ComponentItemProps) {

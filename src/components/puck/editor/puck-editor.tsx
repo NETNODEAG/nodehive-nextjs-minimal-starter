@@ -4,12 +4,14 @@ import { useState } from 'react';
 import { usePathname } from 'next/navigation';
 import {
   ActionBar,
+  blocksPlugin,
   Button,
   ComponentData,
   Config,
   Content,
   createUsePuck,
   Data,
+  outlinePlugin,
   Puck,
   PuckAction,
 } from '@puckeditor/core';
@@ -20,6 +22,7 @@ import { toast } from 'sonner';
 import { DrupalNode } from '@/types/nodehive';
 import ComponentItem from '@/components/puck/editor/component-item';
 import ComponentTemplateModal from '@/components/puck/editor/template-selector/component-template-modal';
+import { createSectionsPlugin } from '@/components/puck/plugins/sections-plugin';
 import { createTemplatesPlugin } from '@/components/puck/plugins/templates-plugin';
 
 import '@puckeditor/core/no-external.css';
@@ -50,7 +53,12 @@ export default function PuckEditor({
     useState(false);
   const [templateContent, setTemplateContent] = useState<Content | null>(null);
 
-  const plugins = [createTemplatesPlugin({ config })];
+  const plugins = [
+    createSectionsPlugin({ config }),
+    blocksPlugin(),
+    outlinePlugin(),
+    createTemplatesPlugin({ config }),
+  ];
 
   const onSave = async (data: Partial<Data>) => {
     setIsSaving(true);
