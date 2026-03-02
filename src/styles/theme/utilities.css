@@ -15,4 +15,21 @@
   --tw-prose-pre-bg: var(--color-black);
   --tw-prose-th-borders: var(--color-black);
   --tw-prose-td-borders: var(--color-black);
+
+  --tw-prose-invert-body: var(--color-white);
+  --tw-prose-invert-headings: var(--color-white);
+  --tw-prose-invert-lead: var(--color-white);
+  --tw-prose-invert-links: var(--color-white);
+  --tw-prose-invert-bold: var(--color-white);
+  --tw-prose-invert-counters: var(--color-white);
+  --tw-prose-invert-bullets: var(--color-white);
+  --tw-prose-invert-hr: var(--color-white);
+  --tw-prose-invert-quotes: var(--color-white);
+  --tw-prose-invert-quote-borders: var(--color-white);
+  --tw-prose-invert-captions: var(--color-white);
+  --tw-prose-invert-code: var(--color-white);
+  --tw-prose-invert-pre-code: var(--color-white);
+  --tw-prose-invert-pre-bg: var(--color-white);
+  --tw-prose-invert-th-borders: var(--color-white);
+  --tw-prose-invert-td-borders: var(--color-white);
 }

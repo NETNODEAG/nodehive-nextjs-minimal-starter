@@ -11,16 +11,21 @@ const meta = {
     eyebrow: 'Features',
     body: '<p>We provide the tools and infrastructure you need to build exceptional digital experiences.</p>',
     background: 'none',
-    align: 'left',
+    layout: 'stacked',
+    variant: '1',
   },
   argTypes: {
     background: {
       control: 'inline-radio',
-      options: ['none', 'light', 'dark'],
+      options: ['none', 'light'],
     },
-    align: {
+    layout: {
       control: 'inline-radio',
-      options: ['left', 'center'],
+      options: ['stacked', 'centered', 'content-left', 'media-left'],
+    },
+    variant: {
+      control: 'inline-radio',
+      options: ['1', '2', '3'],
     },
   },
 } satisfies Meta<typeof ContentSection>;
@@ -33,12 +38,18 @@ export const Default: Story = {};
 
 export const Centered: Story = {
   args: {
-    align: 'center',
+    layout: 'centered',
   },
 };
 
-export const DarkBackground: Story = {
+export const ContentLeft: Story = {
   args: {
-    background: 'dark',
+    layout: 'content-left',
+  },
+};
+
+export const MediaLeft: Story = {
+  args: {
+    layout: 'media-left',
   },
 };
