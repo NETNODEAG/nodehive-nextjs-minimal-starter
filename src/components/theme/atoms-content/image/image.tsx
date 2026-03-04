@@ -15,6 +15,8 @@ const aspectRatioClasses: Record<string, string> = {
   '1/1': 'aspect-square',
   '3/2': 'aspect-3/2',
   '21/9': 'aspect-21/9',
+  '3/4': 'aspect-3/4',
+  '2/3': 'aspect-2/3',
 };
 
 export default function Image({

@@ -19,6 +19,8 @@ export const ImageConfig: ComponentConfig = {
         { label: '1:1 (Quadrat)', value: '1/1' },
         { label: '3:2 (Photo)', value: '3/2' },
         { label: '21:9 (Ultrawide)', value: '21/9' },
+        { label: '3:4 (Portrait)', value: '3/4' },
+        { label: '2:3 (Portrait Tall)', value: '2/3' },
       ],
     },
     fit: {
