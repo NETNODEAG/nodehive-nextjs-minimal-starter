@@ -12,12 +12,12 @@ export default async function NodePuckPage({ node }: NodePuckPageProps) {
   const isLoggedIn = await client.auth.isLoggedIn();
   return (
     <div data-node-type="puck-page">
-      <Debug data={node} />
       <PuckPage
         isLoggedIn={isLoggedIn}
         node={node}
         fieldName="field_puck_data"
       />
+      <Debug data={node} />
     </div>
   );
 }

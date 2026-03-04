@@ -16,7 +16,6 @@ export default function NodePage({ node }: NodePageProps) {
     <article data-node-type="page" className="py-16">
       <Container>
         <H1>{title}</H1>
-        <Debug data={node} />
 
         {Array.isArray(paragraphs) && (
           <div className="space-y-16">
@@ -25,6 +24,7 @@ export default function NodePage({ node }: NodePageProps) {
             })}
           </div>
         )}
+        <Debug data={node} />
       </Container>
     </article>
   );
