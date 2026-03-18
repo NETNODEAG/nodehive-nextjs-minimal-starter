@@ -20,6 +20,7 @@ import { ArrowLeftRightIcon, Loader2Icon, SaveIcon, XIcon } from 'lucide-react';
 import { toast } from 'sonner';
 
 import { DrupalNode } from '@/types/nodehive';
+import { absoluteUrl, isRelative } from '@/lib/utils';
 import ComponentItem from '@/components/puck/editor/component-item';
 import ComponentTemplateModal from '@/components/puck/editor/template-selector/component-template-modal';
 import { createSectionsPlugin } from '@/components/puck/plugins/sections-plugin';
@@ -37,6 +38,48 @@ type PuckEditorProps = {
 
 const usePuck = createUsePuck();
 
+type PuckPageSettings = {
+  metadataTitle: string;
+  metadataDescription: string;
+  metadataImage: {
+    id?: string;
+    type?: string;
+    name?: string;
+    thumbnailImage?: string;
+  } | null;
+  publishedState: 'published' | 'unpublished';
+  urlAlias: string;
+};
+
+type PuckRootProps = Record<string, unknown> & Partial<PuckPageSettings>;
+
+function getDefaultPageSettings(node: DrupalNode): PuckPageSettings {
+  const metadataImage = node?.field_metadata_image;
+  const mediaImage = metadataImage?.field_media_image;
+  const firstMediaImage = Array.isArray(mediaImage)
+    ? mediaImage[0]
+    : mediaImage;
+
+  return {
+    metadataTitle: node?.field_metadata_title || '',
+    metadataDescription: node?.field_metadata_description || '',
+    metadataImage: metadataImage?.id
+      ? {
+          id: metadataImage.id,
+          type: metadataImage.type || 'media--image',
+          name: metadataImage.name || '',
+          thumbnailImage: firstMediaImage?.uri?.url
+            ? isRelative(firstMediaImage.uri.url)
+              ? absoluteUrl(firstMediaImage.uri.url)
+              : firstMediaImage.uri.url
+            : '',
+        }
+      : null,
+    publishedState: node?.status ? 'published' : 'unpublished',
+    urlAlias: node?.path?.alias || '',
+  };
+}
+
 export default function PuckEditor({
   node,
   fieldName,
@@ -53,6 +96,19 @@ export default function PuckEditor({
     useState(false);
   const [templateContent, setTemplateContent] = useState<Content | null>(null);
 
+  const defaultPageSettings = getDefaultPageSettings(nodeData);
+  const rootProps = (data?.root?.props || {}) as PuckRootProps;
+  const editorData: Partial<Data> = {
+    ...data,
+    root: {
+      ...(data?.root || {}),
+      props: {
+        ...defaultPageSettings,
+        ...rootProps,
+      } as unknown as Data['root']['props'],
+    },
+  };
+
   const plugins = [
     createSectionsPlugin({ config }),
     blocksPlugin(),
@@ -62,6 +118,23 @@ export default function PuckEditor({
 
   const onSave = async (data: Partial<Data>) => {
     setIsSaving(true);
+    const rootProps = (data?.root?.props || {}) as PuckRootProps;
+    const {
+      metadataTitle = '',
+      metadataDescription = '',
+      metadataImage = null,
+      publishedState = 'unpublished',
+      urlAlias = '',
+      ...contentRootProps
+    } = rootProps;
+
+    const puckData: Partial<Data> = {
+      ...data,
+      root: {
+        ...(data?.root || {}),
+        props: contentRootProps as Data['root']['props'],
+      },
+    };
 
     try {
       const response = await fetch(`/${lang}/api/puck/publish`, {
@@ -70,7 +143,14 @@ export default function PuckEditor({
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          data: data,
+          data: puckData,
+          pageSettings: {
+            metadataTitle,
+            metadataDescription,
+            metadataImage,
+            published: publishedState === 'published',
+            urlAlias,
+          },
           fieldName: fieldName,
           nodeId: nodeData.id,
           path: pathName,
@@ -119,7 +199,7 @@ export default function PuckEditor({
     <>
       <Puck
         config={config}
-        data={data}
+        data={editorData}
         headerTitle={nodeData.title || 'Page'}
         plugins={plugins}
         overrides={{

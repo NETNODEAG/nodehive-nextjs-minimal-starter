@@ -18,7 +18,12 @@ export async function GET(request: Request, { params }: RouteParams) {
       return NextResponse.json({ error: 'Media not found' }, { status: 404 });
     }
 
-    return NextResponse.json(media);
+    const response = NextResponse.json(media);
+    response.headers.set(
+      'Cache-Control',
+      'no-store, no-cache, must-revalidate'
+    );
+    return response;
   } catch (error) {
     console.error('Error fetching media:', error);
     return NextResponse.json(

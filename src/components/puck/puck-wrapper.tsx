@@ -1,16 +1,15 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { usePuckEditor } from '@/providers/puck-editor-provider';
 import { Config } from '@puckeditor/core';
 import { motion } from 'framer-motion';
-import { SquareDashedMousePointerIcon } from 'lucide-react';
 
 import { DrupalNode } from '@/types/nodehive';
 import { cn } from '@/lib/utils';
 import PuckRender from '@/components/puck/puck-render';
-import Button from '@/components/ui/atoms/button/button';
 
 const LazyPuckEditor = dynamic(
   () => import('@/components/puck/editor/puck-editor'),
@@ -40,6 +39,14 @@ export default function PuckWrapper({
   const puckField = nodeData[fieldName];
   const puckData = JSON.parse(puckField) || {};
   const [isEditMode, setIsEditMode] = useState(puckDataParams === fieldName);
+  const [isEditorReady, setIsEditorReady] = useState(
+    puckDataParams === fieldName
+  );
+  const { registerEditor, isHighlighted } = usePuckEditor();
+
+  useEffect(() => {
+    registerEditor(() => setIsEditMode(true));
+  }, [registerEditor]);
 
   const closePuckEditor = async () => {
     setIsEditMode(false);
@@ -51,10 +58,6 @@ export default function PuckWrapper({
       });
     }
     router.refresh();
-  };
-
-  const openPuckEditor = () => {
-    setIsEditMode(true);
   };
 
   if (!isLoggedIn) {
@@ -69,26 +72,13 @@ export default function PuckWrapper({
         } as React.CSSProperties
       }
     >
-      {!isEditMode && (
-        <div
-          className={cn(
-            'hover:outline-primary relative -outline-offset-1 hover:outline-1 hover:outline-dashed',
-            {
-              'min-h-14': !puckData?.content || puckData?.content?.length === 0,
-            }
-          )}
-        >
-          <div className="sticky top-(--header-height) right-0 z-50 h-0 cursor-pointer">
-            <div className="absolute top-2 right-2">
-              <Button onClick={openPuckEditor} className="flex gap-2">
-                <SquareDashedMousePointerIcon className="size-5 text-white" />
-                Edit
-              </Button>
-            </div>
-          </div>
-          <PuckRender data={puckData} config={config} />
-        </div>
-      )}
+      <div
+        className={cn('relative -outline-offset-1', {
+          'outline-primary outline-1 outline-dashed': isHighlighted,
+        })}
+      >
+        <PuckRender data={puckData} config={config} />
+      </div>
       <motion.div
         className="fixed inset-0 z-50 border border-t border-b border-gray-300 bg-white"
         initial={{ y: '100%' }}
@@ -97,8 +87,9 @@ export default function PuckWrapper({
           duration: 0.3,
           ease: 'easeInOut',
         }}
+        onAnimationComplete={() => setIsEditorReady(isEditMode)}
       >
-        {isEditMode && (
+        {isEditorReady && (
           <LazyPuckEditor
             key={`puck-editor-${fieldName}`}
             fieldName={fieldName}

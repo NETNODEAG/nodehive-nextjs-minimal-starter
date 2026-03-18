@@ -1,5 +1,6 @@
 import type { Dictionary } from '@/dictionaries';
 import { DictionaryProvider } from '@/providers/dictionary-provider';
+import { PuckEditorProvider } from '@/providers/puck-editor-provider';
 import { QueryProvider } from '@/providers/query-provider';
 
 type AppProviderProps = {
@@ -13,9 +14,11 @@ export default function AppProvider({
 }: AppProviderProps) {
   return (
     <QueryProvider>
-      <DictionaryProvider dictionary={dictionary}>
-        {children}
-      </DictionaryProvider>
+      <PuckEditorProvider>
+        <DictionaryProvider dictionary={dictionary}>
+          {children}
+        </DictionaryProvider>
+      </PuckEditorProvider>
     </QueryProvider>
   );
 }
