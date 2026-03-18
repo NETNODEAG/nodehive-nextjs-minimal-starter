@@ -57,6 +57,11 @@ const shouldRefreshSession = (request: NextRequest): boolean => {
 export async function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
+  // Don't intercept the refresh route itself (prevent redirect loop)
+  if (pathname.startsWith('/api/auth/session/refresh')) {
+    return NextResponse.next();
+  }
+
   if (shouldRefreshSession(request)) {
     console.log('Proxy: redirecting to refresh session');
 

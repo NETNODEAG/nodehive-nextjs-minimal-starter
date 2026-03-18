@@ -20,6 +20,21 @@ async function clearAuthCookies() {
   ]);
 }
 
+/**
+ * Check if a concurrent refresh has already succeeded
+ * by looking for a fresh token_expires_at in the cookies.
+ */
+async function hasFreshToken(): Promise<boolean> {
+  const storage = new NextCookieStorage();
+  const token = await storage.get('token');
+  const expiresAt = await storage.get('token_expires_at');
+
+  if (!token || !expiresAt) return false;
+
+  const expiresAtNumber = Number(expiresAt);
+  return Number.isFinite(expiresAtNumber) && expiresAtNumber > Date.now();
+}
+
 async function refreshWithRetries(client: NodeHiveClient) {
   for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
     try {
@@ -43,10 +58,23 @@ async function handleRefresh(request: NextRequest) {
   // Redirect path after refresh
   const nextPath = request.nextUrl.searchParams.get('next');
 
+  const redirectToNext = () => {
+    if (nextPath) {
+      return NextResponse.redirect(new URL(nextPath, request.url));
+    }
+    return NextResponse.json({ ok: true });
+  };
+
   const handleFailure = async (
     reason: 'no-refresh-token' | 'auth-error' | 'exception',
     status: number
   ) => {
+    // Check if a concurrent refresh already succeeded
+    if (await hasFreshToken()) {
+      console.log('Concurrent refresh already succeeded, skipping cleanup');
+      return redirectToNext();
+    }
+
     try {
       await client.logout();
     } catch (error) {
