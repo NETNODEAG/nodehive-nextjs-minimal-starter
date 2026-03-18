@@ -54,6 +54,20 @@ Visual page editing via `@puckeditor/core`:
 
 For creating new Puck components, see the `puck-component` skill in `.claude/skills/puck-component/`.
 
+#### Puck Page Settings (Root Fields)
+The Puck editor exposes page-level settings (published state, URL alias, metadata) as root fields. These require the following fields on the Drupal content type:
+
+- `field_puck_data` (Text, long) – Stores the Puck JSON data
+- `field_metadata_title` (Text) – SEO title
+- `field_metadata_description` (Text, long) – SEO description
+- `field_metadata_image` (Entity reference to media--image) – OG image
+
+`status` and `path.alias` are core node properties and always available.
+
+If a project does not use these metadata fields, remove them from the `root.fields` in `puck.page.config.tsx` and strip the corresponding `pageSettings` logic from `puck-editor.tsx` and `api/puck/publish/route.ts`.
+
+The Puck template system requires a Fragment type `puck_template` with a `field_puck_template_data` (Text, long) field in Drupal.
+
 ### Theme Components
 Located in `src/components/theme/`:
 - `atoms-content/` - Content primitives (Heading, BodyCopy, Image, Video, etc.)

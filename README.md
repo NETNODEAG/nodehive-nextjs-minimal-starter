@@ -89,6 +89,25 @@ Please ensure all changes are made to keep your application functioning correctl
 
 ## 2. Backend configuration
 
+### 2.0 Required Drupal Fields for Puck Page Settings
+
+The Puck editor allows editing page-level metadata directly in the frontend. The following fields must be configured on your Puck page content type in Drupal:
+
+| Field machine name          | Type                              | Description       |
+| --------------------------- | --------------------------------- | ----------------- |
+| `field_puck_data`           | Text (plain, long)                | Puck JSON data    |
+| `field_metadata_title`      | Text (plain)                      | SEO title         |
+| `field_metadata_description`| Text (plain, long)                | SEO description   |
+| `field_metadata_image`      | Entity reference (media--image)   | OG image          |
+
+If you don't need the metadata fields, remove them from `root.fields` in `src/components/drupal/node/puck-page/puck.page.config.tsx`.
+
+Additionally, the Puck template system requires a **Fragment type** `puck_template` with the following field:
+
+| Field machine name          | Type                              | Description              |
+| --------------------------- | --------------------------------- | ------------------------ |
+| `field_puck_template_data`  | Text (plain, long)                | Template JSON data       |
+
 ### 2.1 Multilanguage Setup
 
 The minimal starter is configured to support multiple languages. To enable this feature, follow these steps:
