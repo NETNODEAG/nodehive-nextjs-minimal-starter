@@ -81,10 +81,9 @@ export async function proxy(request: NextRequest) {
   return NextResponse.next();
 }
 
-// Negative lookahead excludes routes from the proxy middleware:
-// api, [lang]/api, static assets, favicon, manifest, robots, etc.
 export const config = {
   matcher: [
+    // excludes routes api, [lang]/api, static assets, favicon, manifest, robots, etc.
     '/((?!api|[a-z]{2}/api|_next/static|_next/image|favicon.ico|icon*.png|manifest.ts|manifest.webmanifest|robots.ts|robots.txt|css/|metadata/|images/).*)',
   ],
 };
