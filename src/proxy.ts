@@ -6,17 +6,6 @@ import Negotiator from 'negotiator';
 import { i18n } from '@/config/i18n-config';
 import { NextCookieStorage } from '@/lib/next-cookie-storage';
 
-const NON_ENTITY_PATHS = [
-  'static',
-  '_next',
-  'sitemap',
-  'sitemap.xml',
-  'manifest.webmanifest',
-  'forbidden',
-  'not-found',
-  'api',
-];
-
 const getLocale = (request: NextRequest) => {
   const negotiatorHeaders: Record<string, string> = {};
   request.headers.forEach((value, key) => (negotiatorHeaders[key] = value));
@@ -57,11 +46,6 @@ const shouldRefreshSession = (request: NextRequest): boolean => {
 export async function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
-  // Don't intercept the refresh route itself (prevent redirect loop)
-  if (pathname.startsWith('/api/auth/session/refresh')) {
-    return NextResponse.next();
-  }
-
   if (shouldRefreshSession(request)) {
     console.log('Proxy: redirecting to refresh session');
 
@@ -94,32 +78,11 @@ export async function proxy(request: NextRequest) {
     );
   }
 
-  const pathWithoutLocale = i18n.locales.reduce(
-    (path, locale) => path.replace(`/${locale}`, ''),
-    pathname
-  );
-
-  const isNonEntityPath = NON_ENTITY_PATHS.some(
-    (path) =>
-      pathWithoutLocale.startsWith(`/${path}/`) ||
-      pathWithoutLocale === `/${path}`
-  );
-
-  if (isNonEntityPath) {
-    return NextResponse.next();
-  }
-
-  const requestHeaders = new Headers(request.headers);
-  requestHeaders.set('x-url', request.url);
-  requestHeaders.set('x-pathname', pathname);
-
-  return NextResponse.next({
-    request: {
-      headers: requestHeaders,
-    },
-  });
+  return NextResponse.next();
 }
 
+// Negative lookahead excludes routes from the proxy middleware:
+// api, [lang]/api, static assets, favicon, manifest, robots, etc.
 export const config = {
   matcher: [
     '/((?!api|[a-z]{2}/api|_next/static|_next/image|favicon.ico|icon*.png|manifest.ts|manifest.webmanifest|robots.ts|robots.txt|css/|metadata/|images/).*)',
