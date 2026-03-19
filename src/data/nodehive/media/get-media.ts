@@ -1,10 +1,8 @@
 import { DrupalJsonApiParams } from 'drupal-jsonapi-params';
 
-import { i18n } from '@/config/i18n-config';
 import { createServerClient } from '@/lib/nodehive-client';
 
 export async function getMedia(id: string, type: string, lang: string) {
-  const isMultilingual = i18n.isMultilingual;
   const apiParams = new DrupalJsonApiParams();
   if (type === 'image') {
     apiParams.addInclude(['field_media_image', 'thumbnail']);
@@ -33,7 +31,7 @@ export async function getMedia(id: string, type: string, lang: string) {
   try {
     const client = await createServerClient();
     const media = await client.getMedia(id, type, {
-      lang: isMultilingual ? lang : undefined,
+      lang,
       params: apiParams,
     });
     return media;

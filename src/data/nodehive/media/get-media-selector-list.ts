@@ -1,6 +1,5 @@
 import { DrupalJsonApiParams } from 'drupal-jsonapi-params';
 
-import { i18n } from '@/config/i18n-config';
 import { createServerClient } from '@/lib/nodehive-client';
 
 export async function getMediaSelectorList(
@@ -10,8 +9,6 @@ export async function getMediaSelectorList(
   offset?: string,
   limit?: string
 ) {
-  const isMultilingual = i18n.isMultilingual;
-
   const apiParams = new DrupalJsonApiParams().addSort('created', 'DESC');
   // Create params object with filtering when query is provided
   if (query) {
@@ -54,7 +51,7 @@ export async function getMediaSelectorList(
   try {
     const client = await createServerClient();
     const medias = await client.getMediaList(type, {
-      lang: isMultilingual ? lang : undefined,
+      lang,
       params: apiParams,
     });
     return medias;
