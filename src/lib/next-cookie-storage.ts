@@ -1,7 +1,7 @@
 import { cookies } from 'next/headers';
 import { CookieOptions, StorageAdapter } from 'nodehive-js';
 
-type CookieKey = 'token' | 'refresh_token' | 'userDetails' | 'token_expires_at';
+type CookieKey = 'token' | 'refresh_token' | 'user_details' | 'token_expires_at';
 
 type CookieKeyMap = Record<CookieKey, string>;
 
@@ -12,7 +12,7 @@ export class NextCookieStorage implements StorageAdapter {
     return {
       token: `${spacePrefix}_token`,
       refresh_token: `${spacePrefix}_refresh_token`,
-      userDetails: `${spacePrefix}_userDetails`,
+      user_details: `${spacePrefix}_user_details`,
       token_expires_at: `${spacePrefix}_token_expires_at`,
     };
   }
