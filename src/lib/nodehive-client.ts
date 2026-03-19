@@ -24,10 +24,10 @@ export const createServerClient = cache(async () => {
   const token = await storage.get('token');
 
   if (token) {
-    return createUserClient();
+    return createUserClient({ debug: true });
   }
 
-  return createServiceClient();
+  return createServiceClient({ debug: true });
 });
 
 export const createUserClient = (options: ClientOptions = {}) => {
