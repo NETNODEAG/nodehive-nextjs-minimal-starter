@@ -98,7 +98,7 @@ export default async function Page(props: PageProps) {
     <>
       <Node node={node as DrupalNode} />
 
-      <SmartActionsButton lang={lang} />
+      <SmartActionsButton lang={lang} nodeId={node?.drupal_internal__nid} />
     </>
   );
 }

@@ -2,9 +2,10 @@
 
 import { useState } from 'react';
 import { Button, FieldLabel } from '@puckeditor/core';
-import { ImageIcon, Trash2 } from 'lucide-react';
+import { ImageIcon, RefreshCwIcon, Trash2 } from 'lucide-react';
 
 import { extractFields } from '@/lib/extract-fields';
+import { getLocaleFromPathname } from '@/lib/utils';
 import { MediaSelectorModal } from './media-selector-modal';
 
 export type MediaItem = {
@@ -30,6 +31,94 @@ export function MediaSelectorField({
   fields,
 }: MediaSelectorFieldProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const handleRefreshMedia = async () => {
+    if (!value?.id || !value?.type) return;
+
+    setIsRefreshing(true);
+    try {
+      const locale = getLocaleFromPathname(window.location.pathname);
+      // Extract type slug from media type (e.g. "media--image" → "image")
+      const typeSlug = value.type.replace('media--', '');
+      const response = await fetch(
+        `/${locale}/api/puck/media/${typeSlug}/${value.id}?t=${Date.now()}`,
+        { cache: 'no-store' }
+      );
+
+      if (!response.ok) {
+        throw new Error('Failed to refresh media');
+      }
+
+      const responseData = await response.json();
+      // The API returns { data: { ... } } format
+      const freshMedia = responseData?.data || responseData;
+
+      // Add cache-busting timestamp to all image_style_uri URLs
+      const cacheBuster = `_cb=${Date.now()}`;
+      const addCacheBuster = (obj: Record<string, unknown>) => {
+        const result = { ...obj };
+        for (const key of Object.keys(result)) {
+          if (
+            typeof result[key] === 'string' &&
+            (result[key] as string).includes('/styles/')
+          ) {
+            const url = result[key] as string;
+            result[key] = url.includes('?')
+              ? `${url}&${cacheBuster}`
+              : `${url}?${cacheBuster}`;
+          } else if (
+            result[key] &&
+            typeof result[key] === 'object' &&
+            !Array.isArray(result[key])
+          ) {
+            result[key] = addCacheBuster(
+              result[key] as Record<string, unknown>
+            );
+          } else if (Array.isArray(result[key])) {
+            result[key] = (result[key] as unknown[]).map((item) =>
+              item && typeof item === 'object'
+                ? addCacheBuster(item as Record<string, unknown>)
+                : item
+            );
+          }
+        }
+        return result;
+      };
+
+      const freshMediaBusted = addCacheBuster(
+        freshMedia as Record<string, unknown>
+      );
+
+      // Rebuild thumbnailImage from fresh data
+      const thumbnailUrl = freshMedia?.thumbnail?.uri?.url;
+      const freshThumbnail = thumbnailUrl
+        ? `${process.env.NEXT_PUBLIC_DRUPAL_BASE_URL}${thumbnailUrl}`
+        : value.thumbnailImage;
+
+      const mediaWithMeta = {
+        ...freshMediaBusted,
+        thumbnailImage: freshThumbnail,
+      };
+
+      if (fields) {
+        const extractedMedia = extractFields(mediaWithMeta, [
+          ...fields,
+          'id',
+          'type',
+          'name',
+          'thumbnailImage',
+        ]);
+        onChange(extractedMedia);
+      } else {
+        onChange(mediaWithMeta as MediaItem);
+      }
+    } catch (error) {
+      console.error('Error refreshing media:', error);
+    } finally {
+      setIsRefreshing(false);
+    }
+  };
 
   // Helper function to get file icon and styling based on file type
   const getFileDisplay = (media: MediaItem | null) => {
@@ -154,8 +243,12 @@ export function MediaSelectorField({
   const handleMediaSelected = (media: MediaItem | null) => {
     if (media && fields) {
       // Extract only the specified fields from the media object
+      // Always include id, type, name, and thumbnailImage for preview display and refresh
       const extractedMedia = extractFields(media, [
         ...fields,
+        'id',
+        'type',
+        'name',
         'thumbnailImage',
       ]);
       onChange(extractedMedia);
@@ -184,7 +277,7 @@ export function MediaSelectorField({
                   if (fileDisplay) {
                     return (
                       <div
-                        className={`flex aspect-square w-10 shrink-0 items-center justify-center overflow-hidden rounded ${fileDisplay.bgColor}`}
+                        className={`flex aspect-square w-24 shrink-0 items-center justify-center overflow-hidden rounded ${fileDisplay.bgColor}`}
                       >
                         <span
                           className={`material-symbols-outlined ${fileDisplay.iconColor} text-4xl`}
@@ -193,10 +286,14 @@ export function MediaSelectorField({
                         </span>
                       </div>
                     );
-                  } else if (value.thumbnailImage) {
-                    // Show thumbnail image for any media type that has one
+                  } else if (
+                    value.thumbnailImage &&
+                    (value.type === 'media--image' ||
+                      value.type === 'media--remote_video' ||
+                      value.type === 'media--video')
+                  ) {
                     return (
-                      <div className="aspect-square w-10 shrink-0 overflow-hidden rounded">
+                      <div className="aspect-square w-24 shrink-0 overflow-hidden rounded">
                         <div className="relative h-full w-full">
                           {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img
@@ -208,9 +305,9 @@ export function MediaSelectorField({
                       </div>
                     );
                   } else {
-                    // Fallback generic icon for media without thumbnails
+                    // Fallback generic icon for unknown media types
                     return (
-                      <div className="flex aspect-square w-10 shrink-0 items-center justify-center overflow-hidden rounded bg-gray-50">
+                      <div className="flex aspect-square w-24 shrink-0 items-center justify-center overflow-hidden rounded bg-gray-50">
                         <span className="material-symbols-outlined text-gray-600">
                           attachment
                         </span>
@@ -224,13 +321,27 @@ export function MediaSelectorField({
                 </div>
               </button>
 
-              <button
-                className="h-full cursor-pointer rounded-md p-3 hover:bg-[#f7faff]"
-                type="button"
-                onClick={() => onChange(null)}
-              >
-                <Trash2 className="h-4 w-4" />
-              </button>
+              <div className="flex flex-col">
+                <button
+                  className="cursor-pointer rounded-md p-3 hover:bg-[#f7faff]"
+                  type="button"
+                  title="Refresh media"
+                  disabled={isRefreshing}
+                  onClick={handleRefreshMedia}
+                >
+                  <RefreshCwIcon
+                    className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`}
+                  />
+                </button>
+                <button
+                  className="cursor-pointer rounded-md p-3 hover:bg-[#f7faff]"
+                  type="button"
+                  title="Remove"
+                  onClick={() => onChange(null)}
+                >
+                  <Trash2 className="h-4 w-4" />
+                </button>
+              </div>
             </div>
           </div>
         ) : (

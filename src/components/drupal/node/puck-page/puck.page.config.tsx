@@ -1,5 +1,6 @@
 import { Config } from '@puckeditor/core';
 
+import { createMediaSelectorField } from '@/components/puck/editor/field-utils';
 import { BodyCopyConfig } from '@/components/theme/atoms-content/body-copy/body-copy.config';
 import { CallToActionConfig } from '@/components/theme/atoms-content/call-to-action/call-to-action.config';
 import { HeadingConfig } from '@/components/theme/atoms-content/heading/heading.config';
@@ -60,7 +61,32 @@ export const config: Config = {
     ContentSection: ContentSectionConfig,
   },
   root: {
-    fields: {},
+    fields: {
+      publishedState: {
+        type: 'select',
+        label: 'Published State',
+        options: [
+          { label: 'Published', value: 'published' },
+          { label: 'Unpublished', value: 'unpublished' },
+        ],
+      },
+      urlAlias: {
+        type: 'text',
+        label: 'URL Alias',
+      },
+      metadataTitle: {
+        type: 'text',
+        label: 'Metadata Title',
+      },
+      metadataDescription: {
+        type: 'textarea',
+        label: 'Metadata Description',
+      },
+      metadataImage: createMediaSelectorField({
+        label: 'Metadata Image',
+        mediaTypes: ['image'],
+      }),
+    },
   },
 };
 

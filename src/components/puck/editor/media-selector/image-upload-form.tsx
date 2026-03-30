@@ -4,6 +4,8 @@ import { FormEvent, useState } from 'react';
 import { uploadImageMedia } from '@/data/nodehive/media/actions';
 import { Button } from '@puckeditor/core';
 
+const MAX_IMAGE_FILE_SIZE_BYTES = 4 * 1024 * 1024;
+
 type MessageType = 'success' | 'error' | null;
 
 interface ImageUploadFormProps {
@@ -113,11 +115,25 @@ export function ImageUploadForm({
           accept="image/*"
           className="focus:border-primary focus:ring-primary mt-1 block w-full max-w-3xl rounded-md border border-gray-300 p-2 shadow-sm"
           required
+          onChange={(e) => {
+            const file = e.target.files?.[0];
+            if (!file) return;
+
+            if (file.size > MAX_IMAGE_FILE_SIZE_BYTES) {
+              e.target.setCustomValidity(
+                'Image is too large. Maximum file size is 4MB.'
+              );
+              e.target.reportValidity();
+              return;
+            }
+
+            e.target.setCustomValidity('');
+          }}
           onClick={(e) => {
             e.stopPropagation();
           }}
         />
-        <p className="mt-1 text-sm text-gray-500">max. 5MB</p>
+        <p className="mt-1 text-sm text-gray-500">max. 4MB</p>
       </div>
 
       <div>

@@ -1,7 +1,10 @@
+import { ExternalLink } from 'lucide-react';
+
 import { Locale } from '@/config/i18n-config';
+import { cn } from '@/lib/utils';
 import { AuthWrapper } from '@/components/nodehive/auth-wrapper';
 import LogoutForm from '@/components/nodehive/smart-actions/logout-form';
-import OpenVisualEditor from '@/components/nodehive/smart-actions/open-visual-editor';
+import OpenPuckEditor from '@/components/nodehive/smart-actions/open-puck-editor';
 import RefreshPage from '@/components/nodehive/smart-actions/refresh-page';
 import UserProfile from '@/components/nodehive/smart-actions/user-profile';
 import {
@@ -10,7 +13,24 @@ import {
   TooltipTrigger,
 } from '@/components/ui/atoms/tooltip/tooltip';
 
-export default function SmartActionsButton({ lang }: { lang: Locale }) {
+interface SmartActionsButtonProps {
+  lang: Locale;
+  nodeId?: number;
+}
+
+export default function SmartActionsButton({
+  lang,
+  nodeId,
+}: SmartActionsButtonProps) {
+  const backendBaseUrl = process.env.NEXT_PUBLIC_DRUPAL_BASE_URL?.replace(
+    /\/$/,
+    ''
+  );
+  const backendEditUrl =
+    backendBaseUrl && nodeId
+      ? `${backendBaseUrl}/${lang}/node/${nodeId}/edit`
+      : null;
+
   return (
     <AuthWrapper>
       <div className="fixed bottom-10 left-1/2 z-40 -translate-x-1/2">
@@ -29,13 +49,33 @@ export default function SmartActionsButton({ lang }: { lang: Locale }) {
             <li>
               <Tooltip>
                 <TooltipTrigger>
-                  <OpenVisualEditor />
+                  <OpenPuckEditor />
                 </TooltipTrigger>
-                <TooltipContent className="text-white">
-                  Visual Editor
-                </TooltipContent>
+                <TooltipContent className="text-white">Edit</TooltipContent>
               </Tooltip>
             </li>
+            {backendEditUrl && (
+              <li>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <a
+                      href={backendEditUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className={cn(
+                        'flex h-8 w-8 cursor-pointer items-center justify-center rounded-full text-white transition-colors hover:bg-neutral-700'
+                      )}
+                    >
+                      <span className="sr-only">Backend Edit</span>
+                      <ExternalLink className="h-5 w-5" />
+                    </a>
+                  </TooltipTrigger>
+                  <TooltipContent className="text-white">
+                    Backend Edit
+                  </TooltipContent>
+                </Tooltip>
+              </li>
+            )}
             <li>
               <Tooltip>
                 <TooltipTrigger>

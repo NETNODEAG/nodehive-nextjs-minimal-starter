@@ -5,7 +5,8 @@ import { i18n } from '@/config/i18n-config';
 import { createUserClient } from '@/lib/nodehive-client';
 
 export async function PATCH(request: NextRequest) {
-  const { path, type, data, nodeId, fieldName, lang } = await request.json();
+  const { path, type, data, nodeId, fieldName, lang, pageSettings } =
+    await request.json();
   console.log('Publishing Puck data for node', nodeId, 'field', fieldName);
 
   const jsonApiType = type.replace('node--', '');
@@ -17,13 +18,49 @@ export async function PATCH(request: NextRequest) {
     endpoint = isMultilingual ? `/${lang}${endpoint}` : endpoint;
     const apiUrl = `${baseUrl}${endpoint}`;
 
+    const attributes: Record<string, unknown> = {
+      [fieldName]: JSON.stringify(data),
+    };
+
+    if (typeof pageSettings?.metadataTitle === 'string') {
+      attributes.field_metadata_title = pageSettings.metadataTitle;
+    }
+
+    if (typeof pageSettings?.metadataDescription === 'string') {
+      attributes.field_metadata_description = pageSettings.metadataDescription;
+    }
+
+    if (typeof pageSettings?.published === 'boolean') {
+      attributes.status = pageSettings.published;
+    }
+
+    if (typeof pageSettings?.urlAlias === 'string') {
+      const alias = pageSettings.urlAlias.trim();
+      attributes.path = {
+        alias: alias ? (alias.startsWith('/') ? alias : `/${alias}`) : null,
+      };
+    }
+
+    const relationships: Record<string, unknown> = {};
+    if (pageSettings?.metadataImage === null) {
+      relationships.field_metadata_image = {
+        data: null,
+      };
+    } else if (pageSettings?.metadataImage?.id) {
+      relationships.field_metadata_image = {
+        data: {
+          type: pageSettings.metadataImage.type || 'media--image',
+          id: pageSettings.metadataImage.id,
+        },
+      };
+    }
+
     const payload = {
       data: {
         type: type,
         id: nodeId,
-        attributes: {
-          [fieldName]: JSON.stringify(data),
-        },
+        attributes,
+        ...(Object.keys(relationships).length > 0 ? { relationships } : {}),
       },
     };
     const client = createUserClient();
