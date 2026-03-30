@@ -1,11 +1,9 @@
 import { DrupalJsonApiParams } from 'drupal-jsonapi-params';
 
-import { i18n } from '@/config/i18n-config';
 import { createServerClient } from '@/lib/nodehive-client';
 
 export async function getSpaceNodes(language: string) {
   const spaceId = process.env.NEXT_PUBLIC_DRUPAL_NODEHIVE_SPACE_ID;
-  const isMultilingual = i18n.isMultilingual;
 
   if (!spaceId) {
     return [];
@@ -53,19 +51,19 @@ export async function getSpaceNodes(language: string) {
     const [pageNodes, articleNodes, puckPageNodes] = await Promise.all([
       client
         .getNodes('page', {
-          lang: isMultilingual ? language : undefined,
+          lang: language,
           params: apiParams,
         })
         .catch(() => ({ data: [] })),
       client
         .getNodes('article', {
-          lang: isMultilingual ? language : undefined,
+          lang: language,
           params: apiParams,
         })
         .catch(() => ({ data: [] })),
       client
         .getNodes('puck_page', {
-          lang: isMultilingual ? language : undefined,
+          lang: language,
           params: apiParams,
         })
         .catch(() => ({ data: [] })),

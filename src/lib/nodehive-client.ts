@@ -1,6 +1,7 @@
 import { cache } from 'react';
 import { NodeHiveClient } from 'nodehive-js';
 
+import { i18n } from '@/config/i18n-config';
 import { NodeHiveConfig } from '@/config/jsonapi-config';
 import { NextCookieStorage } from '@/lib/next-cookie-storage';
 
@@ -8,6 +9,7 @@ const baseOptions = {
   baseUrl: process.env.NEXT_PUBLIC_DRUPAL_REST_BASE_URL || '',
   debug: process.env.NODEHIVE_DEBUG === 'true',
   config: NodeHiveConfig,
+  multilingual: i18n.isMultilingual,
 };
 
 let serviceClient: NodeHiveClient | null = null;

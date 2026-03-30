@@ -1,7 +1,6 @@
 import { revalidatePath } from 'next/cache';
 import { NextRequest, NextResponse } from 'next/server';
 
-import { i18n } from '@/config/i18n-config';
 import { createUserClient } from '@/lib/nodehive-client';
 
 export async function PATCH(request: NextRequest) {
@@ -11,13 +10,6 @@ export async function PATCH(request: NextRequest) {
 
   const jsonApiType = type.replace('node--', '');
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_DRUPAL_REST_BASE_URL;
-
-    const isMultilingual = i18n.isMultilingual;
-    let endpoint = `/jsonapi/node/${jsonApiType}/${nodeId}`;
-    endpoint = isMultilingual ? `/${lang}${endpoint}` : endpoint;
-    const apiUrl = `${baseUrl}${endpoint}`;
-
     const attributes: Record<string, unknown> = {
       [fieldName]: JSON.stringify(data),
     };
@@ -55,6 +47,8 @@ export async function PATCH(request: NextRequest) {
       };
     }
 
+    const client = createUserClient();
+    const endpoint = `/jsonapi/node/${jsonApiType}/${nodeId}`;
     const payload = {
       data: {
         type: type,
@@ -63,43 +57,13 @@ export async function PATCH(request: NextRequest) {
         ...(Object.keys(relationships).length > 0 ? { relationships } : {}),
       },
     };
-    const client = createUserClient();
-    let token = null;
-    try {
-      token = await client.auth.getToken();
-    } catch (error) {
-      console.error('Error getting token', error);
-    }
 
-    if (!token) {
-      try {
-        const response = await client.auth.refreshToken();
-        token = response.token;
-      } catch (error) {
-        console.error('Error refreshing token', error);
-      }
-    }
-
-    if (!token) {
-      throw new Error('Unable to retrieve authentication token');
-    }
-
-    const response = await fetch(apiUrl, {
+    await client.request(endpoint, {
       method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/vnd.api+json',
-        Authorization: `Bearer ${token}`,
-        Accept: 'application/vnd.api+json',
-      },
-      body: JSON.stringify(payload),
+      lang,
+      data: payload,
+      headers: { Accept: 'application/vnd.api+json' },
     });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(
-        `Failed to update Drupal node: ${response.status} ${JSON.stringify(errorData)}`
-      );
-    }
 
     console.log(`Successfully updated node ${nodeId} with Puck data`);
   } catch (error) {
