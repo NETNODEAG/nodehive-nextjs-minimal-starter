@@ -4,7 +4,12 @@ import { match as matchLocale } from '@formatjs/intl-localematcher';
 import Negotiator from 'negotiator';
 
 import { i18n } from '@/config/i18n-config';
-import { NextCookieStorage } from '@/lib/next-cookie-storage';
+import {
+  clearAuthCookies,
+  isAuthFailure,
+  refreshSession,
+  shouldRefreshSession,
+} from '@/lib/auth/refresh';
 
 const getLocale = (request: NextRequest) => {
   const negotiatorHeaders: Record<string, string> = {};
@@ -18,43 +23,8 @@ const getLocale = (request: NextRequest) => {
   return matchLocale(languages, locales, i18n.defaultLocale);
 };
 
-const shouldRefreshSession = (request: NextRequest): boolean => {
-  const TOKEN_COOKIE = NextCookieStorage.cookieKeys()['token'];
-  const REFRESH_TOKEN_COOKIE = NextCookieStorage.cookieKeys()['refresh_token'];
-  const EXPIRES_AT_COOKIE = NextCookieStorage.cookieKeys()['token_expires_at'];
-  const token = request.cookies.get(TOKEN_COOKIE)?.value;
-  const refreshToken = request.cookies.get(REFRESH_TOKEN_COOKIE)?.value;
-  const expiresAt = request.cookies.get(EXPIRES_AT_COOKIE)?.value;
-
-  // Need a refresh token to do anything
-  if (!refreshToken) return false;
-
-  const expiresAtNumber = expiresAt ? Number(expiresAt) : null;
-  const tokenExpiresSoon =
-    typeof expiresAtNumber === 'number' &&
-    Number.isFinite(expiresAtNumber) &&
-    expiresAtNumber <= Date.now() + 60_000;
-
-  // Refresh if we have no token or it's about to expire
-  if (!token || tokenExpiresSoon) {
-    return true;
-  }
-
-  return false;
-};
-
-export async function proxy(request: NextRequest) {
+function handleI18nRouting(request: NextRequest): NextResponse {
   const pathname = request.nextUrl.pathname;
-
-  if (shouldRefreshSession(request)) {
-    console.log('Proxy: redirecting to refresh session');
-
-    // Build refresh URL with return path
-    const refreshUrl = new URL('/api/auth/session/refresh', request.url);
-    refreshUrl.searchParams.set('next', pathname + request.nextUrl.search);
-
-    return NextResponse.redirect(refreshUrl);
-  }
 
   if (!i18n.isMultilingual) {
     const rewriteUrl = new URL(
@@ -79,6 +49,48 @@ export async function proxy(request: NextRequest) {
   }
 
   return NextResponse.next();
+}
+
+export async function proxy(request: NextRequest) {
+  // Skip token refresh for prefetch requests
+  if (request.headers.get('next-router-prefetch') === '1') {
+    return handleI18nRouting(request);
+  }
+
+  if (!shouldRefreshSession(request)) {
+    return handleI18nRouting(request);
+  }
+
+  try {
+    // Refresh first — creates NextResponse.next({ request }) internally,
+    // updates request.cookies and collects Set-Cookie headers.
+    const refreshResponse = await refreshSession(request);
+
+    // Create the routing response (request cookies are already updated)
+    const response = handleI18nRouting(request);
+
+    // Copy Set-Cookie headers from refresh response to routing response
+    for (const header of refreshResponse.headers.getSetCookie()) {
+      response.headers.append('Set-Cookie', header);
+    }
+
+    return response;
+  } catch (error) {
+    if (isAuthFailure(error)) {
+      console.warn('[Proxy] Refresh token invalid, clearing session');
+      const expiredUrl = new URL(request.url);
+      expiredUrl.searchParams.set('session', 'expired');
+      const response = NextResponse.redirect(expiredUrl);
+      clearAuthCookies(request, response);
+      return response;
+    }
+
+    console.warn(
+      '[Proxy] Token refresh failed (transient), keeping session:',
+      error
+    );
+    return handleI18nRouting(request);
+  }
 }
 
 export const config = {
