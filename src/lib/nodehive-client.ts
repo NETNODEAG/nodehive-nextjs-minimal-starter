@@ -3,7 +3,10 @@ import { NodeHiveClient } from 'nodehive-js';
 
 import { i18n } from '@/config/i18n-config';
 import { NodeHiveConfig } from '@/config/jsonapi-config';
-import { NextCookieStorage } from '@/lib/next-cookie-storage';
+import {
+  NextCookieStorage,
+  type ProxyContext,
+} from '@/lib/next-cookie-storage';
 
 const baseOptions = {
   baseUrl: process.env.NEXT_PUBLIC_DRUPAL_REST_BASE_URL || '',
@@ -25,8 +28,8 @@ export const createServerClient = cache(async () => {
   return createServiceClient();
 });
 
-export const createUserClient = () => {
-  const storage = new NextCookieStorage();
+export const createUserClient = (proxyContext?: ProxyContext) => {
+  const storage = new NextCookieStorage(proxyContext);
   const userOauthConfig = {
     grantType: 'password' as const,
     clientId: process.env.NODEHIVE_OAUTH_USER_CLIENT_ID || '',
