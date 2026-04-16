@@ -4,6 +4,12 @@ import Container from '@/components/theme/atoms-layout/container/container';
 
 export const ContainerConfig: ComponentConfig = {
   label: 'Container',
+  metadata: {
+    aiDescription:
+      'Width-constrained wrapper that holds other components and controls max-width, padding, and vertical spacing.',
+    aiGuidelines:
+      'Wrap content blocks (Headings, BodyCopy, media) to keep readable line length and consistent page rhythm.',
+  },
   fields: {
     content: {
       type: 'slot',

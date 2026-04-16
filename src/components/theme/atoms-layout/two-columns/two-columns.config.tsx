@@ -28,11 +28,18 @@ const gapOptions = [
 
 export const TwoColumnsConfig: ComponentConfig<TwoColumnsConfigProps> = {
   label: 'Zwei Spalten',
+  metadata: {
+    aiDescription: 'Two-column side-by-side layout with configurable ratio.',
+  },
   fields: {
     columnRatio: {
       label: 'Spalten-Verhältnis',
       type: 'select',
       options: columnRatioOptions,
+      metadata: {
+        aiGuidelines:
+          '1:1 for balanced content, 1:2 or 2:1 when one side dominates.',
+      },
     },
     gap: {
       label: 'Abstand zwischen Spalten',

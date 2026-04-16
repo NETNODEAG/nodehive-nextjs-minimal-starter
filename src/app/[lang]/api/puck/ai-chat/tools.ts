@@ -1,8 +1,10 @@
 import { createOpenAI } from '@ai-sdk/openai';
+import { Config } from '@puckeditor/core';
 import { generateObject, tool } from 'ai';
 import TurndownService from 'turndown';
 import { z } from 'zod';
 
+import { serializeComponentSpec } from '@/components/puck/plugins/ai-chat-plugin/utils/build-system-prompt';
 import { generateId } from '@/components/puck/utils';
 
 type PuckData = {
@@ -11,12 +13,38 @@ type PuckData = {
 };
 
 type ToolsContext = {
+  puckConfig: Config;
   puckData: PuckData;
   lang: string;
 };
 
-export function createAiChatTools({ puckData, lang }: ToolsContext) {
+export function createAiChatTools({
+  puckConfig,
+  puckData,
+  lang,
+}: ToolsContext) {
   return {
+    get_component_spec: tool({
+      description:
+        'Get the full specification for a component (description, guidelines, fields with hints, default props). Call this before adding or modifying a component to avoid guessing fields or values.',
+      inputSchema: z.object({
+        name: z
+          .string()
+          .describe(
+            'Component type name from the AVAILABLE COMPONENTS list (e.g., "Hero", "Container")'
+          ),
+      }),
+      execute: async ({ name }) => {
+        const spec = serializeComponentSpec(name, puckConfig);
+        if (!spec) {
+          return {
+            error: `Component "${name}" not found in config. Check the AVAILABLE COMPONENTS list.`,
+          };
+        }
+        return { name, spec };
+      },
+    }),
+
     set_page_content: tool({
       description:
         'Replace the entire page content with new components. Use this when creating a full page or replacing all content.',

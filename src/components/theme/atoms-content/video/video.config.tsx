@@ -5,6 +5,12 @@ import Video from '@/components/theme/atoms-content/video/video';
 
 export const VideoConfig: ComponentConfig = {
   label: 'Video',
+  metadata: {
+    aiDescription:
+      'Embedded video picked from the Drupal media library or a remote source.',
+    aiGuidelines:
+      'Prefer muted autoplay for decorative videos to respect browser autoplay policies.',
+  },
   fields: {
     videoSelector: createMediaSelectorField({
       label: 'Video auswählen',

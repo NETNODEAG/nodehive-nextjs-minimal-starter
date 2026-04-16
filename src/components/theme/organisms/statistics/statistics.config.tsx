@@ -4,6 +4,12 @@ import Statistics from '@/components/theme/organisms/statistics/statistics';
 
 export const StatisticsConfig: ComponentConfig = {
   label: 'Statistics',
+  metadata: {
+    aiDescription:
+      'Row or grid of numeric stats with labels (e.g., "1M+ users", "99.9% uptime").',
+    aiGuidelines:
+      '3-4 items work best. Numbers should be concrete and concise.',
+  },
   fields: {
     items: {
       type: 'array',

@@ -46,8 +46,12 @@ export async function POST(request: Request, { params }: RouteParams) {
     model: openai('gpt-5.4'),
     system: systemPrompt,
     messages: await convertToModelMessages(messages),
-    tools: createAiChatTools({ puckData: parsedPuckData, lang }),
-    stopWhen: (event) => event.steps.length >= 5,
+    tools: createAiChatTools({
+      puckConfig: parsedConfig,
+      puckData: parsedPuckData,
+      lang,
+    }),
+    stopWhen: (event) => event.steps.length >= 20,
   });
 
   return result.toUIMessageStreamResponse();

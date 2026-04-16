@@ -5,6 +5,12 @@ import Hero from '@/components/theme/sections/hero/hero';
 
 export const HeroConfig: ComponentConfig = {
   label: 'Hero Section',
+  metadata: {
+    aiDescription:
+      'Large intro section with headline, subtitle, CTAs, and optional background media.',
+    aiGuidelines:
+      'At most once per page, as the first section. Title 3-8 words, description 10-25 words, max 2 CTAs.',
+  },
   fields: {
     layout: {
       type: 'select',
@@ -14,6 +20,10 @@ export const HeroConfig: ComponentConfig = {
         { label: 'Centered', value: 'centered' },
         { label: 'Bottom', value: 'bottom' },
       ],
+      metadata: {
+        aiGuidelines:
+          'default: left-aligned content. centered: content centered horizontally — elegant for short copy. bottom: content docked to the bottom — good when the background image is the main visual.',
+      },
     },
     height: {
       type: 'radio',
@@ -23,6 +33,10 @@ export const HeroConfig: ComponentConfig = {
         { label: '50%', value: '50' },
         { label: '90%', value: '90' },
       ],
+      metadata: {
+        aiGuidelines:
+          '25: compact/subtle intro. 50: standard prominent hero. 90: near-full-viewport hero for landing pages.',
+      },
     },
     title: {
       type: 'text',
