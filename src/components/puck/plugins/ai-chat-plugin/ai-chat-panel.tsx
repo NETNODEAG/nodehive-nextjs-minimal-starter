@@ -8,17 +8,13 @@ import {
   ArrowUpIcon,
   BotIcon,
   HistoryIcon,
-  ImageIcon,
-  LinkIcon,
+  PaperclipIcon,
   SquareIcon,
 } from 'lucide-react';
 import { toast } from 'sonner';
 
 import { getLocaleFromPathname } from '@/lib/utils';
-import {
-  ImageAttachmentButton,
-  LinkAttachmentButton,
-} from './components/attachment-button';
+import { FileAttachmentButton } from './components/attachment-button';
 import { ChatHistoryList } from './components/chat-history-list';
 import { ChatMessage } from './components/chat-message';
 import {
@@ -149,16 +145,7 @@ export function AiChatPanel({ config, nodeId }: AiChatPanelProps) {
     setInput('');
   };
 
-  const handleAttachLink = (url: string) => {
-    if (!activeChatId) {
-      setActiveChatId(generateChatId());
-    }
-    sendMessage({
-      text: `Please analyze this webpage and suggest content: ${url}`,
-    });
-  };
-
-  const handleAttachImage = (file: File) => {
+  const handleAttachFile = (file: File) => {
     if (!activeChatId) {
       setActiveChatId(generateChatId());
     }
@@ -175,7 +162,7 @@ export function AiChatPanel({ config, nodeId }: AiChatPanelProps) {
         },
       ];
       sendMessage({
-        text: 'Analyze this image and suggest how to use it on the page.',
+        text: 'Analyze this file and suggest how to use it on the page.',
         files,
       });
     };
@@ -283,13 +270,9 @@ export function AiChatPanel({ config, nodeId }: AiChatPanelProps) {
           />
           <div className="flex items-center justify-between px-2 pb-2">
             <div className="flex gap-1">
-              <LinkAttachmentButton
-                onAttach={handleAttachLink}
-                icon={<LinkIcon className="h-4 w-4" />}
-              />
-              <ImageAttachmentButton
-                onAttach={handleAttachImage}
-                icon={<ImageIcon className="h-4 w-4" />}
+              <FileAttachmentButton
+                onAttach={handleAttachFile}
+                icon={<PaperclipIcon className="h-4 w-4" />}
               />
             </div>
             {isStreaming ? (

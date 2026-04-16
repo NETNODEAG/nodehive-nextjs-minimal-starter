@@ -17,7 +17,7 @@ const nextConfig: NextConfig = {
   // Needed for making npm link work (only locally, breaks Vercel)
   ...(process.env.VERCEL
     ? {}
-    : { outputFileTracingRoot: path.join(__dirname, '../') }),
+    : { outputFileTracingRoot: path.join(__dirname, '../../') }),
   images: {
     remotePatterns: [...imageDomains],
     formats: ['image/avif', 'image/webp'],
