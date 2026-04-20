@@ -31,6 +31,21 @@ import {
   getZoneLength,
 } from './utils/find-component-location';
 
+function collectToolCallIds(messages: UIMessage[]): string[] {
+  const ids: string[] = [];
+  for (const message of messages) {
+    if (message.role !== 'assistant') continue;
+    for (const part of message.parts) {
+      if (!part.type.startsWith('tool-') && part.type !== 'dynamic-tool')
+        continue;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const id = (part as any).toolCallId;
+      if (id) ids.push(id);
+    }
+  }
+  return ids;
+}
+
 const usePuck = createUsePuck();
 
 type AiChatPanelProps = {
@@ -82,6 +97,11 @@ export function AiChatPanel({ config, nodeId, context }: AiChatPanelProps) {
     setSessions(existingSessions);
     if (existingSessions.length > 0) {
       const latestId = existingSessions[0].id;
+      // Seed the applied-set with all existing tool call ids so restored
+      // history doesn't re-dispatch the patches (would duplicate content).
+      appliedToolCallIds.current = new Set(
+        collectToolCallIds(loadMessages(latestId))
+      );
       setActiveChatId(latestId);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -344,9 +364,11 @@ export function AiChatPanel({ config, nodeId, context }: AiChatPanelProps) {
   };
 
   const handleSelectChat = (chatId: string) => {
-    appliedToolCallIds.current.clear();
-    setActiveChatId(chatId);
     const loaded = loadMessages(chatId);
+    // Seed applied-set with existing tool call ids so we don't re-dispatch
+    // them against the live editor state (would duplicate components).
+    appliedToolCallIds.current = new Set(collectToolCallIds(loaded));
+    setActiveChatId(chatId);
     setMessages(loaded);
     setShowHistory(false);
   };

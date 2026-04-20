@@ -19,7 +19,8 @@ const headingVariants = cva('font-heading hyphens-auto lg:hyphens-none', {
 });
 
 export interface HeadingProps
-  extends React.HTMLAttributes<HTMLHeadingElement>,
+  extends
+    React.HTMLAttributes<HTMLHeadingElement>,
     VariantProps<typeof headingVariants> {
   level: '1' | '2' | '3' | '4';
 }
@@ -31,7 +32,13 @@ const Heading: React.FC<HeadingProps> = ({
   children,
   ...props
 }) => {
-  const Tag: keyof React.JSX.IntrinsicElements = `h${level}`;
+  // Normalize: accept "2" or "h2" — strip any leading "h" and clamp to 1-6.
+  const normalized = String(level).replace(/^h/i, '');
+  const parsed = Number(normalized);
+  const safeLevel = Number.isFinite(parsed)
+    ? Math.min(6, Math.max(1, parsed))
+    : 2;
+  const Tag = `h${safeLevel}` as 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
 
   return (
     <Tag className={cn(headingVariants({ size }), className)} {...props}>

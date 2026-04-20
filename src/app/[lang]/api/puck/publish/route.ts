@@ -28,9 +28,11 @@ export async function PATCH(request: NextRequest) {
 
     if (typeof pageSettings?.urlAlias === 'string') {
       const alias = pageSettings.urlAlias.trim();
-      attributes.path = {
-        alias: alias ? (alias.startsWith('/') ? alias : `/${alias}`) : null,
-      };
+      if (alias) {
+        attributes.path = {
+          alias: alias.startsWith('/') ? alias : `/${alias}`,
+        };
+      }
     }
 
     const relationships: Record<string, unknown> = {};
@@ -67,7 +69,17 @@ export async function PATCH(request: NextRequest) {
 
     console.log(`Successfully updated node ${nodeId} with Puck data`);
   } catch (error) {
+    // Surface Drupal's JSON:API error body so we don't just see
+    // "HTTP 500: Internal Server Error" — the real cause lives in details.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const details = (error as any)?.details;
     console.error('Error updating Drupal node:', error);
+    if (details) {
+      console.error(
+        'Drupal response details:',
+        JSON.stringify(details, null, 2)
+      );
+    }
     return NextResponse.json(
       {
         status: 'error',
