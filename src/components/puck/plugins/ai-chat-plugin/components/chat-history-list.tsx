@@ -32,22 +32,19 @@ export function ChatHistoryList({
       <div className="flex items-center gap-2 border-b border-gray-200 p-3">
         <button
           onClick={onBack}
-          className="rounded-md p-1 text-gray-500 hover:bg-gray-100 hover:text-gray-700"
+          className="cursor-pointer rounded-md p-1 text-gray-500 hover:bg-gray-100 hover:text-gray-700"
         >
           <ArrowLeftIcon className="h-4 w-4" />
         </button>
         <h3 className="flex-1 text-sm font-medium text-gray-900">
           Chat History
         </h3>
-      </div>
-
-      <div className="border-b border-gray-200 p-3">
         <button
           onClick={onNewChat}
-          className="flex w-full items-center justify-center gap-2 rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
+          className="cursor-pointer rounded-md p-1.5 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600"
+          title="New chat"
         >
           <PlusIcon className="h-4 w-4" />
-          New chat
         </button>
       </div>
 
@@ -70,7 +67,7 @@ export function ChatHistoryList({
               >
                 <button
                   onClick={() => onSelectChat(session.id)}
-                  className="flex flex-1 items-center gap-2 text-left"
+                  className="flex min-w-0 flex-1 cursor-pointer items-center gap-2 text-left"
                 >
                   <MessageSquareIcon className="h-4 w-4 shrink-0 text-gray-400" />
                   <div className="min-w-0 flex-1">
@@ -85,7 +82,7 @@ export function ChatHistoryList({
                     e.stopPropagation();
                     onDeleteChat(session.id);
                   }}
-                  className="shrink-0 rounded p-1 text-gray-400 opacity-0 group-hover:opacity-100 hover:bg-gray-200 hover:text-red-500"
+                  className="shrink-0 cursor-pointer rounded p-1 text-gray-400 opacity-0 group-hover:opacity-100 hover:bg-gray-200 hover:text-red-500"
                   title="Delete chat"
                 >
                   <Trash2Icon className="h-3.5 w-3.5" />

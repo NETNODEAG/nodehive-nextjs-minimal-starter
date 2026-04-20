@@ -1,28 +1,28 @@
 import { createOpenAI } from '@ai-sdk/openai';
-import { Config } from '@puckeditor/core';
+import { ComponentData, Config } from '@puckeditor/core';
 import { generateObject, tool } from 'ai';
 import TurndownService from 'turndown';
 import { z } from 'zod';
 
 import { serializeComponentSpec } from '@/components/puck/plugins/ai-chat-plugin/utils/build-system-prompt';
-import { generateId } from '@/components/puck/utils';
+import { generateTemplateIds } from '@/components/puck/utils';
 
-type PuckData = {
-  content: Array<{ type: string; props: Record<string, any> }>;
-  [key: string]: any;
-};
+const ROOT_ZONE = 'root:default-zone';
 
 type ToolsContext = {
   puckConfig: Config;
-  puckData: PuckData;
   lang: string;
 };
 
-export function createAiChatTools({
-  puckConfig,
-  puckData,
-  lang,
-}: ToolsContext) {
+function resolveZone(
+  destinationId: string | undefined,
+  destinationSlot: string | undefined
+): string {
+  if (!destinationId || destinationId === 'root') return ROOT_ZONE;
+  return `${destinationId}:${destinationSlot || 'content'}`;
+}
+
+export function createAiChatTools({ puckConfig, lang }: ToolsContext) {
   return {
     get_component_spec: tool({
       description:
@@ -45,47 +45,63 @@ export function createAiChatTools({
       },
     }),
 
-    set_page_content: tool({
+    add_component: tool({
       description:
-        'Replace the entire page content with new components. Use this when creating a full page or replacing all content.',
+        'Add a new component at the root of the page or inside a parent component slot. Emits a patch that the editor applies incrementally — the page updates immediately with no flash.',
       inputSchema: z.object({
-        content: z
-          .array(
-            z.object({
-              type: z
-                .string()
-                .describe(
-                  'Component type name (e.g., "Hero", "Container", "Heading")'
-                ),
-              props: z
-                .record(z.string(), z.any())
-                .describe('Component props matching the field definitions'),
-            })
-          )
-          .describe('Array of components to set as page content'),
+        type: z
+          .string()
+          .describe('Component type name (e.g., "Heading", "Hero")'),
+        props: z
+          .record(z.string(), z.any())
+          .describe(
+            'Component props matching the field definitions. For nested slots, fill slot arrays recursively — child components get IDs auto-generated.'
+          ),
+        destinationId: z
+          .string()
+          .optional()
+          .describe(
+            'Parent component ID to nest inside. Omit or set to "root" for top-level.'
+          ),
+        destinationSlot: z
+          .string()
+          .optional()
+          .describe(
+            'Slot field name on the parent (e.g., "content", "leftColumn"). Required when destinationId is set (other than "root").'
+          ),
+        destinationIndex: z
+          .number()
+          .optional()
+          .describe(
+            'Position within the destination (0-based). Omit to append at the end.'
+          ),
       }),
-      execute: async ({ content }) => {
-        const contentWithIds = content.map((component) => ({
-          ...component,
-          props: {
-            ...component.props,
-            id: generateId(component.type),
-          },
-        }));
-
+      execute: async ({
+        type,
+        props,
+        destinationId,
+        destinationSlot,
+        destinationIndex,
+      }) => {
+        const [component] = generateTemplateIds(
+          [{ type, props } as ComponentData],
+          puckConfig
+        );
+        const zone = resolveZone(destinationId, destinationSlot);
         return {
-          puckData: {
-            ...puckData,
-            content: contentWithIds,
-          },
-          message: `Set page content with ${content.length} component(s)`,
+          action: 'add' as const,
+          id: component.props.id,
+          component,
+          destinationZone: zone,
+          destinationIndex: destinationIndex ?? -1,
+          message: `Added ${type}${destinationId && destinationId !== 'root' ? ` into ${destinationId}:${destinationSlot}` : ''}`,
         };
       },
     }),
 
     modify_component: tool({
       description:
-        'Modify a specific component by its ID. Merges new props with existing ones.',
+        'Modify a specific component by its ID. Merges new props with existing ones. Emits a patch — only the affected component re-renders.',
       inputSchema: z.object({
         componentId: z
           .string()
@@ -95,89 +111,50 @@ export function createAiChatTools({
           .describe('Props to update (merged with existing)'),
       }),
       execute: async ({ componentId, newProps }) => {
-        const newContent = puckData.content.map((component) => {
-          if (component.props.id === componentId) {
-            return {
-              ...component,
-              props: {
-                ...component.props,
-                ...newProps,
-              },
-            };
-          }
-          return component;
-        });
-
+        // Strip any id the model may have included; the id must not change.
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { id: _ignored, ...safeProps } = newProps;
         return {
-          puckData: {
-            ...puckData,
-            content: newContent,
-          },
-          message: `Modified component ${componentId}`,
-        };
-      },
-    }),
-
-    add_component: tool({
-      description: 'Add a new component at a specific position in the page.',
-      inputSchema: z.object({
-        type: z
-          .string()
-          .describe('Component type name (e.g., "Heading", "Hero")'),
-        props: z
-          .record(z.string(), z.any())
-          .describe('Component props matching the field definitions'),
-        index: z
-          .number()
-          .optional()
-          .describe(
-            'Position to insert at (0-based). Omit to append at the end.'
-          ),
-      }),
-      execute: async ({ type, props, index }) => {
-        const newComponent = {
-          type,
-          props: {
-            ...props,
-            id: generateId(type),
-          },
-        };
-
-        const newContent = [...puckData.content];
-        if (index !== undefined && index >= 0) {
-          newContent.splice(index, 0, newComponent);
-        } else {
-          newContent.push(newComponent);
-        }
-
-        return {
-          puckData: {
-            ...puckData,
-            content: newContent,
-          },
-          message: `Added ${type} component`,
+          action: 'modify' as const,
+          id: componentId,
+          newProps: safeProps,
+          message: `Modified ${componentId}`,
         };
       },
     }),
 
     remove_component: tool({
-      description: 'Remove a component from the page by its ID.',
+      description:
+        'Remove a component from the page by its ID. Emits a patch — only the affected zone re-renders.',
       inputSchema: z.object({
         componentId: z
           .string()
           .describe('The component ID to remove (from current page data)'),
       }),
       execute: async ({ componentId }) => {
-        const newContent = puckData.content.filter(
-          (component) => component.props.id !== componentId
-        );
-
         return {
-          puckData: {
-            ...puckData,
-            content: newContent,
-          },
-          message: `Removed component ${componentId}`,
+          action: 'remove' as const,
+          id: componentId,
+          message: `Removed ${componentId}`,
+        };
+      },
+    }),
+
+    set_page_metadata: tool({
+      description:
+        'Update page-level metadata (SEO title, description, URL alias, published state, OG image). See PAGE METADATA FIELDS in the system prompt for the exact field names. Pass only the fields you want to change — others stay untouched.',
+      inputSchema: z.object({
+        fields: z
+          .record(z.string(), z.any())
+          .describe(
+            'Partial root props to merge. Field names must match the PAGE METADATA FIELDS list exactly.'
+          ),
+      }),
+      execute: async ({ fields }) => {
+        return {
+          action: 'setRoot' as const,
+          fields,
+          message: `Updated page metadata (${Object.keys(fields).join(', ')})`,
         };
       },
     }),

@@ -28,8 +28,8 @@ const gapOptions = [
 
 export const TwoColumnsConfig: ComponentConfig<TwoColumnsConfigProps> = {
   label: 'Zwei Spalten',
-  metadata: {
-    aiDescription: 'Two-column side-by-side layout with configurable ratio.',
+  ai: {
+    description: 'Two-column side-by-side layout with configurable ratio.',
   },
   fields: {
     columnRatio: {
@@ -37,8 +37,10 @@ export const TwoColumnsConfig: ComponentConfig<TwoColumnsConfigProps> = {
       type: 'select',
       options: columnRatioOptions,
       metadata: {
-        aiGuidelines:
-          '1:1 for balanced content, 1:2 or 2:1 when one side dominates.',
+        ai: {
+          instructions:
+            '1:1 for balanced content, 1:2 or 2:1 when one side dominates.',
+        },
       },
     },
     gap: {
@@ -57,10 +59,12 @@ export const TwoColumnsConfig: ComponentConfig<TwoColumnsConfigProps> = {
     leftColumn: {
       type: 'slot',
       label: 'Linke Spalte',
+      disallow: ['Container', 'TwoColumns', 'Hero', 'ContentSection'],
     },
     rightColumn: {
       type: 'slot',
       label: 'Rechte Spalte',
+      disallow: ['Container', 'TwoColumns', 'Hero', 'ContentSection'],
     },
   },
 

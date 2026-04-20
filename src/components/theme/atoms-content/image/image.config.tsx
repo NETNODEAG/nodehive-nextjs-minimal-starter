@@ -5,9 +5,9 @@ import Image from '@/components/theme/atoms-content/image/image';
 
 export const ImageConfig: ComponentConfig = {
   label: 'Image',
-  metadata: {
-    aiDescription: 'Single image picked from the Drupal media library.',
-    aiGuidelines:
+  ai: {
+    description: 'Single image picked from the Drupal media library.',
+    instructions:
       'Use search_media first to find an existing asset. Ensure the image has meaningful alt text.',
   },
   fields: {

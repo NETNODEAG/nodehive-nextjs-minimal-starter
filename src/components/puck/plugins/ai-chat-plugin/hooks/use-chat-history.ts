@@ -45,6 +45,13 @@ export function generateChatId(): string {
   return `chat-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 }
 
+function stripFileParts(messages: UIMessage[]): UIMessage[] {
+  return messages.map((m) => ({
+    ...m,
+    parts: m.parts.filter((p) => p.type !== 'file'),
+  }));
+}
+
 export function useChatHistory(nodeId: string) {
   const getChatSessions = (): ChatSession[] => {
     return getChatsIndex(nodeId).sort((a, b) => b.updatedAt - a.updatedAt);
@@ -67,7 +74,8 @@ export function useChatHistory(nodeId: string) {
   ) => {
     try {
       const trimmed = messages.slice(-MAX_MESSAGES_PER_CHAT);
-      localStorage.setItem(getChatStorageKey(chatId), JSON.stringify(trimmed));
+      const stripped = stripFileParts(trimmed);
+      localStorage.setItem(getChatStorageKey(chatId), JSON.stringify(stripped));
 
       const sessions = getChatsIndex(nodeId);
       const existing = sessions.find((s) => s.id === chatId);

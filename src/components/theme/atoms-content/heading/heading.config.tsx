@@ -4,9 +4,9 @@ import { Heading } from '@/components/theme/atoms-content/heading/heading';
 
 export const HeadingConfig: ComponentConfig = {
   label: 'Heading',
-  metadata: {
-    aiDescription: 'Page or section heading (h1-h4).',
-    aiGuidelines: 'Keep headings concise (3-8 words).',
+  ai: {
+    description: 'Page or section heading (h1-h4).',
+    instructions: 'Keep headings concise (3-8 words).',
   },
   fields: {
     text: {
@@ -25,8 +25,10 @@ export const HeadingConfig: ComponentConfig = {
         { label: 'Small', value: 'sm' },
       ],
       metadata: {
-        aiGuidelines:
-          'Visual size, independent of semantic level. display-xxl/xl for hero-style titles, xl/lg for major section headings, md/sm for sub-sections.',
+        ai: {
+          instructions:
+            'Visual size, independent of semantic level. display-xxl/xl for hero-style titles, xl/lg for major section headings, md/sm for sub-sections.',
+        },
       },
     },
     level: {
@@ -39,8 +41,10 @@ export const HeadingConfig: ComponentConfig = {
         { label: 'H4', value: '4' },
       ],
       metadata: {
-        aiGuidelines:
-          'Semantic HTML level. One "1" (h1) per page. "2" for page sections, "3"-"4" for subsections.',
+        ai: {
+          instructions:
+            'Semantic HTML level. One "1" (h1) per page. "2" for page sections, "3"-"4" for subsections.',
+        },
       },
     },
   },

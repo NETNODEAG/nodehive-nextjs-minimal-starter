@@ -18,10 +18,12 @@ export async function POST(request: Request, { params }: RouteParams) {
     messages,
     puckConfig,
     puckData,
+    context,
   }: {
     messages: UIMessage[];
     puckConfig: string;
     puckData: string;
+    context?: string;
   } = body;
 
   let parsedConfig;
@@ -36,7 +38,7 @@ export async function POST(request: Request, { params }: RouteParams) {
     );
   }
 
-  const systemPrompt = buildSystemPrompt(parsedConfig, parsedPuckData);
+  const systemPrompt = buildSystemPrompt(parsedConfig, parsedPuckData, context);
 
   const openai = createOpenAI({
     apiKey: process.env.AI_API_KEY,
@@ -48,7 +50,6 @@ export async function POST(request: Request, { params }: RouteParams) {
     messages: await convertToModelMessages(messages),
     tools: createAiChatTools({
       puckConfig: parsedConfig,
-      puckData: parsedPuckData,
       lang,
     }),
     stopWhen: (event) => event.steps.length >= 20,

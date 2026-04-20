@@ -35,7 +35,7 @@ export function FileAttachmentButton({
       <button
         type="button"
         onClick={() => fileInputRef.current?.click()}
-        className="rounded-lg border border-gray-200 p-2 text-gray-500 transition-colors hover:bg-gray-50 hover:text-gray-700"
+        className="cursor-pointer rounded-lg border border-gray-200 p-2 text-gray-500 transition-colors hover:bg-gray-50 hover:text-gray-700"
         title="Attach file"
       >
         {icon}

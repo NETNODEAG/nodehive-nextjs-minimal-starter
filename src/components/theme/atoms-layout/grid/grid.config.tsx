@@ -4,21 +4,32 @@ import Grid from '@/components/theme/atoms-layout/grid/grid';
 
 export const GridConfig: ComponentConfig = {
   label: 'Grid',
-  metadata: {
-    aiDescription:
+  ai: {
+    description:
       'Multi-column grid layout for equal-width children. Typically contains Cards.',
   },
   fields: {
     content: {
       type: 'slot',
+      allow: [
+        'Card',
+        'Statistics',
+        'Heading',
+        'BodyCopy',
+        'CallToAction',
+        'Image',
+        'Video',
+      ],
     },
     columns: {
       type: 'number',
       min: 1,
       max: 12,
       metadata: {
-        aiGuidelines:
-          'Pick based on item count (3 items = 3 cols, 4 items = 2 or 4 cols).',
+        ai: {
+          instructions:
+            'Pick based on item count (3 items = 3 cols, 4 items = 2 or 4 cols).',
+        },
       },
     },
     gap: {

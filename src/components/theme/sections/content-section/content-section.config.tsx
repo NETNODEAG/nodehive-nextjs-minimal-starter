@@ -4,10 +4,10 @@ import ContentSection from '@/components/theme/sections/content-section/content-
 
 export const ContentSectionConfig: ComponentConfig = {
   label: 'Content Section',
-  metadata: {
-    aiDescription:
-      'Full-width section with eyebrow, title, body, and an optional media slot (Image/Video/BodyCopy).',
-    aiGuidelines:
+  ai: {
+    description:
+      'Full-width section with eyebrow, title, body, and an optional media slot (Image or Video only).',
+    instructions:
       'Use when a standard titled content block with optional media is needed.',
   },
   fields: {
@@ -21,8 +21,10 @@ export const ContentSectionConfig: ComponentConfig = {
         { label: 'Media Left / Content Right', value: 'media-left' },
       ],
       metadata: {
-        aiGuidelines:
-          'stacked: text then media below. centered: centered text only. content-left/media-left: pick based on which side should lead visually.',
+        ai: {
+          instructions:
+            'stacked: text then media below. centered: centered text only. content-left/media-left: pick based on which side should lead visually.',
+        },
       },
     },
     variant: {
@@ -42,8 +44,10 @@ export const ContentSectionConfig: ComponentConfig = {
         { label: 'Light', value: 'light' },
       ],
       metadata: {
-        aiGuidelines:
-          'none: default transparent. light: use to break visual rhythm between adjacent sections.',
+        ai: {
+          instructions:
+            'none: default transparent. light: use to break visual rhythm between adjacent sections.',
+        },
       },
     },
     eyebrow: {
@@ -64,7 +68,7 @@ export const ContentSectionConfig: ComponentConfig = {
     content: {
       type: 'slot',
       label: 'Content',
-      allow: ['Image', 'Video', 'BodyCopy'],
+      allow: ['Image', 'Video'],
     },
   },
   defaultProps: {

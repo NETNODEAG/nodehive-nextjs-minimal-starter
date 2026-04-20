@@ -42,6 +42,12 @@ export const createMediaSelectorField = ({
   return {
     type: 'custom' as const,
     label,
+    metadata: {
+      ai: {
+        bind: 'search_media',
+        instructions: `Value must be a full media object returned by search_media (type: ${mediaTypes.join(', ')}). Never construct one by hand.`,
+      },
+    },
     render: (({ onChange, value, field }) => (
       <MediaSelectorField
         onChange={onChange}

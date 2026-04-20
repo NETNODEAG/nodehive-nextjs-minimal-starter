@@ -29,6 +29,24 @@ import { createTemplatesPlugin } from '@/components/puck/plugins/templates-plugi
 
 import '@puckeditor/core/no-external.css';
 
+const DEFAULT_AI_CONTEXT = `
+BRAND
+- Product: NodeHive — Headless CMS powered by Drupal, editor built on Puck page builder.
+- Audience: Entwickler, CTOs, Digital-Agenturen mit Enterprise-Anforderungen.
+
+SPRACHE
+- Standardsprache: Deutsch (Schweiz). Übersetze nur, wenn der User explizit eine andere Sprache verlangt.
+- Englische Fachbegriffe nicht übersetzen (API, SDK, Headless, Content-Type).
+
+TONE OF VOICE
+- Professionell, knapp, technisch kompetent. Keine Marketing-Superlative ("revolutionär", "bahnbrechend").
+- Duzen bevorzugt, außer der Kontext verlangt ausdrücklich Siezen.
+
+CONTENT-REGELN
+- Konkrete Aussagen statt vager Versprechen. Zahlen und messbare Vorteile wo möglich.
+- Keine Preise auf Landing/Content-Seiten — Pricing gehört in dedizierte Pricing-Abschnitte.
+`.trim();
+
 type PuckEditorProps = {
   node: DrupalNode;
   fieldName: string;
@@ -111,11 +129,15 @@ export default function PuckEditor({
   };
 
   const plugins = [
-    createAiChatPlugin({ config, nodeId: nodeData.id }),
     createSectionsPlugin({ config }),
     blocksPlugin(),
     outlinePlugin(),
     createTemplatesPlugin({ config }),
+    createAiChatPlugin({
+      config,
+      nodeId: nodeData.id,
+      context: DEFAULT_AI_CONTEXT,
+    }),
   ];
 
   const onSave = async (data: Partial<Data>) => {

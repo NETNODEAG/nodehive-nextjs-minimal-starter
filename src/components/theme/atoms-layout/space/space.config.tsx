@@ -4,9 +4,9 @@ import Space, { SpaceProps } from '@/components/theme/atoms-layout/space/space';
 
 export const SpaceConfig: ComponentConfig<SpaceProps> = {
   label: 'Abstand',
-  metadata: {
-    aiDescription: 'Vertical spacer between other components.',
-    aiGuidelines:
+  ai: {
+    description: 'Vertical spacer between other components.',
+    instructions:
       'Only use when default section spacing is not enough; prefer Container/section padding when possible.',
   },
   fields: {
@@ -22,8 +22,10 @@ export const SpaceConfig: ComponentConfig<SpaceProps> = {
         { label: '3XL', value: '3xl' },
       ],
       metadata: {
-        aiGuidelines:
-          'sm/md: between related content blocks. lg/xl: between page sections. 2xl/3xl: strong visual separation between distinct areas.',
+        ai: {
+          instructions:
+            'sm/md: between related content blocks. lg/xl: between page sections. 2xl/3xl: strong visual separation between distinct areas.',
+        },
       },
     },
   },

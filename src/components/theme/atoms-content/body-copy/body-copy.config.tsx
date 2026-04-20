@@ -4,9 +4,9 @@ import BodyCopy from '@/components/theme/atoms-content/body-copy/body-copy';
 
 export const BodyCopyConfig: ComponentConfig = {
   label: 'Body Copy',
-  metadata: {
-    aiDescription: 'Rich-text paragraph block.',
-    aiGuidelines: 'Keep blocks short (2-4 sentences).',
+  ai: {
+    description: 'Rich-text paragraph block.',
+    instructions: 'Keep blocks short (2-4 sentences).',
   },
   fields: {
     text: {
