@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { Config } from '@puckeditor/core';
 import { UIMessage } from 'ai';
 import { BotIcon, ChevronDownIcon, Loader2Icon, UserIcon } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
@@ -11,7 +12,13 @@ import { cn } from '@/lib/utils';
 type ChatMessageProps = {
   message: UIMessage;
   isStreaming?: boolean;
+  config?: Config;
 };
+
+function getComponentLabel(type: string | undefined, config?: Config): string {
+  if (!type) return '';
+  return config?.components?.[type]?.label || type;
+}
 
 type MessagePart = UIMessage['parts'][number];
 type ToolPartGroup = { kind: 'tools'; parts: MessagePart[] };
@@ -53,7 +60,11 @@ function groupParts(parts: readonly MessagePart[]): PartGroup[] {
   return groups;
 }
 
-export function ChatMessage({ message, isStreaming }: ChatMessageProps) {
+export function ChatMessage({
+  message,
+  isStreaming,
+  config,
+}: ChatMessageProps) {
   const isUser = message.role === 'user';
 
   return (
@@ -67,7 +78,9 @@ export function ChatMessage({ message, isStreaming }: ChatMessageProps) {
       <div className="flex max-w-[85%] flex-col gap-1">
         {groupParts(message.parts).map((group, gIdx) => {
           if (group.kind === 'tools') {
-            return <ToolCallGroup key={gIdx} parts={group.parts} />;
+            return (
+              <ToolCallGroup key={gIdx} parts={group.parts} config={config} />
+            );
           }
           const { part } = group;
           const key = `${gIdx}`;
@@ -139,7 +152,7 @@ export function ChatMessage({ message, isStreaming }: ChatMessageProps) {
   );
 }
 
-function ToolCallRow({ part }: { part: MessagePart }) {
+function ToolCallRow({ part, config }: { part: MessagePart; config?: Config }) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const toolPart = part as any;
   return (
@@ -151,7 +164,7 @@ function ToolCallRow({ part }: { part: MessagePart }) {
       ) : (
         <Loader2Icon className="h-3.5 w-3.5 animate-spin" />
       )}
-      <span>{getToolLabel(toolPart)}</span>
+      <span>{getToolLabel(toolPart, config)}</span>
     </div>
   );
 }
@@ -162,7 +175,13 @@ function isCompletedToolPart(part: MessagePart): boolean {
   return state === 'output-available' || state === 'output-error';
 }
 
-function ToolCallGroup({ parts }: { parts: MessagePart[] }) {
+function ToolCallGroup({
+  parts,
+  config,
+}: {
+  parts: MessagePart[];
+  config?: Config;
+}) {
   const [expanded, setExpanded] = useState(false);
   if (parts.length === 0) return null;
 
@@ -173,7 +192,7 @@ function ToolCallGroup({ parts }: { parts: MessagePart[] }) {
   if (!active && completed.length === 1) {
     return (
       <div className="rounded-xl bg-gray-50 px-3.5 py-2">
-        <ToolCallRow part={completed[0]} />
+        <ToolCallRow part={completed[0]} config={config} />
       </div>
     );
   }
@@ -202,7 +221,7 @@ function ToolCallGroup({ parts }: { parts: MessagePart[] }) {
       {expanded && completed.length > 0 && (
         <div className="mt-1.5 space-y-1 border-t border-gray-200 pt-1.5">
           {completed.map((part, i) => (
-            <ToolCallRow key={i} part={part} />
+            <ToolCallRow key={i} part={part} config={config} />
           ))}
         </div>
       )}
@@ -212,7 +231,7 @@ function ToolCallGroup({ parts }: { parts: MessagePart[] }) {
             completed.length > 0 && 'mt-1.5 border-t border-gray-200 pt-1.5'
           )}
         >
-          <ToolCallRow part={active} />
+          <ToolCallRow part={active} config={config} />
         </div>
       )}
     </div>
@@ -225,46 +244,54 @@ function typeFromComponentId(id: string | undefined): string | undefined {
   return dash > 0 ? id.slice(0, dash) : id;
 }
 
-function getToolLabel(part: any): string {
+function getToolLabel(part: any, config?: Config): string {
   const toolName = part.toolName || part.type?.replace('tool-', '') || '';
   const done = part.state === 'output-available';
   const input = part.input || {};
 
   switch (toolName) {
-    case 'get_component_spec':
-      return input.name
+    case 'get_component_spec': {
+      const label = getComponentLabel(input.name, config);
+      return label
         ? done
-          ? `Read ${input.name} spec`
-          : `Reading ${input.name} spec...`
+          ? `Read ${label} spec`
+          : `Reading ${label} spec...`
         : done
           ? 'Read component spec'
           : 'Reading component spec...';
+    }
     case 'add_component': {
-      const type = input.type;
-      return type
+      const label = getComponentLabel(input.type, config);
+      return label
         ? done
-          ? `${type} added`
-          : `Adding ${type}...`
+          ? `${label} added`
+          : `Adding ${label}...`
         : done
           ? 'Component added'
           : 'Adding component...';
     }
     case 'modify_component': {
-      const type = typeFromComponentId(input.componentId);
-      return type
+      const label = getComponentLabel(
+        typeFromComponentId(input.componentId),
+        config
+      );
+      return label
         ? done
-          ? `${type} modified`
-          : `Modifying ${type}...`
+          ? `${label} modified`
+          : `Modifying ${label}...`
         : done
           ? 'Component modified'
           : 'Modifying component...';
     }
     case 'remove_component': {
-      const type = typeFromComponentId(input.componentId);
-      return type
+      const label = getComponentLabel(
+        typeFromComponentId(input.componentId),
+        config
+      );
+      return label
         ? done
-          ? `${type} removed`
-          : `Removing ${type}...`
+          ? `${label} removed`
+          : `Removing ${label}...`
         : done
           ? 'Component removed'
           : 'Removing component...';

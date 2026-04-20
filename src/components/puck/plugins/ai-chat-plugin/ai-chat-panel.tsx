@@ -17,7 +17,7 @@ import {
 } from 'lucide-react';
 import { toast } from 'sonner';
 
-import { getLocaleFromPathname } from '@/lib/utils';
+import { cn, getLocaleFromPathname } from '@/lib/utils';
 import { FileAttachmentButton } from './components/attachment-button';
 import { ChatHistoryList } from './components/chat-history-list';
 import { ChatMessage } from './components/chat-message';
@@ -69,6 +69,8 @@ export function AiChatPanel({ config, nodeId, context }: AiChatPanelProps) {
   const [pendingFiles, setPendingFiles] = useState<
     { file: File; base64: string }[]
   >([]);
+  const [isDragging, setIsDragging] = useState(false);
+  const dragDepth = useRef(0);
   const appliedToolCallIds = useRef<Set<string>>(new Set());
 
   const { getChatSessions, loadMessages, saveMessages, deleteChat } =
@@ -285,6 +287,50 @@ export function AiChatPanel({ config, nodeId, context }: AiChatPanelProps) {
     reader.readAsDataURL(file);
   };
 
+  const handlePaste = (e: React.ClipboardEvent<HTMLTextAreaElement>) => {
+    const items = e.clipboardData?.items;
+    if (!items) return;
+    const files: File[] = [];
+    for (const item of items) {
+      if (item.kind === 'file') {
+        const file = item.getAsFile();
+        if (file) files.push(file);
+      }
+    }
+    if (files.length > 0) {
+      e.preventDefault();
+      files.forEach(handleAttachFile);
+    }
+  };
+
+  const handleDragEnter = (e: React.DragEvent<HTMLDivElement>) => {
+    if (!e.dataTransfer?.types.includes('Files')) return;
+    e.preventDefault();
+    dragDepth.current += 1;
+    setIsDragging(true);
+  };
+
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    if (!e.dataTransfer?.types.includes('Files')) return;
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'copy';
+  };
+
+  const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
+    if (!e.dataTransfer?.types.includes('Files')) return;
+    dragDepth.current = Math.max(0, dragDepth.current - 1);
+    if (dragDepth.current === 0) setIsDragging(false);
+  };
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    if (!e.dataTransfer?.types.includes('Files')) return;
+    e.preventDefault();
+    dragDepth.current = 0;
+    setIsDragging(false);
+    const files = Array.from(e.dataTransfer.files);
+    files.forEach(handleAttachFile);
+  };
+
   const removePendingFile = (index: number) => {
     setPendingFiles((prev) => prev.filter((_, i) => i !== index));
   };
@@ -372,6 +418,7 @@ export function AiChatPanel({ config, nodeId, context }: AiChatPanelProps) {
               <ChatMessage
                 key={message.id}
                 message={message}
+                config={config}
                 isStreaming={
                   isStreaming &&
                   message.id === messages[messages.length - 1]?.id
@@ -412,7 +459,18 @@ export function AiChatPanel({ config, nodeId, context }: AiChatPanelProps) {
             ))}
           </div>
         )}
-        <div className="rounded-xl border border-gray-200 bg-white">
+        <div
+          className={cn(
+            'rounded-xl border bg-white transition-colors',
+            isDragging
+              ? 'border-gray-900 ring-2 ring-gray-900/10'
+              : 'border-gray-200'
+          )}
+          onDragEnter={handleDragEnter}
+          onDragOver={handleDragOver}
+          onDragLeave={handleDragLeave}
+          onDrop={handleDrop}
+        >
           {pendingFiles.length > 0 && (
             <div className="flex flex-wrap gap-1.5 border-b border-gray-100 p-2">
               {pendingFiles.map((pending, index) => {
@@ -445,7 +503,10 @@ export function AiChatPanel({ config, nodeId, context }: AiChatPanelProps) {
           <textarea
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="What do you want to build?"
+            onPaste={handlePaste}
+            placeholder={
+              isDragging ? 'Drop to attach' : 'What do you want to build?'
+            }
             className="w-full resize-none rounded-xl border-0 px-3.5 pt-3 pb-1 text-sm text-gray-900 placeholder-gray-400 focus:ring-0 focus:outline-none"
             rows={2}
             onKeyDown={(e) => {
