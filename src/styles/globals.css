@@ -23,3 +23,12 @@
 [data-radix-popper-content-wrapper] {
   z-index: 100 !important;
 }
+
+/* Prevent scroll-chaining. Applied to the root scroller so:
+   - when Puck's preview iframe (which copies our stylesheets) reaches
+     its edge, it doesn't overflow into the parent body;
+   - any scroll in the parent that reaches its own edge doesn't chain
+     into the browser's pull-to-refresh gesture. */
+html {
+  overscroll-behavior: contain;
+}
