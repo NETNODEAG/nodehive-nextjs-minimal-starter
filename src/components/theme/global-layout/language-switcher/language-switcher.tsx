@@ -19,12 +19,12 @@ export default function LanguageSwitcher({ lang }: LanguageSwitcherProps) {
   >();
   const pathname = usePathname();
 
+  // Current path without the locale prefix, e.g. "/about" when on "/en/about".
+  const resourcePath =
+    pathname.replace(new RegExp(`^/${lang}(?=/|$)`), '') || '/';
+
   useEffect(() => {
     async function fetchTranslatedPaths() {
-      // Strip the locale prefix to get the resource path
-      const resourcePath =
-        pathname.replace(new RegExp(`^/${lang}(?=/|$)`), '') || '/';
-
       // No need to fetch translations for the homepage
       if (resourcePath === '/') {
         setTranslatedPaths(undefined);
@@ -49,14 +49,18 @@ export default function LanguageSwitcher({ lang }: LanguageSwitcherProps) {
     }
 
     fetchTranslatedPaths();
-  }, [lang, pathname]);
+  }, [lang, resourcePath]);
 
   return (
     <ul className="flex gap-2">
       {i18n.locales.map((locale) => {
+        // Use whatever Drupal returns (alias or canonical /node/<id>).
+        // Drupal handles the fallback to source language on its side;
+        // we just pass through whatever it gives us, or use the current
+        // resource path if nothing is returned for this locale.
         const href = translatedPaths?.[locale]
           ? `/${locale}${translatedPaths[locale]}`
-          : `/${locale}`;
+          : `/${locale}${resourcePath === '/' ? '' : resourcePath}`;
 
         return (
           <li key={locale}>

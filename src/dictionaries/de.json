@@ -1,5 +1,10 @@
 {
   "login": {
     "title": "Login zu Ihrem Konto"
+  },
+  "notTranslated": {
+    "title": "Diese Seite ist nicht auf Deutsch verfügbar",
+    "body": "Wir haben diese Seite noch nicht übersetzt. Du kannst sie in der Originalsprache lesen:",
+    "readOriginal": "Originalversion lesen"
   }
 }
