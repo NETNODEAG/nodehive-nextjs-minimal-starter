@@ -13,7 +13,18 @@ export type MediaItem = {
   type: string;
   name?: string;
   thumbnailImage?: string;
+  thumbnail?: { uri?: { url?: string } };
+  field_media_image?: { uri?: { url?: string } };
 };
+
+function deriveThumbnailImage(value: MediaItem | null): string | undefined {
+  if (!value) return undefined;
+  if (value.thumbnailImage) return value.thumbnailImage;
+  const relative =
+    value.thumbnail?.uri?.url || value.field_media_image?.uri?.url;
+  if (!relative) return undefined;
+  return `${process.env.NEXT_PUBLIC_DRUPAL_BASE_URL || ''}${relative}`;
+}
 
 type MediaSelectorFieldProps = {
   onChange: (value: MediaItem | null) => void;
@@ -287,21 +298,30 @@ export function MediaSelectorField({
                       </div>
                     );
                   } else if (
-                    value.thumbnailImage &&
-                    (value.type === 'media--image' ||
-                      value.type === 'media--remote_video' ||
-                      value.type === 'media--video')
+                    value.type === 'media--image' ||
+                    value.type === 'media--remote_video' ||
+                    value.type === 'media--video'
                   ) {
-                    return (
-                      <div className="aspect-square w-24 shrink-0 overflow-hidden rounded">
-                        <div className="relative h-full w-full">
-                          {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img
-                            src={value.thumbnailImage}
-                            alt={value.name || ''}
-                            className="h-full w-full object-contain"
-                          />
+                    const thumbnailSrc = deriveThumbnailImage(value);
+                    if (thumbnailSrc) {
+                      return (
+                        <div className="aspect-square w-24 shrink-0 overflow-hidden rounded">
+                          <div className="relative h-full w-full">
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img
+                              src={thumbnailSrc}
+                              alt={value.name || ''}
+                              className="h-full w-full object-contain"
+                            />
+                          </div>
                         </div>
+                      );
+                    }
+                    return (
+                      <div className="flex aspect-square w-24 shrink-0 items-center justify-center overflow-hidden rounded bg-gray-50">
+                        <span className="material-symbols-outlined text-gray-600">
+                          attachment
+                        </span>
                       </div>
                     );
                   } else {

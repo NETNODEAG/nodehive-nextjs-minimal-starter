@@ -174,10 +174,12 @@ export const HeroSectionConfig: ComponentConfig = {
     const secondaryCta = cta?.[1]?.text ? cta[1] : undefined;
 
     const imageAlt = backgroundImage?.field_media_image?.meta?.alt || '';
+    const uriUrl = backgroundImage?.field_media_image?.uri?.url;
     const imageSrc =
       backgroundImage?.field_media_image?.image_style_uri?.wide ||
-      backgroundImage?.field_media_image?.uri ||
-      undefined;
+      (uriUrl
+        ? `${process.env.NEXT_PUBLIC_DRUPAL_BASE_URL || ''}${uriUrl}`
+        : undefined);
 
     return (
       <HeroSection
