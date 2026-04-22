@@ -48,7 +48,7 @@ export const CardConfig: ComponentConfig = {
     title: 'Card Title',
     description:
       'This is a description for your card. Add relevant information here to engage your audience.',
-    icon: 'Sparkles',
+    icon: 'sparkles',
     mode: 'flat',
   },
   render: ({ title, description, icon, mode }) => {

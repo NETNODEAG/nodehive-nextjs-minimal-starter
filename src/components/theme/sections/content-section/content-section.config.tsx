@@ -163,9 +163,9 @@ export const ContentSectionConfig: ComponentConfig = {
     return fields;
   },
   defaultProps: {
-    title: 'Content Section Title',
-    eyebrow: 'Eyebrow',
-    body: '<p>Add your content here.</p>',
+    title: 'Everything you need to ship faster',
+    eyebrow: 'FEATURES',
+    body: '<p>A short intro paragraph sets context for what follows. Keep it concrete and focused on the reader.</p>',
     background: 'none',
     layout: 'stacked',
     width: 'wide',

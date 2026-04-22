@@ -27,7 +27,7 @@ export const BodyCopyConfig: ComponentConfig = {
   },
   defaultProps: {
     size: 'base',
-    text: '<p>Dies ist ein Textbereich, in dem Sie Ihren Inhalt hinzufügen können</p>',
+    text: '<p>Write a short, clear paragraph that explains the idea and keeps the reader moving.</p>',
   },
   render: ({ size, text }) => <BodyCopy size={size}>{text}</BodyCopy>,
 };

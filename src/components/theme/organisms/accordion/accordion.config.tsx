@@ -19,7 +19,15 @@ export const AccordionConfig: ComponentConfig = {
       max: 20,
       defaultItemProps: {
         question: 'New question',
-        content: [],
+        content: [
+          {
+            type: 'BodyCopy',
+            props: {
+              size: 'base',
+              text: '<p>Write the answer to this question here.</p>',
+            },
+          },
+        ],
       },
       arrayFields: {
         question: {
@@ -51,9 +59,42 @@ export const AccordionConfig: ComponentConfig = {
   },
   defaultProps: {
     items: [
-      { question: 'What is included in the plan?', content: [] },
-      { question: 'Can I cancel anytime?', content: [] },
-      { question: 'Do you offer a free trial?', content: [] },
+      {
+        question: 'What is included in the plan?',
+        content: [
+          {
+            type: 'BodyCopy',
+            props: {
+              size: 'base',
+              text: '<p>Every plan includes core features, regular updates, and access to our full documentation. Higher tiers add SSO, audit logs, and priority support.</p>',
+            },
+          },
+        ],
+      },
+      {
+        question: 'Can I cancel anytime?',
+        content: [
+          {
+            type: 'BodyCopy',
+            props: {
+              size: 'base',
+              text: '<p>Yes. Cancel whenever you like from your account settings — no retention calls, no hidden fees.</p>',
+            },
+          },
+        ],
+      },
+      {
+        question: 'Do you offer a free trial?',
+        content: [
+          {
+            type: 'BodyCopy',
+            props: {
+              size: 'base',
+              text: '<p>We offer a 14-day free trial on every paid plan. No credit card required to get started.</p>',
+            },
+          },
+        ],
+      },
     ],
   },
   render: ({ items, puck }) => (

@@ -49,7 +49,7 @@ export const HeadingConfig: ComponentConfig = {
     },
   },
   defaultProps: {
-    text: 'Überschrift',
+    text: 'Section heading',
     size: 'lg',
     level: '2',
   },

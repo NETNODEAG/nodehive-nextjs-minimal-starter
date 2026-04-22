@@ -89,7 +89,7 @@ export const CallToActionConfig: ComponentConfig = {
     },
   },
   defaultProps: {
-    text: 'Call to Action',
+    text: 'Get started',
     href: '#',
     variant: 'button',
     size: 'big',

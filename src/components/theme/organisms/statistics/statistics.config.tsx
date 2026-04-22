@@ -42,7 +42,7 @@ export const StatisticsConfig: ComponentConfig = {
       },
       defaultItemProps: {
         title: '100+',
-        text: '<p>Description</p>',
+        text: '<p>Short caption describing what this number counts</p>',
       },
       getItemSummary: (item) => item.title || 'Statistic',
     },
