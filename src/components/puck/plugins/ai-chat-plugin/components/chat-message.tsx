@@ -413,6 +413,10 @@ function getToolLabel(part: any, config?: Config): string {
     }
     case 'search_media':
       return done ? 'Media search complete' : 'Searching media library...';
+    case 'list_templates':
+      return done ? 'Templates listed' : 'Listing templates...';
+    case 'insert_template':
+      return done ? 'Template inserted' : 'Inserting template...';
     case 'fetch_url':
       return done ? 'URL analyzed' : 'Analyzing URL...';
     default:

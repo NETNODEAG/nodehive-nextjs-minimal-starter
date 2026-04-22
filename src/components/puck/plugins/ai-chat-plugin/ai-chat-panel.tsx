@@ -147,9 +147,10 @@ export function AiChatPanel({ config, nodeId }: AiChatPanelProps) {
           toolCallId?: string;
           state?: string;
           output?: {
-            action?: 'add' | 'modify' | 'remove' | 'setRoot';
+            action?: 'add' | 'addMany' | 'modify' | 'remove' | 'setRoot';
             id?: string;
             component?: ComponentData;
+            components?: ComponentData[];
             newProps?: Record<string, unknown>;
             fields?: Record<string, unknown>;
             destinationZone?: string;
@@ -193,6 +194,33 @@ export function AiChatPanel({ config, nodeId }: AiChatPanelProps) {
               destinationZone: zone,
               destinationIndex: index,
               data: output.component,
+            });
+          } else if (
+            output.action === 'addMany' &&
+            Array.isArray(output.components) &&
+            output.destinationZone
+          ) {
+            const zone = output.destinationZone;
+            const startIndex =
+              output.destinationIndex !== undefined &&
+              output.destinationIndex >= 0
+                ? output.destinationIndex
+                : getZoneLength(currentData, config, zone);
+            output.components.forEach((component, i) => {
+              const index = startIndex + i;
+              dispatch({
+                type: 'insert',
+                componentType: component.type,
+                destinationZone: zone,
+                destinationIndex: index,
+                id: component.props.id as string,
+              });
+              dispatch({
+                type: 'replace',
+                destinationZone: zone,
+                destinationIndex: index,
+                data: component,
+              });
             });
           } else if (
             output.action === 'modify' &&

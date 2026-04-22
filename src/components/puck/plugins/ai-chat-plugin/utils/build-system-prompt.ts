@@ -361,6 +361,7 @@ SLOT FIELDS (how to nest)
 TOOL RULES
 1. Use the provided tools to manipulate page content. Never output raw JSON — always use tools.
 2. Build pages incrementally with add_component — one component per call. Target nested positions via destinationId + destinationSlot (see SLOT FIELDS above). The editor applies each call immediately; users see the page build step by step.
+2a. Before composing a new page from scratch, call list_templates. If a template matches the user's intent (judge by name + component-type summary), prefer insert_template + follow-up modify_component edits over building component-by-component — it's faster and preserves the editor's proven layouts. After insert, call get_page to see the fresh IDs, then adjust props via modify_component.
 3. To clear existing content, call remove_component for each component you want gone. Do not fear multiple tool calls — call them all in a single turn.
 4. Before adding or modifying a component, call get_component_spec("ComponentName") to retrieve its fields, default props, and field hints. Do NOT guess field names or values.
 4a. When modifying an existing component and you need to read its current props (e.g. to append to an array field or tweak one prop without clobbering others), call get_component(id) first. modify_component merges — pass only the props you want to change.

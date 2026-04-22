@@ -1,4 +1,4 @@
-import { ComponentData, Config, Data } from '@puckeditor/core';
+import { ComponentData, Config, Data, walkTree } from '@puckeditor/core';
 import { tool } from 'ai';
 import TurndownService from 'turndown';
 import { z } from 'zod';
@@ -21,6 +21,48 @@ function resolveZone(
 ): string {
   if (!destinationId || destinationId === 'root') return ROOT_ZONE;
   return `${destinationId}:${destinationSlot || 'content'}`;
+}
+
+type TemplateFragment = {
+  id: string;
+  title: string;
+  field_puck_template_data: string;
+};
+
+async function fetchPuckTemplates(lang: string): Promise<TemplateFragment[]> {
+  const baseUrl =
+    process.env.NEXT_PUBLIC_FRONTEND_BASE_URL || 'http://localhost:3000';
+  const response = await fetch(
+    `${baseUrl}/${lang}/api/puck/fragment/puck_template?limit=100`,
+    { headers: { 'Content-Type': 'application/json' } }
+  );
+  if (!response.ok) return [];
+  const body = await response.json();
+  return (body?.data || []) as TemplateFragment[];
+}
+
+function parseTemplateContent(raw: string): ComponentData[] | null {
+  try {
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : [parsed];
+  } catch {
+    return null;
+  }
+}
+
+function summarizeTemplate(
+  content: ComponentData[],
+  config: Config
+): Record<string, number> {
+  const counts: Record<string, number> = {};
+  const data = { root: { props: {} }, content, zones: {} } as Data;
+  walkTree(data, config, (slotContent) => {
+    for (const component of slotContent) {
+      counts[component.type] = (counts[component.type] || 0) + 1;
+    }
+    return slotContent;
+  });
+  return counts;
 }
 
 export function createAiChatTools({
@@ -301,6 +343,87 @@ export function createAiChatTools({
         } catch {
           return { results: [], message: 'Error searching media' };
         }
+      },
+    }),
+
+    list_templates: tool({
+      description:
+        'List reusable page/section templates saved to the CMS (puck_template fragments). Call this BEFORE composing a new page from scratch — if a template matches the user intent, prefer insert_template + follow-up modify_component edits over building component-by-component. Returns each template with a summary of the component types it contains so you can judge fit without reading the full tree.',
+      inputSchema: z.object({}),
+      execute: async () => {
+        const templates = await fetchPuckTemplates(lang);
+        const results = templates.map((template) => {
+          const content = parseTemplateContent(
+            template.field_puck_template_data
+          );
+          const summary = content ? summarizeTemplate(content, puckConfig) : {};
+          return {
+            id: template.id,
+            name: template.title,
+            summary,
+          };
+        });
+        return {
+          templates: results,
+          message: `Found ${results.length} template(s).`,
+        };
+      },
+    }),
+
+    insert_template: tool({
+      description:
+        'Insert a saved template into the page at a target position. IDs are regenerated for every component in the template, so the same template can be inserted multiple times safely. After insert, call get_page to read the fresh structure and use modify_component to adjust any prop.',
+      inputSchema: z.object({
+        templateId: z
+          .string()
+          .describe('Template ID from list_templates output.'),
+        destinationId: z
+          .string()
+          .optional()
+          .describe(
+            'Parent component ID to nest inside. Omit or set to "root" for top-level.'
+          ),
+        destinationSlot: z
+          .string()
+          .optional()
+          .describe(
+            'Slot field name on the parent (required when destinationId is set and not "root").'
+          ),
+        destinationIndex: z
+          .number()
+          .optional()
+          .describe(
+            'Position within the destination (0-based). Omit to append at the end.'
+          ),
+      }),
+      execute: async ({
+        templateId,
+        destinationId,
+        destinationSlot,
+        destinationIndex,
+      }) => {
+        const templates = await fetchPuckTemplates(lang);
+        const template = templates.find((t) => t.id === templateId);
+        if (!template) {
+          return {
+            error: `Template "${templateId}" not found. Call list_templates to get the current list.`,
+          };
+        }
+        const content = parseTemplateContent(template.field_puck_template_data);
+        if (!content) {
+          return {
+            error: `Template "${template.title}" has invalid data and cannot be inserted.`,
+          };
+        }
+        const regenerated = generateTemplateIds(content, puckConfig);
+        const zone = resolveZone(destinationId, destinationSlot);
+        return {
+          action: 'addMany' as const,
+          components: regenerated,
+          destinationZone: zone,
+          destinationIndex: destinationIndex ?? -1,
+          message: `Inserted template "${template.title}" (${regenerated.length} top-level component${regenerated.length === 1 ? '' : 's'}).`,
+        };
       },
     }),
 
