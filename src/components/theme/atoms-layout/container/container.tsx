@@ -9,7 +9,6 @@ const containerVariants = cva('', {
       none: 'bg-transparent',
       light: 'bg-background text-foreground',
       dark: 'bg-background text-foreground',
-      primary: 'bg-background text-foreground',
     },
     spacingX: {
       none: 'px-0',

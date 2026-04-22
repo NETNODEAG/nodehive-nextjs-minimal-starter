@@ -116,7 +116,7 @@ export const ContentSectionConfig: ComponentConfig = {
         },
       },
     },
-    background: createSectionBackgroundField(['none', 'light']),
+    background: createSectionBackgroundField(['none', 'light', 'dark']),
     eyebrow: {
       type: 'text',
       label: 'Eyebrow',

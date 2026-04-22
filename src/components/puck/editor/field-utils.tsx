@@ -9,13 +9,12 @@ import {
   MediaSelectorField,
 } from '@/components/puck/editor/media-selector/media-selector-field';
 
-export type SectionBackgroundVariant = 'none' | 'light' | 'dark' | 'primary';
+export type SectionBackgroundVariant = 'none' | 'light' | 'dark';
 
 const BACKGROUND_LABELS: Record<SectionBackgroundVariant, string> = {
   none: 'None',
   light: 'Light',
   dark: 'Dark',
-  primary: 'Primary (brand)',
 };
 
 export const createSectionBackgroundField = (
@@ -30,8 +29,7 @@ export const createSectionBackgroundField = (
         instructions: `Use to create visual rhythm between sections:
   - none: default transparent — blends into the page
   - light: subtle grey tint — softens the divide between two neutral sections
-  - dark: strong contrast — use sparingly for emphasis (final CTA, closing stats)
-  - primary: brand-colored — rare, only for a single conversion moment per page`,
+  - dark: strong contrast — use sparingly for emphasis (final CTA, closing stats)`,
       },
     },
   };

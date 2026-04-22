@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import Container from './container';
 
 const widthOptions = ['full', 'wide', 'narrow'] as const;
-const backgroundOptions = ['none', 'light', 'dark', 'primary'] as const;
+const backgroundOptions = ['none', 'light', 'dark'] as const;
 const spacingYOptions = ['none', 'sm', 'md', 'lg', 'xl', '2xl'] as const;
 const spacingXOptions = ['none', 'md'] as const;
 
@@ -95,13 +95,13 @@ export const Backgrounds: Story = {
 
 export const WithSpacing: Story = {
   args: {
-    background: 'primary',
+    background: 'dark',
     spacingY: 'lg',
   },
   render: (args) => (
     <Container {...args}>
       <div className="rounded-lg border border-dashed border-white/40 p-6 text-sm">
-        Container with vertical spacing and primary background
+        Container with vertical spacing and dark background
       </div>
     </Container>
   ),

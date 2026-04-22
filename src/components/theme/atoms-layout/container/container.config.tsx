@@ -31,12 +31,7 @@ export const ContainerConfig: ComponentConfig = {
         { label: 'Narrow', value: 'narrow' },
       ],
     },
-    background: createSectionBackgroundField([
-      'none',
-      'light',
-      'dark',
-      'primary',
-    ]),
+    background: createSectionBackgroundField(['none', 'light', 'dark']),
     spacingY: {
       label: 'Abstand vertikal',
       type: 'select',
