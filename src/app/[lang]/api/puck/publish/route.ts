@@ -1,11 +1,42 @@
 import { revalidatePath } from 'next/cache';
 import { NextRequest, NextResponse } from 'next/server';
 
+import { requireEditor } from '@/lib/auth/require-editor';
 import { createUserClient } from '@/lib/nodehive-client';
 
+// Whitelists guard against attribute-write / path-injection via the
+// user-controlled request body. Drupal's JSON:API ACL is a secondary line
+// of defence, but we fail fast here so a malformed / malicious payload never
+// reaches the CMS.
+const ALLOWED_FIELD_NAMES = new Set([
+  'field_puck_data',
+  'field_puck_template_data',
+]);
+const TYPE_RE = /^[a-z_]+(--[a-z_]+)?$/;
+const UUID_RE =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
 export async function PATCH(request: NextRequest) {
+  const unauthorized = await requireEditor();
+  if (unauthorized) return unauthorized;
+
   const { path, type, data, nodeId, fieldName, lang, pageSettings } =
     await request.json();
+
+  if (
+    typeof fieldName !== 'string' ||
+    !ALLOWED_FIELD_NAMES.has(fieldName) ||
+    typeof type !== 'string' ||
+    !TYPE_RE.test(type) ||
+    typeof nodeId !== 'string' ||
+    !UUID_RE.test(nodeId)
+  ) {
+    return NextResponse.json(
+      { status: 'error', message: 'invalid fieldName, type, or nodeId' },
+      { status: 400 }
+    );
+  }
+
   console.log('Publishing Puck data for node', nodeId, 'field', fieldName);
 
   const jsonApiType = type.replace('node--', '');

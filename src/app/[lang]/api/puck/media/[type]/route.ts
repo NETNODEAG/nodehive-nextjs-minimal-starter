@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { getMediaSelectorList } from '@/data/nodehive/media/get-media-selector-list';
 
+import { requireEditor } from '@/lib/auth/require-editor';
+
 interface RouteParams {
   params: Promise<{
     lang: string;
@@ -9,6 +11,9 @@ interface RouteParams {
 }
 
 export async function GET(request: Request, { params }: RouteParams) {
+  const unauthorized = await requireEditor();
+  if (unauthorized) return unauthorized;
+
   try {
     const { type, lang } = await params;
     const { searchParams } = new URL(request.url);
