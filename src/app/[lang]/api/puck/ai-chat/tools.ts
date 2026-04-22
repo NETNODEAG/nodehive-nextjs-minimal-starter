@@ -1,16 +1,17 @@
-import { createOpenAI } from '@ai-sdk/openai';
-import { ComponentData, Config } from '@puckeditor/core';
-import { generateObject, tool } from 'ai';
+import { ComponentData, Config, Data } from '@puckeditor/core';
+import { tool } from 'ai';
 import TurndownService from 'turndown';
 import { z } from 'zod';
 
 import { serializeComponentSpec } from '@/components/puck/plugins/ai-chat-plugin/utils/build-system-prompt';
+import { findComponentLocation } from '@/components/puck/plugins/ai-chat-plugin/utils/find-component-location';
 import { generateTemplateIds } from '@/components/puck/utils';
 
 const ROOT_ZONE = 'root:default-zone';
 
 type ToolsContext = {
   puckConfig: Config;
+  puckData: Data;
   lang: string;
 };
 
@@ -22,8 +23,102 @@ function resolveZone(
   return `${destinationId}:${destinationSlot || 'content'}`;
 }
 
-export function createAiChatTools({ puckConfig, lang }: ToolsContext) {
+export function createAiChatTools({
+  puckConfig,
+  puckData,
+  lang,
+}: ToolsContext) {
   return {
+    ask_user_questions: tool({
+      description:
+        "Ask the user one or more clarifying questions when requirements are ambiguous AND you cannot make a reasonable assumption. The client renders the questions as tabs the user can step through. Every question MUST have a short tab title (1-3 words, e.g. 'Page type', 'Audience', 'Layout'), 2-4 radio-button suggestions, and always shows a free-text 'Other' input. Mark exactly ONE option per question as `recommended: true` — your best guess given the context; it gets a '(recommended)' badge (nothing is pre-selected — the user always picks). Use sparingly — for genuinely blocking ambiguity only; for minor decisions pick a sensible default and mention it in your reply. The tool result is an array of { question, label, value } where `value` is the structured answer (use this to act) and `label` is the human-readable text the user saw (use it when referring back to the user's choice in your reply).",
+      inputSchema: z.object({
+        questions: z
+          .array(
+            z.object({
+              title: z
+                .string()
+                .describe(
+                  'Short tab title, 1-3 words (e.g. "Page type", "Audience", "Layout"). Shown on the tab button.'
+                ),
+              question: z
+                .string()
+                .describe('The full question text shown to the user'),
+              options: z
+                .array(
+                  z.object({
+                    label: z
+                      .string()
+                      .describe(
+                        'Short human-readable label for the radio button'
+                      ),
+                    value: z
+                      .string()
+                      .describe(
+                        'The value returned to you when this option is selected'
+                      ),
+                    recommended: z
+                      .boolean()
+                      .optional()
+                      .describe(
+                        'Mark exactly one option per question as the recommended default. It gets a "(recommended)" badge but is NOT pre-selected — the user always makes an explicit choice.'
+                      ),
+                  })
+                )
+                .min(2)
+                .max(6)
+                .describe('Suggested answers as radio options (2-6)'),
+            })
+          )
+          .min(1)
+          .max(5)
+          .describe(
+            'Questions to ask — each shown as a tab. Keep to 1-3 for best UX.'
+          ),
+      }),
+      // No `execute` — this is a client-handled tool. The chat UI renders the
+      // questions, the user answers, and the client calls addToolOutput() to
+      // return the answers to the model.
+    }),
+
+    get_page: tool({
+      description:
+        'Get the full current page data — every component with full props, plus root-level page metadata. Heavier than get_component; use this only when you need a complete snapshot (e.g. analyzing the whole page, bulk operations). Prefer get_component(id) for single-component reads.',
+      inputSchema: z.object({}),
+      execute: async () => {
+        return { data: puckData };
+      },
+    }),
+
+    get_component: tool({
+      description:
+        'Get the current props of a component on the page by its ID. Use this when you need to read existing values before modifying a component (e.g. to append to an array field or change one prop without clobbering others). IDs come from the CURRENT PAGE STRUCTURE tree.',
+      inputSchema: z.object({
+        componentId: z
+          .string()
+          .describe(
+            'The component ID from the CURRENT PAGE STRUCTURE tree (e.g., "HeroSection-abc123")'
+          ),
+      }),
+      execute: async ({ componentId }) => {
+        const location = findComponentLocation(
+          puckData,
+          puckConfig,
+          componentId
+        );
+        if (!location) {
+          return {
+            error: `Component "${componentId}" not found in the current page.`,
+          };
+        }
+        return {
+          id: componentId,
+          type: location.component.type,
+          props: location.component.props,
+        };
+      },
+    }),
+
     get_component_spec: tool({
       description:
         'Get the full specification for a component (description, guidelines, fields with hints, default props). Call this before adding or modifying a component to avoid guessing fields or values.',
@@ -219,9 +314,9 @@ export function createAiChatTools({ puckConfig, lang }: ToolsContext) {
 
     fetch_url: tool({
       description:
-        'Fetch a URL and return a structured analysis of the page (title, description, section layout, CTAs, key images). Use this when the user shares a link and wants to create content based on it. Note: JavaScript is NOT executed — pages rendered client-side (SPAs) may return empty content.',
+        'Fetch a URL and return its content as Markdown (plus title and meta description). Use this when the user shares a link and wants to create or adapt content based on it. Read the returned markdown yourself to identify sections, headings, body copy, CTAs, and images, then build the page with add_component calls using that content as the source. Note: JavaScript is NOT executed — pages rendered client-side (SPAs) may return very little content.',
       inputSchema: z.object({
-        url: z.string().url().describe('The URL to fetch and analyze'),
+        url: z.string().url().describe('The URL to fetch'),
       }),
       execute: async ({ url }) => {
         try {
@@ -241,7 +336,14 @@ export function createAiChatTools({ puckConfig, lang }: ToolsContext) {
 
           const html = await response.text();
 
-          // HTML → Markdown (preserves heading hierarchy, links, images, lists)
+          const titleMatch = html.match(/<title[^>]*>(.*?)<\/title>/i);
+          const title = titleMatch ? titleMatch[1].trim() : '';
+
+          const descMatch = html.match(
+            /<meta[^>]*name=["']description["'][^>]*content=["']([^"']*)["']/i
+          );
+          const description = descMatch ? descMatch[1].trim() : '';
+
           const turndown = new TurndownService({
             headingStyle: 'atx',
             codeBlockStyle: 'fenced',
@@ -254,83 +356,20 @@ export function createAiChatTools({ puckConfig, lang }: ToolsContext) {
             'svg' as 'script',
           ]);
 
-          // Extract <title> and <meta description> before conversion
-          const titleMatch = html.match(/<title[^>]*>(.*?)<\/title>/i);
-          const pageTitle = titleMatch ? titleMatch[1].trim() : '';
-
-          const descMatch = html.match(
-            /<meta[^>]*name=["']description["'][^>]*content=["']([^"']*)["']/i
-          );
-          const metaDescription = descMatch ? descMatch[1].trim() : '';
-
           const markdown = turndown.turndown(html).slice(0, 15000);
 
-          // Detect empty/SPA shell early
           if (markdown.trim().length < 100) {
             return {
               url,
-              title: pageTitle,
-              description: metaDescription,
+              title,
+              description,
               warning:
                 'Very little content found — this page may be rendered client-side (SPA) and cannot be analyzed without a headless browser.',
               markdown,
             };
           }
 
-          // Structured extraction pass with a fast model
-          const openai = createOpenAI({ apiKey: process.env.AI_API_KEY });
-
-          const { object } = await generateObject({
-            model: openai('gpt-5.4'),
-            schema: z.object({
-              purpose: z
-                .string()
-                .describe('One-sentence summary of what this page is about'),
-              sections: z
-                .array(
-                  z.object({
-                    type: z
-                      .string()
-                      .describe(
-                        'Section role (e.g., hero, features, pricing, testimonials, faq, cta, footer)'
-                      ),
-                    heading: z.string().optional(),
-                    summary: z
-                      .string()
-                      .describe('Short summary of the section content'),
-                  })
-                )
-                .describe('Detected page sections in order'),
-              ctas: z
-                .array(
-                  z.object({
-                    text: z.string(),
-                    url: z.string().optional(),
-                  })
-                )
-                .describe('Primary call-to-action buttons/links'),
-              keyImages: z
-                .array(
-                  z.object({
-                    alt: z.string(),
-                    url: z.string(),
-                  })
-                )
-                .describe(
-                  'Important content images (skip icons, logos, decorative images)'
-                ),
-            }),
-            system:
-              'You analyze webpages for a page-builder AI. Extract layout structure, CTAs, and key images from the given markdown.',
-            prompt: `URL: ${url}\nTitle: ${pageTitle}\nDescription: ${metaDescription}\n\nMarkdown content:\n${markdown}`,
-          });
-
-          return {
-            url,
-            title: pageTitle,
-            description: metaDescription,
-            ...object,
-          };
+          return { url, title, description, markdown };
         } catch (error) {
           return {
             url,

@@ -3,7 +3,13 @@
 import { useEffect, useRef, useState } from 'react';
 import { useChat } from '@ai-sdk/react';
 import { ComponentData, Config, createUsePuck, Data } from '@puckeditor/core';
-import { DefaultChatTransport, FileUIPart, TextUIPart, UIMessage } from 'ai';
+import {
+  DefaultChatTransport,
+  FileUIPart,
+  lastAssistantMessageIsCompleteWithToolCalls,
+  TextUIPart,
+  UIMessage,
+} from 'ai';
 import {
   ArrowUpIcon,
   BotIcon,
@@ -106,21 +112,25 @@ export function AiChatPanel({ config, nodeId }: AiChatPanelProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const { messages, sendMessage, setMessages, status, stop } = useChat({
-    id: activeChatId,
-    transport: new DefaultChatTransport({
-      api: `/${locale}/api/puck/ai-chat`,
-      body: {
-        puckConfig: JSON.stringify(config),
-        puckData: JSON.stringify(appState?.data),
+  const { messages, sendMessage, setMessages, status, stop, addToolOutput } =
+    useChat({
+      id: activeChatId,
+      transport: new DefaultChatTransport({
+        api: `/${locale}/api/puck/ai-chat`,
+        body: {
+          puckConfig: JSON.stringify(config),
+          puckData: JSON.stringify(appState?.data),
+        },
+      }),
+      messages: loadMessages(activeChatId),
+      // Auto-resubmit when an interactive tool (e.g. ask_user_questions) gets
+      // its output from the UI — otherwise the chat sits idle after submit.
+      sendAutomaticallyWhen: lastAssistantMessageIsCompleteWithToolCalls,
+      onError: (error) => {
+        console.error('AI chat error:', error);
+        toast.error('AI request failed. Please try again.');
       },
-    }),
-    messages: loadMessages(activeChatId),
-    onError: (error) => {
-      console.error('AI chat error:', error);
-      toast.error('AI request failed. Please try again.');
-    },
-  });
+    });
 
   // Apply patch-style tool outputs to the Puck editor as they stream in,
   // using fine-grained actions (insert+replace / replace / remove) so the
@@ -443,6 +453,13 @@ export function AiChatPanel({ config, nodeId }: AiChatPanelProps) {
                   isStreaming &&
                   message.id === messages[messages.length - 1]?.id
                 }
+                onAnswerQuestions={(toolCallId, answers) => {
+                  addToolOutput({
+                    tool: 'ask_user_questions',
+                    toolCallId,
+                    output: { answers },
+                  });
+                }}
               />
             ))}
             {status === 'submitted' && (

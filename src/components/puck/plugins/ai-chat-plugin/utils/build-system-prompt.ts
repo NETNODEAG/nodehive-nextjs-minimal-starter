@@ -1,4 +1,4 @@
-import { Config, Data } from '@puckeditor/core';
+import { ComponentData, Config, Data } from '@puckeditor/core';
 
 // ---------------------------------------------------------------------------
 // Editable prompt content — customise these per project.
@@ -152,9 +152,10 @@ function serializeCategories(config: Config): string {
 
 /**
  * Field-level detail for on-demand loading. Called by the get_component_spec
- * tool — returns fields, field hints, and default props. The component's
- * description and guidelines live in the summary prompt and are not duplicated
- * here. Returns null if the component does not exist in the config.
+ * tool — returns usage instructions, fields, field hints, and default props.
+ * The summary prompt only carries each component's short description (enough
+ * for selection); the deeper how-to-use guidance lives here. Returns null if
+ * the component does not exist in the config.
  */
 export function serializeComponentSpec(
   name: string,
@@ -162,6 +163,8 @@ export function serializeComponentSpec(
 ): string | null {
   const componentConfig = config.components?.[name];
   if (!componentConfig || isExcluded(componentConfig)) return null;
+
+  const ai = getComponentAi(componentConfig);
 
   const fields = Object.entries(componentConfig.fields || {}).map(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -177,11 +180,70 @@ export function serializeComponentSpec(
     }
   );
 
-  return [
-    `Default props: ${JSON.stringify(componentConfig.defaultProps || {})}`,
-    'Fields:',
-    fields.join('\n'),
-  ].join('\n');
+  const parts: string[] = [];
+  if (ai.instructions) {
+    parts.push(`Usage instructions: ${ai.instructions}`);
+  }
+  parts.push(
+    `Default props: ${JSON.stringify(componentConfig.defaultProps || {})}`
+  );
+  parts.push('Fields:');
+  parts.push(fields.join('\n'));
+
+  return parts.join('\n');
+}
+
+/**
+ * Lightweight tree of the current page: component type + id + nesting, plus a
+ * short text preview (first title/eyebrow/heading prop) to help the AI tell
+ * similar components apart. Full props are loaded on demand via get_component.
+ */
+function serializePageStructure(data: Data, config: Config): string {
+  const lines: string[] = [];
+  const indent = (depth: number) => '  '.repeat(depth);
+
+  function preview(component: ComponentData): string {
+    const props = (component.props || {}) as Record<string, unknown>;
+    const candidates = ['title', 'heading', 'eyebrow', 'quote', 'text'];
+    for (const key of candidates) {
+      const value = props[key];
+      if (typeof value === 'string' && value.trim()) {
+        const trimmed = value.trim().replace(/\s+/g, ' ');
+        const short =
+          trimmed.length > 60 ? `${trimmed.slice(0, 57)}…` : trimmed;
+        return ` "${short}"`;
+      }
+    }
+    return '';
+  }
+
+  function walk(components: ComponentData[], depth: number) {
+    for (const component of components) {
+      const id = component.props?.id;
+      lines.push(
+        `${indent(depth)}- ${component.type}${id ? ` [${id}]` : ''}${preview(component)}`
+      );
+
+      const componentConfig = config.components?.[component.type];
+      if (!componentConfig) continue;
+
+      for (const [fieldName, fieldConfig] of Object.entries(
+        componentConfig.fields || {}
+      )) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        if ((fieldConfig as any).type !== 'slot') continue;
+        const slotValue = (component.props as Record<string, unknown>)?.[
+          fieldName
+        ];
+        if (!Array.isArray(slotValue) || slotValue.length === 0) continue;
+        lines.push(`${indent(depth + 1)}slot "${fieldName}":`);
+        walk(slotValue as ComponentData[], depth + 2);
+      }
+    }
+  }
+
+  walk(data.content || [], 0);
+  return lines.length > 0 ? lines.join('\n') : '(empty page)';
 }
 
 export function buildSystemPrompt(
@@ -198,16 +260,13 @@ export function buildSystemPrompt(
       const header = `- ${name}${label ? ` ("${label}")` : ''} [${category}]`;
       const lines = [header];
       if (ai.description) {
-        lines.push(`    Description: ${ai.description}`);
-      }
-      if (ai.instructions) {
-        lines.push(`    Instructions: ${ai.instructions}`);
+        lines.push(`    ${ai.description}`);
       }
       return lines.join('\n');
     }
   );
 
-  const currentContent = JSON.stringify(puckData, null, 2);
+  const structureTree = serializePageStructure(puckData, config);
   const rootFieldsBlock = serializeRootFields(config);
   const rootSection = rootFieldsBlock
     ? `\nPAGE METADATA FIELDS (set via the set_page_metadata tool):\n${rootFieldsBlock}\n`
@@ -231,15 +290,19 @@ ${BRAND_AND_TONE}
 ${CONTENT_AND_STRUCTURE}
 
 AVAILABLE COMPONENTS
-Each entry shows the technical id ("display label") [category], a description of what the component is, and guidelines for how it should be used. Field-level details (default props, available fields, field hints) are loaded on demand via the get_component_spec tool.
+Each entry shows the technical id ("display label") [category] and a short description of what the component is — enough to pick the right one. Usage guidelines, default props, fields, and field hints are loaded on demand via the get_component_spec tool.
 
 ${componentSummaries.join('\n')}
 
 COMPONENT CATEGORIES
 ${serializeCategories(config)}
 ${rootSection}
-CURRENT PAGE DATA
-${currentContent}
+CURRENT PAGE STRUCTURE
+Lightweight tree: component type [id] with optional text preview. Slot children nest beneath their parent. Three ways to read deeper:
+- get_component(id) — full props of ONE component (preferred for targeted edits).
+- get_page() — full data for EVERY component plus page-level metadata (use when you need the whole snapshot).
+
+${structureTree}
 
 SLOT FIELDS (how to nest)
 - A field with type "slot" holds a list of child components on a specific parent. Nesting is achieved by TARGETING the parent in add_component, not by embedding child arrays in props.
@@ -255,14 +318,16 @@ TOOL RULES
 2. Build pages incrementally with add_component — one component per call. Target nested positions via destinationId + destinationSlot (see SLOT FIELDS above). The editor applies each call immediately; users see the page build step by step.
 3. To clear existing content, call remove_component for each component you want gone. Do not fear multiple tool calls — call them all in a single turn.
 4. Before adding or modifying a component, call get_component_spec("ComponentName") to retrieve its fields, default props, and field hints. Do NOT guess field names or values.
+4a. When modifying an existing component and you need to read its current props (e.g. to append to an array field or tweak one prop without clobbering others), call get_component(id) first. modify_component merges — pass only the props you want to change.
 5. Use exact component type names (e.g., "Heading", "Container", "HeroSection").
 6. When adding images or videos, use the search_media tool first to find available media from the CMS. NEVER invent a URL, ID, or media object.
    - Any field marked "BOUND TO TOOL: <toolName>" in get_component_spec MUST be filled from that tool's output, verbatim. Do not synthesize a value.
-7. When modifying or removing a component, reference it by its current ID from the page data or from a previous add_component result.
+7. When modifying or removing a component, reference it by its current ID from the CURRENT PAGE STRUCTURE tree or from a previous add_component result.
 8. Page-level metadata (SEO title, description, URL alias, published state, OG image) is separate from the component tree — set it with set_page_metadata, never via add_component/modify_component.
-9. When the user shares a URL, use fetch_url to analyze it and suggest content.
+9. When the user shares a URL, use fetch_url to retrieve its content as markdown. Read the markdown yourself to identify sections, headings, body copy, CTAs, and images — then build the page with add_component calls using that content as your source. If the user wants an exact replica, copy the text verbatim; if they want "inspired by", adapt while preserving the key messages. Match the existing page language — do not auto-translate unless asked.
 10. When the user shares an image, analyze it and suggest how to incorporate it.
 11. Be concise in your responses. Describe what you did after making changes.
+11a. Use ask_user_questions ONLY when requirements are ambiguous AND you cannot make a reasonable default assumption. Don't gate every minor choice. Prefer picking a sensible default and mentioning it in your reply so the user can course-correct. When you do ask, keep to 1-3 questions with 2-4 options each.
 12. When creating a full page, build it section by section for a professional layout.
 13. Respect each component's description and guidelines — do not misuse a component outside its intended purpose.`;
 }

@@ -48,6 +48,7 @@ export async function POST(request: Request, { params }: RouteParams) {
     messages: await convertToModelMessages(messages),
     tools: createAiChatTools({
       puckConfig: parsedConfig,
+      puckData: parsedPuckData,
       lang,
     }),
     stopWhen: (event) => event.steps.length >= 20,
