@@ -97,7 +97,7 @@ const HeroSection: React.FC<HeroProps> = ({
 
       <Container width="wide" className="relative z-10">
         <div
-          className={cn('prose prose-theme max-w-none space-y-6', {
+          className={cn('space-y-6', {
             'mx-auto max-w-4xl': isCentered,
           })}
         >
@@ -107,7 +107,14 @@ const HeroSection: React.FC<HeroProps> = ({
             </Heading>
           )}
 
-          {description && <BodyCopy size="lg">{description}</BodyCopy>}
+          {description && (
+            <BodyCopy
+              size="lg"
+              className={cn({ 'mx-auto max-w-none': isCentered })}
+            >
+              {description}
+            </BodyCopy>
+          )}
 
           {(primaryCta || secondaryCta) && (
             <div
