@@ -51,7 +51,7 @@ export async function POST(request: Request, { params }: RouteParams) {
       puckData: parsedPuckData,
       lang,
     }),
-    stopWhen: (event) => event.steps.length >= 20,
+    stopWhen: (event) => event.steps.length >= 50,
   });
 
   return result.toUIMessageStreamResponse();

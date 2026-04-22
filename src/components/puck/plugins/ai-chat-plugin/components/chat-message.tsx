@@ -398,8 +398,19 @@ function getToolLabel(part: any, config?: Config): string {
       return done ? 'Questions answered' : 'Waiting for your input...';
     case 'get_page':
       return done ? 'Page snapshot read' : 'Reading page...';
-    case 'get_component':
-      return done ? 'Component read' : 'Reading component...';
+    case 'get_component': {
+      const label = getComponentLabel(
+        typeFromComponentId(input.componentId),
+        config
+      );
+      return label
+        ? done
+          ? `Read ${label}`
+          : `Reading ${label}...`
+        : done
+          ? 'Component read'
+          : 'Reading component...';
+    }
     case 'search_media':
       return done ? 'Media search complete' : 'Searching media library...';
     case 'fetch_url':
