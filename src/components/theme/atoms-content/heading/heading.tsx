@@ -3,20 +3,23 @@ import { cva, type VariantProps } from 'class-variance-authority';
 
 import { cn } from '@/lib/utils';
 
-const headingVariants = cva('font-heading hyphens-auto lg:hyphens-none', {
-  variants: {
-    size: {
-      'display-xxl':
-        'text-6xl font-semibold tracking-tight md:text-8xl lg:text-9xl',
-      'display-xl':
-        'text-5xl font-semibold tracking-tight md:text-7xl lg:text-8xl',
-      xl: 'text-4xl font-bold md:text-5xl',
-      lg: 'text-3xl font-bold md:text-4xl',
-      md: 'text-xl font-bold md:text-2xl',
-      sm: 'text-lg font-bold md:text-xl',
+const headingVariants = cva(
+  'font-heading hyphens-auto [hyphenate-limit-chars:6_3_3] lg:hyphens-none',
+  {
+    variants: {
+      size: {
+        'display-xxl':
+          'text-6xl font-semibold tracking-tight md:text-8xl lg:text-9xl',
+        'display-xl':
+          'text-5xl font-semibold tracking-tight md:text-7xl lg:text-8xl',
+        xl: 'text-4xl font-bold md:text-5xl',
+        lg: 'text-3xl font-bold md:text-4xl',
+        md: 'text-xl font-bold md:text-2xl',
+        sm: 'text-lg font-bold md:text-xl',
+      },
     },
-  },
-});
+  }
+);
 
 export interface HeadingProps
   extends
