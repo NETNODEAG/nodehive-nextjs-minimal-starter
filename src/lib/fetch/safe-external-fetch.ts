@@ -43,10 +43,10 @@ async function assertUrlIsPublic(url: URL): Promise<void> {
   ) {
     throw new Error(`Blocked hostname: ${host}`);
   }
-  // Resolve DNS ourselves and check ALL returned addresses. Guards against
-  // DNS-rebinding attacks where a hostname resolves to a public address on
-  // the first lookup but a private one afterwards — we resolve and validate
-  // inline, then hand the URL to fetch().
+  // Resolve DNS ourselves and check all returned addresses. Raises the
+  // bar against DNS-rebinding but doesn't fully close it — fetch() does
+  // a second lookup internally. Full fix would pin the IP via an undici
+  // Dispatcher; acceptable risk for editor-only use.
   const addresses = await lookup(host, { all: true });
   if (addresses.length === 0) {
     throw new Error(`No addresses resolved for ${host}`);
@@ -61,17 +61,10 @@ async function assertUrlIsPublic(url: URL): Promise<void> {
 }
 
 /**
- * fetch() replacement for URLs that originate from user-influenced input
- * (e.g. an AI tool that accepts a URL to fetch). Guards against SSRF:
- *   - Only http(s) schemes allowed.
- *   - Hostnames like localhost / .internal / .local are rejected upfront.
- *   - DNS is resolved manually; any RFC1918, loopback, link-local, or
- *     multicast address causes the request to be refused.
- *   - Redirects are followed manually and every hop is re-validated, which
- *     blocks the common SSRF bypass where an attacker returns a 302 to an
- *     internal URL after passing the initial check.
- *
- * Throws on any policy violation. Successful responses are returned as-is.
+ * fetch() replacement for user-influenced URLs. Blocks non-http(s) schemes,
+ * private/loopback/link-local addresses, and re-validates every redirect
+ * hop. Throws on any policy violation. See assertUrlIsPublic() for the
+ * residual DNS-rebinding caveat.
  */
 export async function safeExternalFetch(
   inputUrl: string,
