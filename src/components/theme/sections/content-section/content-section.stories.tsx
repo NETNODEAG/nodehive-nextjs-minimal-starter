@@ -12,7 +12,12 @@ const meta = {
     body: '<p>We provide the tools and infrastructure you need to build exceptional digital experiences.</p>',
     background: 'none',
     layout: 'stacked',
-    variant: '1',
+    width: 'wide',
+    textWidth: 'narrow',
+    slotWidth: 'wide',
+    contentPosition: 'left',
+    split: '50-50',
+    reverseOnMobile: false,
   },
   argTypes: {
     background: {
@@ -21,11 +26,30 @@ const meta = {
     },
     layout: {
       control: 'inline-radio',
-      options: ['stacked', 'centered', 'content-left', 'media-left'],
+      options: ['stacked', 'centered', 'side-by-side'],
     },
-    variant: {
+    width: {
       control: 'inline-radio',
-      options: ['1', '2', '3'],
+      options: ['narrow', 'wide', 'full'],
+    },
+    textWidth: {
+      control: 'inline-radio',
+      options: ['narrow', 'wide'],
+    },
+    slotWidth: {
+      control: 'inline-radio',
+      options: ['narrow', 'wide', 'full'],
+    },
+    contentPosition: {
+      control: 'inline-radio',
+      options: ['left', 'right'],
+    },
+    split: {
+      control: 'inline-radio',
+      options: ['50-50', '60-40', '40-60'],
+    },
+    reverseOnMobile: {
+      control: 'boolean',
     },
   },
 } satisfies Meta<typeof ContentSection>;
@@ -42,14 +66,30 @@ export const Centered: Story = {
   },
 };
 
-export const ContentLeft: Story = {
+export const SideBySideContentLeft: Story = {
   args: {
-    layout: 'content-left',
+    layout: 'side-by-side',
+    contentPosition: 'left',
   },
 };
 
-export const MediaLeft: Story = {
+export const SideBySideContentRight: Story = {
   args: {
-    layout: 'media-left',
+    layout: 'side-by-side',
+    contentPosition: 'right',
+  },
+};
+
+export const SideBySideLeftWider: Story = {
+  args: {
+    layout: 'side-by-side',
+    split: '60-40',
+  },
+};
+
+export const SideBySideRightWider: Story = {
+  args: {
+    layout: 'side-by-side',
+    split: '40-60',
   },
 };

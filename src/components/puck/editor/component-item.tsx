@@ -2,7 +2,9 @@
 
 import React from 'react';
 import Image from 'next/image';
+import { createUsePuck } from '@puckeditor/core';
 import {
+  BarChart3Icon,
   BoxIcon,
   BoxSelectIcon,
   Columns2Icon,
@@ -10,9 +12,10 @@ import {
   GridIcon,
   GripVerticalIcon,
   HeadingIcon,
+  HelpCircleIcon,
   IdCardIcon,
   ImageIcon,
-  ListOrdered,
+  MessageCircleIcon,
   MousePointerClickIcon,
   PlaySquareIcon,
   SpaceIcon,
@@ -33,7 +36,9 @@ type ComponentItemProps = {
   name: string;
 };
 
-// Component icon mapping
+const usePuck = createUsePuck();
+
+// Component icon mapping — keyed by component type name.
 const COMPONENT_ICONS: Record<string, React.ReactNode> = {
   // Layout
   Container: <BoxSelectIcon className="size-4" />,
@@ -48,36 +53,22 @@ const COMPONENT_ICONS: Record<string, React.ReactNode> = {
   Video: <PlaySquareIcon className="size-4" />,
   // Organisms
   Card: <IdCardIcon className="size-4" />,
-  Statistics: <ListOrdered className="size-4" />,
+  Accordion: <HelpCircleIcon className="size-4" />,
+  Testimonial: <MessageCircleIcon className="size-4" />,
+  Statistics: <BarChart3Icon className="size-4" />,
   // Sections
-  Hero: <WallpaperIcon className="size-4" />,
+  HeroSection: <WallpaperIcon className="size-4" />,
   ContentSection: <FileTextIcon className="size-4" />,
 };
 
 // TODO add preview
 const COMPONENT_PREVIEWS: Record<string, string> = {};
 
-const COMPONENT_LABELS: Record<string, string> = {
-  // Layout
-  Container: 'Container',
-  Grid: 'Grid',
-  TwoColumns: 'Two Columns',
-  Space: 'Space',
-  // Content
-  Heading: 'Heading',
-  BodyCopy: 'Text',
-  CallToAction: 'Call to Action',
-  Image: 'Image',
-  Video: 'Video',
-  // Organisms
-  Card: 'Card',
-  Statistics: 'Statistics',
-  // Sections
-  Hero: 'Hero',
-  ContentSection: 'Content Section',
-};
-
 export default function ComponentItem({ name }: ComponentItemProps) {
+  // Pull the label from the Puck config (single source of truth) —
+  // falls back to the type name if no label is set.
+  const label = usePuck((s) => s.config.components?.[name]?.label) || name;
+
   return (
     <TooltipProvider delayDuration={200}>
       <Tooltip>
@@ -91,9 +82,7 @@ export default function ComponentItem({ name }: ComponentItemProps) {
               <div className="shrink-0">
                 {COMPONENT_ICONS[name] || <BoxIcon className="size-4" />}
               </div>
-              <span className="truncate text-sm">
-                {COMPONENT_LABELS[name] || name}
-              </span>
+              <span className="truncate text-sm">{label}</span>
             </div>
             <GripVerticalIcon className="size-3 shrink-0" />
           </div>

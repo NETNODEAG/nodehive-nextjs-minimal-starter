@@ -1,10 +1,21 @@
 import { ComponentConfig } from '@puckeditor/core';
 
-import { createMediaSelectorField } from '@/components/puck/editor/field-utils';
-import Hero from '@/components/theme/sections/hero/hero';
+import {
+  createMediaSelectorField,
+  createSectionBackgroundField,
+} from '@/components/puck/editor/field-utils';
+import HeroSection from '@/components/theme/sections/hero-section/hero-section';
 
-export const HeroConfig: ComponentConfig = {
-  label: 'Hero Section',
+export const HeroSectionConfig: ComponentConfig = {
+  label: 'Hero',
+  metadata: {
+    ai: {
+      description:
+        'Large intro section with headline, subtitle, CTAs, and optional background media.',
+      instructions:
+        'At most once per page, as the first section. Title 3-8 words, description 10-25 words, max 2 CTAs.',
+    },
+  },
   fields: {
     layout: {
       type: 'select',
@@ -14,6 +25,12 @@ export const HeroConfig: ComponentConfig = {
         { label: 'Centered', value: 'centered' },
         { label: 'Bottom', value: 'bottom' },
       ],
+      metadata: {
+        ai: {
+          instructions:
+            'default: left-aligned content. centered: content centered horizontally — elegant for short copy. bottom: content docked to the bottom — good when the background image is the main visual.',
+        },
+      },
     },
     height: {
       type: 'radio',
@@ -22,6 +39,27 @@ export const HeroConfig: ComponentConfig = {
         { label: '25%', value: '25' },
         { label: '50%', value: '50' },
         { label: '90%', value: '90' },
+      ],
+      metadata: {
+        ai: {
+          instructions:
+            '25: compact/subtle intro. 50: standard prominent hero. 90: near-full-viewport hero for landing pages.',
+        },
+      },
+    },
+    backgroundImage: createMediaSelectorField({
+      label: 'Background Image',
+      mediaTypes: ['image'],
+    }),
+    background: createSectionBackgroundField(['none', 'light', 'dark']),
+    overlayOpacity: {
+      type: 'select',
+      label: 'Overlay Opacity',
+      options: [
+        { label: 'None', value: 0 },
+        { label: 'Light (25%)', value: 25 },
+        { label: 'Medium (50%)', value: 50 },
+        { label: 'Heavy (75%)', value: 75 },
       ],
     },
     title: {
@@ -81,28 +119,28 @@ export const HeroConfig: ComponentConfig = {
         },
       },
     },
-    background: {
-      type: 'select',
-      label: 'Background Style',
-      options: [
-        { label: 'None', value: 'none' },
-        { label: 'Light', value: 'light' },
-      ],
-    },
-    backgroundImage: createMediaSelectorField({
-      label: 'Background Image',
-      mediaTypes: ['image'],
-    }),
-    overlayOpacity: {
-      type: 'select',
-      label: 'Overlay Opacity',
-      options: [
-        { label: 'None', value: 0 },
-        { label: 'Light (25%)', value: 25 },
-        { label: 'Medium (50%)', value: 50 },
-        { label: 'Heavy (75%)', value: 75 },
-      ],
-    },
+  },
+  resolveFields: (data, params) => {
+    const f = params.fields;
+    const hasBgImage = !!data.props.backgroundImage?.field_media_image;
+
+    const fields: any = {
+      layout: f.layout,
+      height: f.height,
+      backgroundImage: f.backgroundImage,
+    };
+
+    if (hasBgImage) {
+      fields.overlayOpacity = f.overlayOpacity;
+    } else {
+      fields.background = f.background;
+    }
+
+    fields.title = f.title;
+    fields.description = f.description;
+    fields.cta = f.cta;
+
+    return fields;
   },
   defaultProps: {
     title: 'Welcome to Our Platform',
@@ -136,13 +174,15 @@ export const HeroConfig: ComponentConfig = {
     const secondaryCta = cta?.[1]?.text ? cta[1] : undefined;
 
     const imageAlt = backgroundImage?.field_media_image?.meta?.alt || '';
+    const uriUrl = backgroundImage?.field_media_image?.uri?.url;
     const imageSrc =
       backgroundImage?.field_media_image?.image_style_uri?.wide ||
-      backgroundImage?.field_media_image?.uri ||
-      undefined;
+      (uriUrl
+        ? `${process.env.NEXT_PUBLIC_DRUPAL_BASE_URL || ''}${uriUrl}`
+        : undefined);
 
     return (
-      <Hero
+      <HeroSection
         title={title}
         description={description}
         background={background}

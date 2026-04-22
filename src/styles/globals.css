@@ -12,14 +12,66 @@
   --color-white: #ffffff;
   --color-primary: #10857f;
   --color-secondary: #082f49;
+
+  --color-background: #ffffff;
+  --color-foreground: #111827; /* gray-900 */
+  --color-muted: #f3f4f6;      /* gray-100 */
+  --color-muted-foreground: #4b5563; /* gray-600 */
+  --color-border: #e5e7eb;     /* gray-200 */
+  --color-card: #ffffff;
+}
+
+[data-section-theme='light'] {
+  --color-background: #f9fafb; /* gray-50 */
+  --color-muted: #f3f4f6;      /* gray-100 */
+  --color-card: #ffffff;
+}
+
+[data-section-theme='dark'] {
+  --color-background: #111827; /* gray-900 */
+  --color-foreground: #f9fafb; /* gray-50 */
+  --color-muted: #1f2937;      /* gray-800 */
+  --color-muted-foreground: #9ca3af; /* gray-400 */
+  --color-border: #1f2937;     /* gray-800 */
+  --color-card: #1f2937;       /* gray-800 */
 }
 
 @theme inline {
   --font-sans: var(--font-inter);
   --font-heading: var(--font-helvetica-now);
+
+  --animate-accordion-down: accordion-down 200ms ease-out;
+  --animate-accordion-up: accordion-up 200ms ease-out;
+}
+
+@keyframes accordion-down {
+  from {
+    height: 0;
+  }
+  to {
+    height: var(--radix-accordion-content-height);
+  }
+}
+
+@keyframes accordion-up {
+  from {
+    height: var(--radix-accordion-content-height);
+  }
+  to {
+    height: 0;
+  }
 }
 
 /* Fix Puck richtext dropdown z-index */
 [data-radix-popper-content-wrapper] {
   z-index: 100 !important;
+}
+
+/* Prevent scroll-chaining. Applied to the root scroller so:
+   - when Puck's preview iframe (which copies our stylesheets) reaches
+     its edge, it doesn't overflow into the parent body;
+   - any scroll in the parent that reaches its own edge doesn't chain
+     into the browser's pull-to-refresh gesture. */
+html {
+  overscroll-behavior: contain;
 }

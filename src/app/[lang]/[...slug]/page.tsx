@@ -1,12 +1,14 @@
 import { Metadata } from 'next';
 import { notFound, redirect } from 'next/navigation';
 import getPage from '@/data/nodehive/page/get-page';
+import { getDictionary } from '@/dictionaries';
 
 import { DrupalNode } from '@/types/nodehive';
 import { i18n, Locale } from '@/config/i18n-config';
 import { spaceConfig } from '@/config/space-config';
 import { absoluteUrl } from '@/lib/utils';
 import Node from '@/components/drupal/node/node';
+import NotTranslated from '@/components/drupal/node/not-translated';
 import SmartActionsButton from '@/components/nodehive/smart-actions/smart-actions-button';
 
 interface PageProps {
@@ -41,6 +43,12 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
   if (teaser) seoDescription = teaser;
   if (image) seoImage = absoluteUrl(image);
 
+  // If Drupal returned a source-language fallback (no translation for
+  // this locale), tell search engines not to index the fallback page —
+  // otherwise Google sees the English content under a German URL and
+  // penalises for language mismatch.
+  const isFallback = !!node?.langcode && node.langcode !== lang;
+
   return {
     title: {
       template: spaceMetadata.title.template,
@@ -62,10 +70,9 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
         },
       ],
     },
-    robots: {
-      follow: true,
-      index: true,
-    },
+    robots: isFallback
+      ? { follow: true, index: false }
+      : { follow: true, index: true },
   };
 }
 
@@ -87,11 +94,30 @@ export default async function Page(props: PageProps) {
 
   const node = entity?.data;
   const aliasPath = node?.path?.alias;
-  const aliasLang = node?.langcode || lang;
+  const isCurrentLocale = !node?.langcode || node.langcode === lang;
+
+  // When Drupal returns a source-language fallback (langcode !== lang),
+  // show a dedicated "not translated" page inside the current locale's
+  // chrome rather than the source-language content — better SEO (the
+  // page is noindex via generateMetadata) and clearer UX.
+  if (!isCurrentLocale && node?.langcode) {
+    const sourceLang = node.langcode as Locale;
+    const sourcePath = aliasPath || `/${slug.join('/')}`;
+    const sourceHref = `/${sourceLang}${sourcePath}`;
+    const dictionary = await getDictionary(lang);
+    return (
+      <NotTranslated
+        sourceLang={sourceLang}
+        sourceHref={sourceHref}
+        dictionary={dictionary}
+      />
+    );
+  }
 
   // Redirect to the aliased path if it differs from the current slug
-  if (aliasPath && aliasPath !== `/${slug.join('/')}`) {
-    redirect('/' + aliasLang + aliasPath);
+  // (SEO canonical). Only when the node is in the requested locale.
+  if (isCurrentLocale && aliasPath && aliasPath !== `/${slug.join('/')}`) {
+    redirect('/' + lang + aliasPath);
   }
 
   return (

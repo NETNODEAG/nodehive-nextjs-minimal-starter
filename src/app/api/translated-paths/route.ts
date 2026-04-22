@@ -1,4 +1,5 @@
 import { cacheLife } from 'next/cache';
+import { NetworkError } from 'nodehive-js';
 
 import { createServiceClient } from '@/lib/nodehive-client';
 
@@ -7,7 +8,17 @@ async function getTranslatedPaths(path: string) {
   cacheLife('hours');
 
   const client = createServiceClient();
-  return client.getTranslatedPaths(path);
+  try {
+    return await client.getTranslatedPaths(path);
+  } catch (error) {
+    // Drupal returns 400 for paths it doesn't know about (frontend-only
+    // routes, deleted nodes). Treat as "no translations" and cache the
+    // empty result so we don't hammer Drupal for the same unknown path.
+    if (error instanceof NetworkError && error.status === 400) {
+      return {};
+    }
+    throw error;
+  }
 }
 
 export async function GET(request: Request) {

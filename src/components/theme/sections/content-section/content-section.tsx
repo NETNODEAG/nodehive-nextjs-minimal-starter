@@ -1,82 +1,81 @@
 import React from 'react';
-import { cva, type VariantProps } from 'class-variance-authority';
 
 import { cn } from '@/lib/utils';
+import type { SectionBackgroundVariant } from '@/components/puck/editor/field-utils';
 import BodyCopy from '@/components/theme/atoms-content/body-copy/body-copy';
 import { Heading } from '@/components/theme/atoms-content/heading/heading';
 import Container from '@/components/theme/atoms-layout/container/container';
 
-const contentSectionVariants = cva('w-full py-12 md:py-20 lg:py-24', {
-  variants: {
-    background: {
-      none: 'bg-transparent',
-      light: 'bg-gray-50',
-    },
-  },
-  defaultVariants: {
-    background: 'none',
-  },
-});
+export type ContentSectionLayout = 'stacked' | 'centered' | 'side-by-side';
+export type ContentSectionWidth = 'narrow' | 'wide' | 'full';
+export type ContentSectionTextWidth = 'narrow' | 'wide';
+export type ContentSectionSlotWidth = 'narrow' | 'wide' | 'full';
+export type ContentSectionContentPosition = 'left' | 'right';
+export type ContentSectionSplit = '50-50' | '60-40' | '40-60';
 
-export type ContentSectionLayout =
-  | 'stacked'
-  | 'centered'
-  | 'content-left'
-  | 'media-left';
-
-export type ContentSectionVariant = '1' | '2' | '3';
-
-export interface ContentSectionProps
-  extends
-    Omit<React.HTMLAttributes<HTMLElement>, 'title' | 'content'>,
-    VariantProps<typeof contentSectionVariants> {
+export interface ContentSectionProps extends Omit<
+  React.HTMLAttributes<HTMLElement>,
+  'title' | 'content'
+> {
   title?: string | React.ReactNode;
   eyebrow?: string | React.ReactNode;
   body?: string | React.ReactNode;
   content?: React.FC;
   layout?: ContentSectionLayout;
-  variant?: ContentSectionVariant;
+  width?: ContentSectionWidth;
+  textWidth?: ContentSectionTextWidth;
+  slotWidth?: ContentSectionSlotWidth;
+  contentPosition?: ContentSectionContentPosition;
+  split?: ContentSectionSplit;
+  reverseOnMobile?: boolean;
+  background?: SectionBackgroundVariant;
 }
+
+const widthClassMap = {
+  narrow: 'max-w-4xl',
+  wide: 'max-w-7xl',
+  full: 'max-w-full',
+} as const;
 
 const ContentSection: React.FC<ContentSectionProps> = ({
   title,
   eyebrow,
   body,
   content: Content,
-  background,
+  background = 'none',
   layout = 'stacked',
-  variant = '1',
+  width = 'wide',
+  textWidth = 'narrow',
+  slotWidth = 'wide',
+  contentPosition = 'left',
+  split = '50-50',
+  reverseOnMobile = false,
   className,
   ...props
 }) => {
   const isCentered = layout === 'centered';
-  const isSideBySide = layout === 'content-left' || layout === 'media-left';
-  const isMediaToEdge = isSideBySide && variant === '3';
+  const isSideBySide = layout === 'side-by-side';
 
   const textBlock = (
-    <div
-      className={cn('space-y-6', {
-        'text-center': isCentered,
-      })}
-    >
+    <div className={cn('space-y-6', isCentered && 'text-center')}>
       {eyebrow && (
-        <p className="text-sm font-semibold tracking-widest text-blue-600 uppercase">
+        <p className="text-primary text-sm font-semibold tracking-widest uppercase">
           {eyebrow}
         </p>
       )}
-
       {title && (
-        <Heading level="2" size="xl">
+        <Heading
+          level="2"
+          size="xl"
+          className={cn('max-w-prose', isCentered && 'mx-auto')}
+        >
           {title}
         </Heading>
       )}
-
       {body && (
         <BodyCopy
           size="lg"
-          className={cn({
-            'mx-auto text-center': isCentered,
-          })}
+          className={cn('max-w-prose', isCentered && 'mx-auto text-center')}
         >
           {body}
         </BodyCopy>
@@ -84,123 +83,53 @@ const ContentSection: React.FC<ContentSectionProps> = ({
     </div>
   );
 
-  const mediaBlock = Content ? <Content /> : null;
+  const slotBlock = Content ? <Content /> : null;
 
-  // Stacked variants:
-  //   1 = narrow content width
-  //   2 = wide content width
-  //   3 = full-width media
-  if (layout === 'stacked' || layout === 'centered') {
+  if (isSideBySide) {
+    const gridClass = cn(
+      'gap-8 md:items-center md:gap-12',
+      reverseOnMobile ? 'flex flex-col-reverse md:grid' : 'grid',
+      split === '50-50' ? 'md:grid-cols-2' : 'md:grid-cols-5'
+    );
+
+    const leftSpanClass = cn(
+      split === '60-40' && 'md:col-span-3',
+      split === '40-60' && 'md:col-span-2'
+    );
+
+    const rightSpanClass = cn(
+      split === '60-40' && 'md:col-span-2',
+      split === '40-60' && 'md:col-span-3'
+    );
+
+    const isSlotLeft = contentPosition === 'left';
+
     return (
-      <section
-        className={cn(contentSectionVariants({ background }), className)}
-        {...props}
-      >
-        <Container width="wide">
-          <div
-            className={cn('space-y-8', {
-              'max-w-3xl': variant === '1',
-              'mx-auto max-w-3xl': variant === '1' && isCentered,
-            })}
-          >
-            {textBlock}
-          </div>
-        </Container>
-        {mediaBlock && (
-          <div className="mt-8 px-4 md:px-8">
-            <div
-              className={cn('mx-auto', {
-                'max-w-3xl': variant === '1',
-                'max-w-7xl': variant === '2',
-                'max-w-[120rem]': variant === '3',
-              })}
-            >
-              {mediaBlock}
+      <section className={className} {...props}>
+        <Container background={background} width={width} spacingY="2xl">
+          <div className={gridClass}>
+            <div className={leftSpanClass}>
+              {isSlotLeft ? slotBlock : textBlock}
+            </div>
+            <div className={rightSpanClass}>
+              {isSlotLeft ? textBlock : slotBlock}
             </div>
           </div>
-        )}
+        </Container>
       </section>
     );
   }
 
-  // Side-by-side variants:
-  //   1 = equal 50/50 split
-  //   2 = content column wider (7/5 split)
-  //   3 = media bleeds to browser edge
-  const gridClasses = cn('grid items-center gap-8 md:gap-12', {
-    'md:grid-cols-2': variant === '1',
-    'md:grid-cols-12': variant === '2' || variant === '3',
-  });
-
-  const contentColClass = cn({
-    'md:col-span-7': variant === '2',
-    'md:col-span-6': variant === '3',
-  });
-
-  const mediaColClass = cn({
-    'md:col-span-5': variant === '2',
-    'md:col-span-6': variant === '3',
-  });
-
-  const isContentFirst = layout === 'content-left';
-
-  const contentCol = <div className={contentColClass}>{textBlock}</div>;
-
-  const mediaCol = (
-    <div
-      className={cn(mediaColClass, {
-        'overflow-hidden': isMediaToEdge,
-        '[&_img]:h-full [&_img]:w-full [&_img]:object-cover': isMediaToEdge,
-      })}
-    >
-      {mediaBlock}
-    </div>
-  );
-
-  if (isMediaToEdge) {
-    return (
-      <section
-        className={cn(contentSectionVariants({ background }), className)}
-        {...props}
-      >
-        <div className="mx-auto max-w-[120rem] px-4 md:px-8">
-          <div className={gridClasses}>
-            {isContentFirst ? (
-              <>
-                {contentCol}
-                {mediaCol}
-              </>
-            ) : (
-              <>
-                {mediaCol}
-                {contentCol}
-              </>
-            )}
-          </div>
-        </div>
-      </section>
-    );
-  }
+  const textMaxClass = widthClassMap[textWidth];
+  const slotMaxClass = widthClassMap[slotWidth];
 
   return (
-    <section
-      className={cn(contentSectionVariants({ background }), className)}
-      {...props}
-    >
-      <Container width="wide">
-        <div className={gridClasses}>
-          {isContentFirst ? (
-            <>
-              {contentCol}
-              {mediaCol}
-            </>
-          ) : (
-            <>
-              {mediaCol}
-              {contentCol}
-            </>
-          )}
-        </div>
+    <section className={className} {...props}>
+      <Container background={background} width="full" spacingY="2xl">
+        <div className={cn('mx-auto', textMaxClass)}>{textBlock}</div>
+        {slotBlock && (
+          <div className={cn('mx-auto mt-8', slotMaxClass)}>{slotBlock}</div>
+        )}
       </Container>
     </section>
   );

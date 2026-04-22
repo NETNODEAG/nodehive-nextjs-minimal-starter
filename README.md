@@ -6,7 +6,7 @@ This repo is maintained by the makers of NodeHive and used in production project
 
 ## Features
 
-- Next.js 15
+- Next.js 16
 - Drupal slug routing
 - Sitemap.xml stub
 - NodeHive Visual Editor integration

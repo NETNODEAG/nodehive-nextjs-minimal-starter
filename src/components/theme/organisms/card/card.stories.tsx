@@ -13,7 +13,7 @@ const meta = {
     title: 'Insightful analytics',
     description:
       'Leverage actionable insights to understand your audience and make informed decisions about your content.',
-    icon: 'Activity',
+    icon: 'activity',
   },
   argTypes: {
     mode: {

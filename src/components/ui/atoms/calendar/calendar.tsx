@@ -45,16 +45,16 @@ function Calendar({
           'relative h-9 w-9 rounded-md p-0 text-center text-sm focus-within:relative focus-within:z-20'
         ),
         range_start:
-          'day-range-start bg-gray-50 rounded-l-md [&>button]:bg-eco-primary-orange [&>button]:text-black [&>button]:hover:bg-eco-primary-orange [&>button]:hover:text-black',
+          'day-range-start bg-gray-50 rounded-l-md [&>button]:bg-eco-primary-orange [&>button]:text-foreground [&>button]:hover:bg-eco-primary-orange [&>button]:hover:text-foreground',
         range_end:
-          'day-range-end bg-gray-50 rounded-r-md [&>button]:bg-eco-primary-orange [&>button]:text-black [&>button]:hover:bg-eco-primary-orange [&>button]:hover:text-black',
-        range_middle: 'aria-selected:bg-gray-100 aria-selected:text-black',
+          'day-range-end bg-gray-50 rounded-r-md [&>button]:bg-eco-primary-orange [&>button]:text-foreground [&>button]:hover:bg-eco-primary-orange [&>button]:hover:text-foreground',
+        range_middle: 'aria-selected:bg-gray-100 aria-selected:text-foreground',
         selected: cn(
           props.mode === 'range'
-            ? 'bg-eco-primary-orange hover:bg-eco-primary-orange focus:bg-eco-primary-orange hover:text-black focus:text-black'
-            : '[&>button]:bg-eco-primary-orange [&>button]:hover:bg-eco-primary-orange rounded-md! [&>button]:text-black [&>button]:hover:text-black'
+            ? 'bg-eco-primary-orange hover:bg-eco-primary-orange focus:bg-eco-primary-orange hover:text-foreground focus:text-foreground'
+            : '[&>button]:bg-eco-primary-orange [&>button]:hover:bg-eco-primary-orange [&>button]:text-foreground [&>button]:hover:text-foreground rounded-md!'
         ),
-        today: 'bg-gray-100 text-black rounded-md!',
+        today: 'bg-gray-100 text-foreground rounded-md!',
         outside:
           'day-outside text-gray-500 opacity-50 !aria-selected:bg-gray-50/50 !aria-selected:text-gray-500 !aria-selected:opacity-30',
         disabled: 'text-gray-500 opacity-50',

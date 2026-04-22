@@ -1,15 +1,14 @@
 import { cva, type VariantProps } from 'class-variance-authority';
 
 import { cn } from '@/lib/utils';
+import type { SectionBackgroundVariant } from '@/components/puck/editor/field-utils';
 
 const containerVariants = cva('', {
   variants: {
-    backgroundColor: {
-      white: 'bg-white',
-      black: 'bg-black',
-      primary: 'bg-primary',
-      secondary: 'bg-secondary',
-      transparent: 'bg-transparent',
+    background: {
+      none: 'bg-transparent',
+      light: 'bg-background text-foreground',
+      dark: 'bg-background text-foreground',
     },
     spacingX: {
       none: 'px-0',
@@ -21,10 +20,11 @@ const containerVariants = cva('', {
       md: 'py-4 md:py-8',
       lg: 'py-6 md:py-12',
       xl: 'py-8 md:py-16',
+      '2xl': 'py-12 md:py-20 lg:py-24',
     },
   },
   defaultVariants: {
-    backgroundColor: 'transparent',
+    background: 'none',
     spacingY: 'md',
     spacingX: 'md',
   },
@@ -48,13 +48,14 @@ export type ContainerProps = {
   className?: string;
   containerClassName?: string;
   id?: string;
-} & VariantProps<typeof containerVariants> &
+  background?: SectionBackgroundVariant;
+} & Omit<VariantProps<typeof containerVariants>, 'background'> &
   VariantProps<typeof innerContainerVariants>;
 
 export default function Container({
   children,
   width,
-  backgroundColor,
+  background = 'none',
   spacingY,
   spacingX,
   className,
@@ -64,9 +65,10 @@ export default function Container({
   return (
     <div
       id={id}
+      data-section-theme={background !== 'none' ? background : undefined}
       className={cn(
         containerVariants({
-          backgroundColor,
+          background,
           spacingY,
           spacingX,
         }),

@@ -29,6 +29,13 @@ const getIconComponent = (iconName: string) => {
 
 export const CallToActionConfig: ComponentConfig = {
   label: 'Call to Action',
+  metadata: {
+    ai: {
+      description: 'Link or button that drives the user to take an action.',
+      instructions:
+        'Text should be action-oriented (3-5 words, verb-led: "Get started", "Request demo").',
+    },
+  },
   fields: {
     text: {
       type: 'text',
@@ -46,6 +53,12 @@ export const CallToActionConfig: ComponentConfig = {
         { value: 'button', label: 'Button' },
         { value: 'buttonOutline', label: 'Button Outline' },
       ],
+      metadata: {
+        ai: {
+          instructions:
+            'button: primary CTA, strong emphasis. buttonOutline: secondary CTA, less dominant. link: inline or tertiary CTA.',
+        },
+      },
     },
     size: {
       type: 'select',
@@ -78,7 +91,7 @@ export const CallToActionConfig: ComponentConfig = {
     },
   },
   defaultProps: {
-    text: 'Call to Action',
+    text: 'Get started',
     href: '#',
     variant: 'button',
     size: 'big',

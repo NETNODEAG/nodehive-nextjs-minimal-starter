@@ -10,10 +10,12 @@ import { ContainerConfig } from '@/components/theme/atoms-layout/container/conta
 import { GridConfig } from '@/components/theme/atoms-layout/grid/grid.config';
 import { SpaceConfig } from '@/components/theme/atoms-layout/space/space.config';
 import { TwoColumnsConfig } from '@/components/theme/atoms-layout/two-columns/two-columns.config';
+import { AccordionConfig } from '@/components/theme/organisms/accordion/accordion.config';
 import { CardConfig } from '@/components/theme/organisms/card/card.config';
 import { StatisticsConfig } from '@/components/theme/organisms/statistics/statistics.config';
+import { TestimonialConfig } from '@/components/theme/organisms/testimonial/testimonial.config';
 import { ContentSectionConfig } from '@/components/theme/sections/content-section/content-section.config';
-import { HeroConfig } from '@/components/theme/sections/hero/hero.config';
+import { HeroSectionConfig } from '@/components/theme/sections/hero-section/hero-section.config';
 
 export const config: Config = {
   categories: {
@@ -23,12 +25,12 @@ export const config: Config = {
     sections: {
       visible: false,
       title: 'Sections',
-      components: ['Hero', 'ContentSection'],
+      components: ['HeroSection', 'ContentSection'],
     },
     organisms: {
       visible: true,
       title: 'Organisms',
-      components: ['Card', 'Statistics'],
+      components: ['Card', 'Accordion', 'Testimonial', 'Statistics'],
     },
     layout: {
       visible: true,
@@ -55,9 +57,11 @@ export const config: Config = {
     Video: VideoConfig,
     // Organisms
     Card: CardConfig,
+    Accordion: AccordionConfig,
+    Testimonial: TestimonialConfig,
     Statistics: StatisticsConfig,
     // Sections
-    Hero: HeroConfig,
+    HeroSection: HeroSectionConfig,
     ContentSection: ContentSectionConfig,
   },
   root: {

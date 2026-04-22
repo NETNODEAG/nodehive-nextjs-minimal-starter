@@ -2,37 +2,16 @@ import type { Meta, StoryObj } from '@storybook/react';
 
 import Statistics from './statistics';
 
-const variantOptions = ['default', 'bordered', 'subtle'] as const;
-
 const meta = {
   title: 'Organisms/Statistics',
   component: Statistics,
   tags: ['autodocs'],
   args: {
-    variant: 'default',
     items: [
-      {
-        title: '98%',
-        text: '<p>Customer satisfaction rating reported across platforms.</p>',
-      },
-      {
-        title: '24/7',
-        text: '<p>Support coverage to keep your digital presence running smoothly.</p>',
-      },
-      {
-        title: '120+',
-        text: '<p>Successful launches delivered by the team this year.</p>',
-      },
+      { title: '250k', text: 'Transactions every 24 hours' },
+      { title: '$119T', text: 'Assets under holding' },
+      { title: '46,000', text: 'New users annually' },
     ],
-  },
-  argTypes: {
-    variant: {
-      control: 'inline-radio',
-      options: variantOptions,
-    },
-    className: {
-      control: false,
-    },
   },
 } satisfies Meta<typeof Statistics>;
 
@@ -40,14 +19,15 @@ export default meta;
 
 type Story = StoryObj<typeof Statistics>;
 
-export const Default: Story = {};
+export const Three: Story = {};
 
-export const Variants: Story = {
-  render: (args) => (
-    <div className="space-y-12">
-      {variantOptions.map((variant) => (
-        <Statistics key={variant} {...args} variant={variant} />
-      ))}
-    </div>
-  ),
+export const Four: Story = {
+  args: {
+    items: [
+      { title: '99.9%', text: 'Uptime' },
+      { title: '250k', text: 'Transactions per day' },
+      { title: '$119T', text: 'Assets under holding' },
+      { title: '46,000', text: 'New users annually' },
+    ],
+  },
 };

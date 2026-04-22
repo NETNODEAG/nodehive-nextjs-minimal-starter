@@ -4,6 +4,12 @@ import { Heading } from '@/components/theme/atoms-content/heading/heading';
 
 export const HeadingConfig: ComponentConfig = {
   label: 'Heading',
+  metadata: {
+    ai: {
+      description: 'Page or section heading (h1-h4).',
+      instructions: 'Keep headings concise (3-8 words).',
+    },
+  },
   fields: {
     text: {
       type: 'text',
@@ -20,6 +26,12 @@ export const HeadingConfig: ComponentConfig = {
         { label: 'Medium', value: 'md' },
         { label: 'Small', value: 'sm' },
       ],
+      metadata: {
+        ai: {
+          instructions:
+            'Visual size, independent of semantic level. display-xxl/xl for hero-style titles, xl/lg for major section headings, md/sm for sub-sections.',
+        },
+      },
     },
     level: {
       type: 'select',
@@ -30,10 +42,16 @@ export const HeadingConfig: ComponentConfig = {
         { label: 'H3', value: '3' },
         { label: 'H4', value: '4' },
       ],
+      metadata: {
+        ai: {
+          instructions:
+            'Semantic HTML level. One "1" (h1) per page. "2" for page sections, "3"-"4" for subsections.',
+        },
+      },
     },
   },
   defaultProps: {
-    text: 'Überschrift',
+    text: 'Section heading',
     size: 'lg',
     level: '2',
   },

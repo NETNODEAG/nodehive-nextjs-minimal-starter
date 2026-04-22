@@ -3,14 +3,36 @@ import { ComponentConfig } from '@puckeditor/core';
 import Grid from '@/components/theme/atoms-layout/grid/grid';
 
 export const GridConfig: ComponentConfig = {
+  label: 'Grid',
+  metadata: {
+    ai: {
+      description:
+        'Multi-column grid layout for equal-width children. Typically contains Cards.',
+      instructions:
+        'Only used inside section slots for custom layouts — never at the page root. Pick columns based on item count (3 items → 3 cols, 4 items → 2 or 4 cols).',
+    },
+  },
   fields: {
     content: {
       type: 'slot',
+      disallow: [
+        'Container',
+        'TwoColumns',
+        'Grid',
+        'HeroSection',
+        'ContentSection',
+      ],
     },
     columns: {
       type: 'number',
       min: 1,
       max: 12,
+      metadata: {
+        ai: {
+          instructions:
+            'Pick based on item count (3 items = 3 cols, 4 items = 2 or 4 cols).',
+        },
+      },
     },
     gap: {
       type: 'select',

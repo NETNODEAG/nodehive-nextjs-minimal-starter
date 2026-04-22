@@ -9,6 +9,7 @@ import { motion } from 'framer-motion';
 
 import { DrupalNode } from '@/types/nodehive';
 import { cn } from '@/lib/utils';
+import { useScrollLockOutside } from '@/components/puck/editor/use-scroll-lock-outside';
 import PuckRender from '@/components/puck/puck-render';
 
 const LazyPuckEditor = dynamic(
@@ -48,6 +49,8 @@ export default function PuckWrapper({
     registerEditor(() => setIsEditMode(true));
   }, [registerEditor]);
 
+  useScrollLockOutside(isEditMode, '[data-puck-editor-overlay]');
+
   const closePuckEditor = async () => {
     setIsEditMode(false);
     if (searchParams.has('puckeditor')) {
@@ -80,6 +83,7 @@ export default function PuckWrapper({
         <PuckRender data={puckData} config={config} />
       </div>
       <motion.div
+        data-puck-editor-overlay
         className="fixed inset-0 z-50 border border-t border-b border-gray-300 bg-white"
         initial={{ y: '100%' }}
         animate={{ y: isEditMode ? 0 : '100%' }}

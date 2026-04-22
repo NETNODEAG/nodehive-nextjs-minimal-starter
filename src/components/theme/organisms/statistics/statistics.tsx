@@ -1,95 +1,42 @@
 import React from 'react';
-import { cva } from 'class-variance-authority';
 
 import { cn } from '@/lib/utils';
 import BodyCopy from '@/components/theme/atoms-content/body-copy/body-copy';
 
-const statisticsVariants = cva('mx-auto max-w-7xl');
-
-const gridVariants = cva('grid grid-cols-1 gap-x-8 gap-y-12 lg:grid-cols-3');
-
-const statCardVariants = cva('flex flex-col gap-y-4', {
-  variants: {
-    variant: {
-      default: '',
-      bordered: 'border-primary border-t-4 pt-8',
-      subtle: 'rounded-lg bg-gray-50 p-8',
-    },
-  },
-  defaultVariants: {
-    variant: 'default',
-  },
-});
-
-const titleVariants = cva(
-  'order-first text-5xl font-semibold tracking-tight sm:text-6xl',
-  {
-    variants: {
-      variant: {
-        default: 'text-gray-900',
-        bordered: 'text-gray-900',
-        subtle: 'text-gray-900',
-      },
-    },
-    defaultVariants: {
-      variant: 'default',
-    },
-  }
-);
-
-const textVariants = cva('prose prose-theme max-w-none', {
-  variants: {
-    variant: {
-      default:
-        'prose-p:text-base prose-p:leading-7 prose-p:text-gray-600 prose-strong:font-semibold prose-strong:text-gray-900',
-      bordered:
-        'prose-p:text-base prose-p:leading-7 prose-p:text-gray-600 prose-strong:font-semibold prose-strong:text-gray-900',
-      subtle:
-        'prose-p:text-base prose-p:leading-7 prose-p:text-gray-600 prose-strong:font-semibold prose-strong:text-gray-900',
-    },
-  },
-  defaultVariants: {
-    variant: 'default',
-  },
-});
-
-export interface StatisticItemProps {
+export interface StatisticsItem {
   title: string;
-  text: string;
+  text?: string | React.ReactNode;
 }
 
-export interface StatisticsProps extends React.HTMLAttributes<HTMLElement> {
-  variant?: 'default' | 'bordered' | 'subtle';
-  items?: StatisticItemProps[];
+export interface StatisticsProps {
+  items?: StatisticsItem[];
+  className?: string;
 }
 
-const StatisticItem: React.FC<
-  StatisticItemProps & { variant?: 'default' | 'bordered' | 'subtle' }
-> = ({ title, text, variant = 'default' }) => {
-  return (
-    <div className={cn(statCardVariants({ variant }))}>
-      <p className={cn(titleVariants({ variant }))}>{title}</p>
-      <BodyCopy className={cn(textVariants({ variant }))}>{text}</BodyCopy>
-    </div>
-  );
-};
+const Statistics: React.FC<StatisticsProps> = ({ items = [], className }) => {
+  const columnsClass = cn('grid gap-8 md:gap-12', {
+    'grid-cols-1': items.length === 1,
+    'grid-cols-1 md:grid-cols-2': items.length === 2,
+    'grid-cols-1 md:grid-cols-2 lg:grid-cols-3':
+      items.length === 3 || items.length > 4,
+    'grid-cols-1 md:grid-cols-2 lg:grid-cols-4': items.length === 4,
+  });
 
-const Statistics: React.FC<StatisticsProps> = ({
-  items = [],
-  variant = 'default',
-  className,
-  ...props
-}) => {
   return (
-    <section data-component-type="Statistics" {...props}>
-      <div className={cn(statisticsVariants(), className)}>
-        <div className={cn(gridVariants())}>
-          {items.map((item, index) => (
-            <StatisticItem key={index} {...item} variant={variant} />
-          ))}
+    <div className={cn(columnsClass, className)}>
+      {items.map((item, index) => (
+        <div key={index} className="flex flex-col gap-y-3">
+          <p className="text-foreground text-5xl font-semibold tracking-tight sm:text-6xl md:text-7xl">
+            {item.title}
+          </p>
+          {item.text && (
+            <BodyCopy className="prose-p:text-base prose-p:text-muted-foreground prose-strong:text-foreground">
+              {item.text}
+            </BodyCopy>
+          )}
         </div>
-      </div>
-    </section>
+      ))}
+    </div>
   );
 };
 

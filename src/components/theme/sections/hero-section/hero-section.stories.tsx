@@ -1,12 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-import Hero from './hero';
+import HeroSection from './hero-section';
 
 const backgroundOptions = ['none', 'light'] as const;
 
 const meta = {
   title: 'Sections/Hero',
-  component: Hero,
+  component: HeroSection,
   tags: ['autodocs'],
   args: {
     background: 'none',
@@ -35,11 +35,11 @@ const meta = {
       control: false,
     },
   },
-} satisfies Meta<typeof Hero>;
+} satisfies Meta<typeof HeroSection>;
 
 export default meta;
 
-type Story = StoryObj<typeof Hero>;
+type Story = StoryObj<typeof HeroSection>;
 
 export const Default: Story = {};
 
@@ -47,7 +47,7 @@ export const Backgrounds: Story = {
   render: (args) => (
     <div className="space-y-12">
       {backgroundOptions.map((background) => (
-        <Hero key={background} {...args} background={background} />
+        <HeroSection key={background} {...args} background={background} />
       ))}
     </div>
   ),
