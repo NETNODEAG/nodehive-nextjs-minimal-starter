@@ -51,7 +51,6 @@ const usePuck = createUsePuck();
 type AiChatPanelProps = {
   config: Config;
   nodeId: string;
-  context?: string;
 };
 
 const QUICK_ACTIONS = [
@@ -66,7 +65,7 @@ function getMessageText(message: UIMessage): string {
     .join(' ');
 }
 
-export function AiChatPanel({ config, nodeId, context }: AiChatPanelProps) {
+export function AiChatPanel({ config, nodeId }: AiChatPanelProps) {
   const appState = usePuck((s) => s.appState);
   const dispatch = usePuck((s) => s.dispatch);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -114,7 +113,6 @@ export function AiChatPanel({ config, nodeId, context }: AiChatPanelProps) {
       body: {
         puckConfig: JSON.stringify(config),
         puckData: JSON.stringify(appState?.data),
-        context,
       },
     }),
     messages: loadMessages(activeChatId),

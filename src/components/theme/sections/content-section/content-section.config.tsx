@@ -1,9 +1,10 @@
 import { ComponentConfig } from '@puckeditor/core';
 
+import { createSectionBackgroundField } from '@/components/puck/editor/field-utils';
 import ContentSection from '@/components/theme/sections/content-section/content-section';
 
 export const ContentSectionConfig: ComponentConfig = {
-  label: 'Content Section',
+  label: 'Content',
   ai: {
     description:
       'Full-width section with eyebrow, title, body, and an optional media slot (Image or Video only).',
@@ -17,39 +18,103 @@ export const ContentSectionConfig: ComponentConfig = {
       options: [
         { label: 'Stacked', value: 'stacked' },
         { label: 'Centered', value: 'centered' },
-        { label: 'Content Left / Media Right', value: 'content-left' },
-        { label: 'Media Left / Content Right', value: 'media-left' },
+        { label: 'Side by Side', value: 'side-by-side' },
       ],
       metadata: {
         ai: {
           instructions:
-            'stacked: text then media below. centered: centered text only. content-left/media-left: pick based on which side should lead visually.',
+            'stacked: text then media below. centered: centered text, media below. side-by-side: text and media in adjacent columns.',
         },
       },
     },
-    variant: {
-      type: 'radio',
-      label: 'Variant',
-      options: [
-        { label: '1', value: '1' },
-        { label: '2', value: '2' },
-        { label: '3', value: '3' },
-      ],
-    },
-    background: {
+    width: {
       type: 'select',
-      label: 'Background',
+      label: 'Width',
       options: [
-        { label: 'None', value: 'none' },
-        { label: 'Light', value: 'light' },
+        { label: 'Narrow', value: 'narrow' },
+        { label: 'Wide', value: 'wide' },
+        { label: 'Full', value: 'full' },
       ],
       metadata: {
         ai: {
           instructions:
-            'none: default transparent. light: use to break visual rhythm between adjacent sections.',
+            'Only for side-by-side. Outer container width. narrow=896px, wide=1280px, full=viewport width minus gutter.',
         },
       },
     },
+    textWidth: {
+      type: 'select',
+      label: 'Title Width',
+      options: [
+        { label: 'Narrow', value: 'narrow' },
+        { label: 'Wide', value: 'wide' },
+      ],
+      metadata: {
+        ai: {
+          instructions:
+            'Only for stacked/centered. Max width of the text block (eyebrow/title/body). narrow=896px (good reading length), wide=1280px.',
+        },
+      },
+    },
+    slotWidth: {
+      type: 'select',
+      label: 'Content Width',
+      options: [
+        { label: 'Narrow', value: 'narrow' },
+        { label: 'Wide', value: 'wide' },
+        { label: 'Full', value: 'full' },
+      ],
+      metadata: {
+        ai: {
+          instructions:
+            'Only for stacked/centered. Max width of the Content slot (Image/Video/BodyCopy drop area). narrow=896px, wide=1280px, full=viewport width.',
+        },
+      },
+    },
+    contentPosition: {
+      type: 'radio',
+      label: 'Content Position',
+      options: [
+        { label: 'Left', value: 'left' },
+        { label: 'Right', value: 'right' },
+      ],
+      metadata: {
+        ai: {
+          instructions:
+            'Only for side-by-side. Which side the Content slot (the drop area holding Image/Video/BodyCopy) is on (desktop). The text column (eyebrow/title/body) fills the other side.',
+        },
+      },
+    },
+    split: {
+      type: 'select',
+      label: 'Split (left / right)',
+      options: [
+        { label: '50 / 50', value: '50-50' },
+        { label: '60 / 40', value: '60-40' },
+        { label: '40 / 60', value: '40-60' },
+      ],
+      metadata: {
+        ai: {
+          instructions:
+            'Only for side-by-side. Column proportions as left/right percentages (desktop). 50-50 balanced, 60-40 left column wider, 40-60 right column wider. Combine with contentPosition to decide whether the Content slot or the text column gets the wider side.',
+        },
+      },
+    },
+    reverseOnMobile: {
+      type: 'radio',
+      label: 'Reverse order on mobile',
+      options: [
+        { label: 'No', value: false },
+        { label: 'Yes', value: true },
+      ],
+      metadata: {
+        ai: {
+          instructions:
+            'Only for side-by-side. On mobile the two columns stack. By default they follow desktop order (e.g. Content slot on the left shows the slot first, text below). Enable to flip that on mobile.',
+        },
+      },
+    },
+    background: createSectionBackgroundField(['none', 'light']),
     eyebrow: {
       type: 'text',
       label: 'Eyebrow',
@@ -68,8 +133,43 @@ export const ContentSectionConfig: ComponentConfig = {
     content: {
       type: 'slot',
       label: 'Content',
-      allow: ['Image', 'Video'],
+      allow: [
+        'Image',
+        'Video',
+        'BodyCopy',
+        'Space',
+        'Accordion',
+        'Testimonial',
+        'Statistics',
+        'Grid',
+      ],
     },
+  },
+  resolveFields: (data, params) => {
+    const f = params.fields;
+    const isSideBySide = data.props.layout === 'side-by-side';
+
+    const fields: any = {
+      layout: f.layout,
+    };
+
+    if (isSideBySide) {
+      fields.width = f.width;
+      fields.contentPosition = f.contentPosition;
+      fields.split = f.split;
+      fields.reverseOnMobile = f.reverseOnMobile;
+    } else {
+      fields.textWidth = f.textWidth;
+      fields.slotWidth = f.slotWidth;
+    }
+
+    fields.background = f.background;
+    fields.eyebrow = f.eyebrow;
+    fields.title = f.title;
+    fields.body = f.body;
+    fields.content = f.content;
+
+    return fields;
   },
   defaultProps: {
     title: 'Content Section Title',
@@ -77,7 +177,12 @@ export const ContentSectionConfig: ComponentConfig = {
     body: '<p>Add your content here.</p>',
     background: 'none',
     layout: 'stacked',
-    variant: '1',
+    width: 'wide',
+    textWidth: 'narrow',
+    slotWidth: 'wide',
+    contentPosition: 'left',
+    split: '50-50',
+    reverseOnMobile: false,
   },
   render: ({
     title,
@@ -85,7 +190,12 @@ export const ContentSectionConfig: ComponentConfig = {
     body,
     background,
     layout,
-    variant,
+    width,
+    textWidth,
+    slotWidth,
+    contentPosition,
+    split,
+    reverseOnMobile,
     content: Content,
   }) => {
     return (
@@ -95,7 +205,12 @@ export const ContentSectionConfig: ComponentConfig = {
         body={body}
         background={background}
         layout={layout}
-        variant={variant}
+        width={width}
+        textWidth={textWidth}
+        slotWidth={slotWidth}
+        contentPosition={contentPosition}
+        split={split}
+        reverseOnMobile={reverseOnMobile}
         content={Content}
       />
     );

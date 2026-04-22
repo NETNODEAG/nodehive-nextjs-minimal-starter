@@ -1,36 +1,25 @@
 import React from 'react';
 import NextImage from 'next/image';
-import { cva, type VariantProps } from 'class-variance-authority';
 
 import { cn } from '@/lib/utils';
+import type { SectionBackgroundVariant } from '@/components/puck/editor/field-utils';
 import BodyCopy from '@/components/theme/atoms-content/body-copy/body-copy';
 import CallToAction from '@/components/theme/atoms-content/call-to-action/call-to-action';
 import { Heading } from '@/components/theme/atoms-content/heading/heading';
-import Container from '../../atoms-layout/container/container';
-
-const heroVariants = cva('w-full text-left', {
-  variants: {
-    background: {
-      none: 'bg-transparent',
-      light: 'bg-gray-50',
-    },
-  },
-  defaultVariants: {
-    background: 'none',
-  },
-});
+import Container from '@/components/theme/atoms-layout/container/container';
 
 export type HeroLayout = 'default' | 'centered' | 'bottom';
 export type HeroHeight = '25' | '50' | '90';
 
-export interface HeroProps
-  extends
-    Omit<React.HTMLAttributes<HTMLElement>, 'title'>,
-    VariantProps<typeof heroVariants> {
+export interface HeroProps extends Omit<
+  React.HTMLAttributes<HTMLElement>,
+  'title'
+> {
   title?: string | React.ReactNode;
   description?: string | React.ReactNode;
   layout?: HeroLayout;
   height?: HeroHeight;
+  background?: SectionBackgroundVariant;
   backgroundImage?: {
     src: string;
     alt?: string;
@@ -52,12 +41,12 @@ export interface HeroProps
   };
 }
 
-const Hero: React.FC<HeroProps> = ({
+const HeroSection: React.FC<HeroProps> = ({
   title,
   description,
   primaryCta,
   secondaryCta,
-  background,
+  background = 'none',
   backgroundImage,
   overlayOpacity = 50,
   layout = 'default',
@@ -70,25 +59,21 @@ const Hero: React.FC<HeroProps> = ({
   const hasBackgroundImage = !!backgroundImage?.src;
 
   const heightClasses: Record<HeroHeight, string> = {
-    '25': 'min-h-[25vh]',
-    '50': 'min-h-[50vh]',
-    '90': 'min-h-[90vh]',
+    '25': 'min-h-[25vh] py-6 md:py-10',
+    '50': 'min-h-[50vh] py-12 md:py-20',
+    '90': 'min-h-[90vh] py-16 md:py-28',
   };
 
   return (
     <section
+      data-section-theme={hasBackgroundImage ? 'dark' : background}
       className={cn(
-        heroVariants({
-          background: hasBackgroundImage ? undefined : background,
-        }),
-        'relative overflow-hidden',
+        'bg-background text-foreground relative flex w-full flex-col overflow-hidden',
         heightClasses[height],
         {
-          'flex flex-col justify-center py-12 md:py-24 lg:py-32':
-            layout === 'default' || isCentered,
-          'flex flex-col justify-end pt-24 pb-12 md:pt-32 md:pb-16': isBottom,
+          'justify-center': layout === 'default' || isCentered,
+          'justify-end': isBottom,
           'text-center': isCentered,
-          'text-white': hasBackgroundImage,
         },
         className
       )}
@@ -114,7 +99,6 @@ const Hero: React.FC<HeroProps> = ({
         <div
           className={cn('prose prose-theme max-w-none space-y-6', {
             'mx-auto max-w-4xl': isCentered,
-            'prose-invert': hasBackgroundImage,
           })}
         >
           {title && (
@@ -123,14 +107,7 @@ const Hero: React.FC<HeroProps> = ({
             </Heading>
           )}
 
-          {description && (
-            <BodyCopy
-              size="lg"
-              className={cn({ 'prose-invert': hasBackgroundImage })}
-            >
-              {description}
-            </BodyCopy>
-          )}
+          {description && <BodyCopy size="lg">{description}</BodyCopy>}
 
           {(primaryCta || secondaryCta) && (
             <div
@@ -166,4 +143,4 @@ const Hero: React.FC<HeroProps> = ({
   );
 };
 
-export default Hero;
+export default HeroSection;

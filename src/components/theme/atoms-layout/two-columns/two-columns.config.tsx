@@ -30,6 +30,8 @@ export const TwoColumnsConfig: ComponentConfig<TwoColumnsConfigProps> = {
   label: 'Zwei Spalten',
   ai: {
     description: 'Two-column side-by-side layout with configurable ratio.',
+    instructions:
+      "Only used inside section slots for custom two-column layouts — never at the page root. For typical side-by-side text-plus-media use a ContentSection with a side-by-side layout instead; TwoColumns is the escape hatch when the section-level layouts don't fit.",
   },
   fields: {
     columnRatio: {
@@ -59,12 +61,12 @@ export const TwoColumnsConfig: ComponentConfig<TwoColumnsConfigProps> = {
     leftColumn: {
       type: 'slot',
       label: 'Linke Spalte',
-      disallow: ['Container', 'TwoColumns', 'Hero', 'ContentSection'],
+      disallow: ['Container', 'TwoColumns', 'HeroSection', 'ContentSection'],
     },
     rightColumn: {
       type: 'slot',
       label: 'Rechte Spalte',
-      disallow: ['Container', 'TwoColumns', 'Hero', 'ContentSection'],
+      disallow: ['Container', 'TwoColumns', 'HeroSection', 'ContentSection'],
     },
   },
 

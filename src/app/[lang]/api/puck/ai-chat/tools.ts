@@ -31,7 +31,7 @@ export function createAiChatTools({ puckConfig, lang }: ToolsContext) {
         name: z
           .string()
           .describe(
-            'Component type name from the AVAILABLE COMPONENTS list (e.g., "Hero", "Container")'
+            'Component type name from the AVAILABLE COMPONENTS list (e.g., "HeroSection", "Container")'
           ),
       }),
       execute: async ({ name }) => {
@@ -51,7 +51,7 @@ export function createAiChatTools({ puckConfig, lang }: ToolsContext) {
       inputSchema: z.object({
         type: z
           .string()
-          .describe('Component type name (e.g., "Heading", "Hero")'),
+          .describe('Component type name (e.g., "Heading", "HeroSection")'),
         props: z
           .record(z.string(), z.any())
           .describe(

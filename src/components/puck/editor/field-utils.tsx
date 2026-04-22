@@ -1,4 +1,5 @@
 import type { CustomFieldRender } from '@puckeditor/core';
+import dynamicIconImports from 'lucide-react/dynamicIconImports';
 
 import { getLocaleFromPathname } from '@/lib/utils';
 import { CheckboxGroupField } from '@/components/puck/editor/checkbox-group/checkbox-group-field';
@@ -7,6 +8,76 @@ import {
   MediaItem,
   MediaSelectorField,
 } from '@/components/puck/editor/media-selector/media-selector-field';
+
+export type SectionBackgroundVariant = 'none' | 'light' | 'dark' | 'primary';
+
+const BACKGROUND_LABELS: Record<SectionBackgroundVariant, string> = {
+  none: 'None',
+  light: 'Light',
+  dark: 'Dark',
+  primary: 'Primary (brand)',
+};
+
+export const createSectionBackgroundField = (
+  variants: SectionBackgroundVariant[] = ['none', 'light', 'dark']
+) => {
+  return {
+    type: 'select' as const,
+    label: 'Background',
+    options: variants.map((v) => ({ label: BACKGROUND_LABELS[v], value: v })),
+    metadata: {
+      ai: {
+        instructions: `Use to create visual rhythm between sections:
+  - none: default transparent — blends into the page
+  - light: subtle grey tint — softens the divide between two neutral sections
+  - dark: strong contrast — use sparingly for emphasis (final CTA, closing stats)
+  - primary: brand-colored — rare, only for a single conversion moment per page`,
+      },
+    },
+  };
+};
+
+export type SectionSpacing = 'sm' | 'md' | 'lg';
+
+const SPACING_LABELS: Record<SectionSpacing, string> = {
+  sm: 'Small',
+  md: 'Medium',
+  lg: 'Large',
+};
+
+const lucideIconOptions = [
+  { label: 'None', value: '' },
+  ...Object.keys(dynamicIconImports)
+    .sort()
+    .map((name) => ({ label: name, value: name })),
+];
+
+export const createLucideIconField = (label = 'Icon') => ({
+  type: 'select' as const,
+  label,
+  options: lucideIconOptions,
+  metadata: {
+    ai: {
+      instructions:
+        'Pick a lucide-react icon name (kebab-case, e.g. "rocket", "shield-check", "bar-chart"). Leave empty for no icon.',
+    },
+  },
+});
+
+export const createSectionSpacingField = () => ({
+  type: 'select' as const,
+  label: 'Spacing',
+  options: (Object.keys(SPACING_LABELS) as SectionSpacing[]).map((v) => ({
+    label: SPACING_LABELS[v],
+    value: v,
+  })),
+  metadata: {
+    ai: {
+      instructions:
+        'Vertical padding above and below the section content. Default md. Use sm for dense areas (e.g. a row of stats directly after a related section). Use lg for emphasis or to give a section breathing room.',
+    },
+  },
+});
 
 export interface DatePickerFieldOptions {
   label?: string;

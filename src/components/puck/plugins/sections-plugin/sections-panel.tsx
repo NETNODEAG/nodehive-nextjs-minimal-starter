@@ -10,12 +10,14 @@ type SectionsPanelProps = {
   config: Config;
 };
 
-const SECTION_COMPONENTS = ['Hero', 'ContentSection'];
-
 export function SectionsPanel({ config }: SectionsPanelProps) {
   const [searchQuery, setSearchQuery] = useState('');
 
-  const sectionComponents = SECTION_COMPONENTS.filter((name) => {
+  // Pull the section list from the config's "sections" category so new
+  // sections registered there automatically show up here.
+  const sectionComponents = (
+    config.categories?.sections?.components ?? []
+  ).filter((name) => {
     if (!config.components[name]) return false;
     if (!searchQuery) return true;
     const label = config.components[name]?.label || name;

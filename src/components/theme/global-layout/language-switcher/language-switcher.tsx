@@ -69,7 +69,7 @@ export default function LanguageSwitcher({ lang }: LanguageSwitcherProps) {
               className={cn(
                 lang === locale
                   ? 'underline underline-offset-2'
-                  : 'text-black/60',
+                  : 'text-foreground/60',
                 'text-base font-bold uppercase'
               )}
             >

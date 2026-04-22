@@ -6,9 +6,9 @@ export const StatisticsConfig: ComponentConfig = {
   label: 'Statistics',
   ai: {
     description:
-      'Row or grid of numeric stats with labels (e.g., "1M+ users", "99.9% uptime").',
+      'Row of big-number statistics with short descriptions. Columns auto-adapt to the item count.',
     instructions:
-      '3-4 items work best. Numbers should be concrete and concise.',
+      'Use to highlight 3-4 key numbers that build trust (users, transactions, uptime, revenue). Keep the number short and visually striking; put the explanation in the description. Drop inside a ContentSection to add an intro above.',
   },
   fields: {
     items: {
@@ -19,31 +19,35 @@ export const StatisticsConfig: ComponentConfig = {
       arrayFields: {
         title: {
           type: 'text',
-          label: 'Title',
+          label: 'Number (required)',
+          contentEditable: true,
+          metadata: {
+            ai: {
+              instructions:
+                'MUST be a concise number or metric formatted as a string — e.g. "250k", "$119T", "46,000", "99.9%", "4.8★". This is the big visual centerpiece of the item. Never use a word or full sentence here.',
+            },
+          },
         },
         text: {
           type: 'richtext',
-          label: 'Text',
+          label: 'Description',
+          contentEditable: true,
+          metadata: {
+            ai: {
+              instructions:
+                'Short caption below the number (2-8 words): what the number counts. Example: "New users annually", "Assets under holding".',
+            },
+          },
         },
       },
       defaultItemProps: {
-        title: 'New Stat',
+        title: '100+',
         text: '<p>Description</p>',
       },
       getItemSummary: (item) => item.title || 'Statistic',
     },
-    variant: {
-      type: 'radio',
-      label: 'Style',
-      options: [
-        { label: 'Default', value: 'default' },
-        { label: 'Bordered', value: 'bordered' },
-        { label: 'Subtle', value: 'subtle' },
-      ],
-    },
   },
   defaultProps: {
-    variant: 'default',
     items: [
       {
         title: '250k',
@@ -59,7 +63,5 @@ export const StatisticsConfig: ComponentConfig = {
       },
     ],
   },
-  render: ({ variant, items }) => {
-    return <Statistics variant={variant} items={items} />;
-  },
+  render: ({ items }) => <Statistics items={items} />,
 };

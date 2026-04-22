@@ -1,5 +1,6 @@
 import { ComponentConfig } from '@puckeditor/core';
 
+import { createSectionBackgroundField } from '@/components/puck/editor/field-utils';
 import Container from '@/components/theme/atoms-layout/container/container';
 
 export const ContainerConfig: ComponentConfig = {
@@ -13,7 +14,7 @@ export const ContainerConfig: ComponentConfig = {
   fields: {
     content: {
       type: 'slot',
-      disallow: ['Container', 'Hero', 'ContentSection'],
+      disallow: ['Container', 'HeroSection', 'ContentSection'],
     },
     anchor: {
       type: 'text',
@@ -28,17 +29,12 @@ export const ContainerConfig: ComponentConfig = {
         { label: 'Narrow', value: 'narrow' },
       ],
     },
-    backgroundColor: {
-      label: 'Hintergrundfarbe',
-      type: 'select',
-      options: [
-        { label: 'Transparent', value: 'transparent' },
-        { label: 'Weiss', value: 'white' },
-        { label: 'Schwarz', value: 'black' },
-        { label: 'Primary', value: 'primary' },
-        { label: 'Secondary', value: 'secondary' },
-      ],
-    },
+    background: createSectionBackgroundField([
+      'none',
+      'light',
+      'dark',
+      'primary',
+    ]),
     spacingY: {
       label: 'Abstand vertikal',
       type: 'select',
@@ -48,6 +44,7 @@ export const ContainerConfig: ComponentConfig = {
         { label: 'Mittel', value: 'md' },
         { label: 'Gross', value: 'lg' },
         { label: 'Extra Gross', value: 'xl' },
+        { label: 'Section (2xl)', value: '2xl' },
       ],
     },
     spacingX: {
@@ -61,14 +58,14 @@ export const ContainerConfig: ComponentConfig = {
   },
   defaultProps: {
     width: 'wide',
-    backgroundColor: 'transparent',
+    background: 'none',
     spacingY: 'md',
     spacingX: 'md',
   },
   render: ({
     width,
     anchor,
-    backgroundColor,
+    background,
     spacingY,
     spacingX,
     content: Content,
@@ -76,7 +73,7 @@ export const ContainerConfig: ComponentConfig = {
     <Container
       width={width}
       id={anchor}
-      backgroundColor={backgroundColor}
+      background={background}
       spacingY={spacingY}
       spacingX={spacingX}
     >

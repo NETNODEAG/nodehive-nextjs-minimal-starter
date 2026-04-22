@@ -7,19 +7,13 @@ export const GridConfig: ComponentConfig = {
   ai: {
     description:
       'Multi-column grid layout for equal-width children. Typically contains Cards.',
+    instructions:
+      'Only used inside section slots for custom layouts — never at the page root. Pick columns based on item count (3 items → 3 cols, 4 items → 2 or 4 cols).',
   },
   fields: {
     content: {
       type: 'slot',
-      allow: [
-        'Card',
-        'Statistics',
-        'Heading',
-        'BodyCopy',
-        'CallToAction',
-        'Image',
-        'Video',
-      ],
+      allow: ['Card', 'Heading', 'BodyCopy', 'CallToAction', 'Image', 'Video'],
     },
     columns: {
       type: 'number',

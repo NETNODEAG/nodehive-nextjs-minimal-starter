@@ -16,7 +16,7 @@ export const buttonVariants = cva(
           'bg-secondary border-secondary hover:bg-secondary/90 rounded-full border text-white',
         outline:
           'border-primary text-primary hover:bg-primary/10 rounded-full border bg-white',
-        ghost: 'rounded-full hover:bg-slate-100 hover:text-black',
+        ghost: 'hover:text-foreground rounded-full hover:bg-slate-100',
       },
     },
     defaultVariants: { variant: 'primary' },
@@ -24,7 +24,8 @@ export const buttonVariants = cva(
 );
 
 export interface ButtonProps
-  extends VariantProps<typeof buttonVariants>,
+  extends
+    VariantProps<typeof buttonVariants>,
     React.ButtonHTMLAttributes<HTMLButtonElement> {
   text?: string;
   children: React.ReactNode;

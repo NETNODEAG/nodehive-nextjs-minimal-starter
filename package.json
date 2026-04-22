@@ -18,6 +18,7 @@
     "@formatjs/intl-localematcher": "^0.7.5",
     "@iframe-resizer/react": "^5.5.7",
     "@puckeditor/core": "^0.21.0",
+    "@radix-ui/react-accordion": "^1.2.12",
     "@radix-ui/react-dialog": "^1.1.15",
     "@radix-ui/react-popover": "^1.1.15",
     "@radix-ui/react-tooltip": "^1.2.8",

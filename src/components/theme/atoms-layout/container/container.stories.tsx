@@ -3,14 +3,8 @@ import type { Meta, StoryObj } from '@storybook/react';
 import Container from './container';
 
 const widthOptions = ['full', 'wide', 'narrow'] as const;
-const backgroundColorOptions = [
-  'transparent',
-  'white',
-  'black',
-  'primary',
-  'secondary',
-] as const;
-const spacingYOptions = ['none', 'sm', 'md', 'lg', 'xl'] as const;
+const backgroundOptions = ['none', 'light', 'dark', 'primary'] as const;
+const spacingYOptions = ['none', 'sm', 'md', 'lg', 'xl', '2xl'] as const;
 const spacingXOptions = ['none', 'md'] as const;
 
 const widthLabels: Record<(typeof widthOptions)[number], string> = {
@@ -25,7 +19,7 @@ const meta = {
   tags: ['autodocs'],
   args: {
     width: 'wide',
-    backgroundColor: 'transparent',
+    background: 'none',
     spacingY: 'md',
     spacingX: 'md',
     children: (
@@ -39,9 +33,9 @@ const meta = {
       control: 'inline-radio',
       options: widthOptions,
     },
-    backgroundColor: {
+    background: {
       control: 'select',
-      options: backgroundColorOptions,
+      options: backgroundOptions,
     },
     spacingY: {
       control: 'select',
@@ -80,18 +74,18 @@ export const Widths: Story = {
   ),
 };
 
-export const BackgroundColors: Story = {
+export const Backgrounds: Story = {
   render: (args) => (
     <div className="space-y-6">
-      {backgroundColorOptions.map((backgroundColor) => (
+      {backgroundOptions.map((background) => (
         <Container
-          key={backgroundColor}
+          key={background}
           {...args}
-          backgroundColor={backgroundColor}
+          background={background}
           spacingY="md"
         >
-          <div className="rounded-lg border border-dashed border-slate-400 bg-slate-50 p-6 text-sm text-slate-700">
-            Background color: {backgroundColor}
+          <div className="border-muted-foreground/40 rounded-lg border border-dashed p-6 text-sm">
+            Background: {background}
           </div>
         </Container>
       ))}
@@ -101,13 +95,13 @@ export const BackgroundColors: Story = {
 
 export const WithSpacing: Story = {
   args: {
-    backgroundColor: 'primary',
+    background: 'primary',
     spacingY: 'lg',
   },
   render: (args) => (
     <Container {...args}>
-      <div className="rounded-lg border border-dashed border-white bg-white/20 p-6 text-sm text-white">
-        Container with vertical spacing and background color
+      <div className="rounded-lg border border-dashed border-white/40 p-6 text-sm">
+        Container with vertical spacing and primary background
       </div>
     </Container>
   ),

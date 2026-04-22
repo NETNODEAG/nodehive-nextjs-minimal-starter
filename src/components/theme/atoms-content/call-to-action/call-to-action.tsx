@@ -13,7 +13,7 @@ const callToActionVariants = cva(
         button:
           'bg-primary hover:bg-primary/80 rounded-full border border-transparent text-white',
         buttonOutline:
-          'border-primary text-primary rounded-full border bg-white hover:bg-slate-50',
+          'border-primary text-primary bg-background hover:bg-muted rounded-full border',
       },
       size: {
         small: 'px-3 py-1.5 text-sm',
@@ -31,8 +31,7 @@ const callToActionVariants = cva(
 );
 
 export interface CallToActionProps
-  extends NextLinkProps,
-    VariantProps<typeof callToActionVariants> {
+  extends NextLinkProps, VariantProps<typeof callToActionVariants> {
   children: ReactNode;
   className?: string;
   text?: string;
