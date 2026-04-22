@@ -16,10 +16,12 @@ const iconOptions = [
 
 export const CardConfig: ComponentConfig = {
   label: 'Card',
-  ai: {
-    description:
-      'Preformatted card with icon, title, description, and optional link. Designed to live inside a Grid.',
-    instructions: 'Titles 2-5 words, descriptions 1-2 sentences.',
+  metadata: {
+    ai: {
+      description:
+        'Preformatted card with icon, title, description, and optional link. Designed to live inside a Grid.',
+      instructions: 'Titles 2-5 words, descriptions 1-2 sentences.',
+    },
   },
   fields: {
     title: {

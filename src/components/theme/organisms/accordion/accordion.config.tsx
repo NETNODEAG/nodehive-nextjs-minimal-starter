@@ -5,11 +5,13 @@ import Accordion from '@/components/theme/organisms/accordion/accordion';
 
 export const AccordionConfig: ComponentConfig = {
   label: 'Accordion',
-  ai: {
-    description:
-      'Collapsible accordion with a question/answer list. Each item has a question and a slot for the answer content (text, image, video).',
-    instructions:
-      'Use for FAQs, product specs, or any set of collapsible details. 4-8 items is typical. Keep questions conversational and answers short. Drop inside a ContentSection or Container to add an intro above. ALWAYS fill out the answer slot of every item — never leave it empty. At minimum nest a BodyCopy with 1-3 sentences answering the question; an Image (e.g. a product shot, diagram) is a great addition when it clarifies the answer. An accordion item without answer content is considered broken.',
+  metadata: {
+    ai: {
+      description:
+        'Collapsible accordion with a question/answer list. Each item has a question and a slot for the answer content (text, image, video).',
+      instructions:
+        'Use for FAQs, product specs, or any set of collapsible details. 4-8 items is typical. Keep questions conversational and answers short. Drop inside a ContentSection or Container to add an intro above. ALWAYS fill out the answer slot of every item — never leave it empty. At minimum nest a BodyCopy with 1-3 sentences answering the question; an Image (e.g. a product shot, diagram) is a great addition when it clarifies the answer. An accordion item without answer content is considered broken.',
+    },
   },
   fields: {
     items: {

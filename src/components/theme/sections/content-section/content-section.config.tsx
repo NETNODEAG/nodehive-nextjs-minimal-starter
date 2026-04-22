@@ -5,11 +5,13 @@ import ContentSection from '@/components/theme/sections/content-section/content-
 
 export const ContentSectionConfig: ComponentConfig = {
   label: 'Content',
-  ai: {
-    description:
-      'Full-width section with eyebrow, title, body, and an optional media slot (Image or Video only).',
-    instructions:
-      'Use when a standard titled content block with optional media is needed.',
+  metadata: {
+    ai: {
+      description:
+        'Full-width section with eyebrow, title, body, and an optional media slot (Image or Video only).',
+      instructions:
+        'Use when a standard titled content block with optional media is needed.',
+    },
   },
   fields: {
     layout: {

@@ -8,11 +8,13 @@ import HeroSection from '@/components/theme/sections/hero-section/hero-section';
 
 export const HeroSectionConfig: ComponentConfig = {
   label: 'Hero',
-  ai: {
-    description:
-      'Large intro section with headline, subtitle, CTAs, and optional background media.',
-    instructions:
-      'At most once per page, as the first section. Title 3-8 words, description 10-25 words, max 2 CTAs.',
+  metadata: {
+    ai: {
+      description:
+        'Large intro section with headline, subtitle, CTAs, and optional background media.',
+      instructions:
+        'At most once per page, as the first section. Title 3-8 words, description 10-25 words, max 2 CTAs.',
+    },
   },
   fields: {
     layout: {

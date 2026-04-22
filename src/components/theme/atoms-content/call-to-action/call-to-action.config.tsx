@@ -29,10 +29,12 @@ const getIconComponent = (iconName: string) => {
 
 export const CallToActionConfig: ComponentConfig = {
   label: 'Call to Action',
-  ai: {
-    description: 'Link or button that drives the user to take an action.',
-    instructions:
-      'Text should be action-oriented (3-5 words, verb-led: "Get started", "Request demo").',
+  metadata: {
+    ai: {
+      description: 'Link or button that drives the user to take an action.',
+      instructions:
+        'Text should be action-oriented (3-5 words, verb-led: "Get started", "Request demo").',
+    },
   },
   fields: {
     text: {

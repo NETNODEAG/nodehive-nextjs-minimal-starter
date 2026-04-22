@@ -1,7 +1,7 @@
 import '@puckeditor/core';
 
 declare module '@puckeditor/core' {
-  interface ComponentConfigExtensions {
+  interface ComponentMetadata {
     ai?: {
       description?: string;
       instructions?: string;

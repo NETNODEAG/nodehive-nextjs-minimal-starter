@@ -49,7 +49,7 @@ function languageLabel(lang: string): string {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function getComponentAi(componentConfig: any) {
-  return (componentConfig?.ai || {}) as {
+  return (componentConfig?.metadata?.ai || {}) as {
     description?: string;
     instructions?: string;
     exclude?: boolean;

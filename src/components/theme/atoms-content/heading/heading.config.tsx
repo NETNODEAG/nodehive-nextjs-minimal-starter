@@ -4,9 +4,11 @@ import { Heading } from '@/components/theme/atoms-content/heading/heading';
 
 export const HeadingConfig: ComponentConfig = {
   label: 'Heading',
-  ai: {
-    description: 'Page or section heading (h1-h4).',
-    instructions: 'Keep headings concise (3-8 words).',
+  metadata: {
+    ai: {
+      description: 'Page or section heading (h1-h4).',
+      instructions: 'Keep headings concise (3-8 words).',
+    },
   },
   fields: {
     text: {

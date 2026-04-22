@@ -5,11 +5,13 @@ import Testimonial from '@/components/theme/organisms/testimonial/testimonial';
 
 export const TestimonialConfig: ComponentConfig = {
   label: 'Testimonial',
-  ai: {
-    description:
-      'Single hero testimonial: large centered quote with optional author details and avatar.',
-    instructions:
-      'Use to build trust with one standout quote. Keep it short (1-3 sentences). Always include a name; role and company optional. Use an avatar only if you actually have one — never a generic stock photo.',
+  metadata: {
+    ai: {
+      description:
+        'Single hero testimonial: large centered quote with optional author details and avatar.',
+      instructions:
+        'Use to build trust with one standout quote. Keep it short (1-3 sentences). Always include a name; role and company optional. Use an avatar only if you actually have one — never a generic stock photo.',
+    },
   },
   fields: {
     quote: {

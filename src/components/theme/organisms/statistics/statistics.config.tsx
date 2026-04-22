@@ -4,11 +4,13 @@ import Statistics from '@/components/theme/organisms/statistics/statistics';
 
 export const StatisticsConfig: ComponentConfig = {
   label: 'Statistics',
-  ai: {
-    description:
-      'Row of big-number statistics with short descriptions. Columns auto-adapt to the item count.',
-    instructions:
-      'Use to highlight 3-4 key numbers that build trust (users, transactions, uptime, revenue). Every item is ALWAYS a number/metric on top + a short descriptive caption below — this pairing is mandatory. The title MUST be a number like "250K", "5000", "$100", "800+", "2003", "99.9%" — never a word, label, or sentence. The description is a short caption (2-6 words) describing what the number counts, e.g. "Projekte realisiert", "Expert*Innen", "Töggeli Matches gespielt", "New users annually". Drop inside a ContentSection to add an intro above.',
+  metadata: {
+    ai: {
+      description:
+        'Row of big-number statistics with short descriptions. Columns auto-adapt to the item count.',
+      instructions:
+        'Use to highlight 3-4 key numbers that build trust (users, transactions, uptime, revenue). Every item is ALWAYS a number/metric on top + a short descriptive caption below — this pairing is mandatory. The title MUST be a number like "250K", "5000", "$100", "800+", "2003", "99.9%" — never a word, label, or sentence. The description is a short caption (2-6 words) describing what the number counts, e.g. "Projekte realisiert", "Expert*Innen", "Töggeli Matches gespielt", "New users annually". Drop inside a ContentSection to add an intro above.',
+    },
   },
   fields: {
     items: {
