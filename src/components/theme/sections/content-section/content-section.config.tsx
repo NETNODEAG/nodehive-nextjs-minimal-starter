@@ -133,16 +133,7 @@ export const ContentSectionConfig: ComponentConfig = {
     content: {
       type: 'slot',
       label: 'Content',
-      allow: [
-        'Image',
-        'Video',
-        'BodyCopy',
-        'Space',
-        'Accordion',
-        'Testimonial',
-        'Statistics',
-        'Grid',
-      ],
+      disallow: ['Container', 'HeroSection', 'ContentSection'],
     },
   },
   resolveFields: (data, params) => {

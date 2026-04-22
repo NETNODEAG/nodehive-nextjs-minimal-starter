@@ -61,12 +61,24 @@ export const TwoColumnsConfig: ComponentConfig<TwoColumnsConfigProps> = {
     leftColumn: {
       type: 'slot',
       label: 'Linke Spalte',
-      disallow: ['Container', 'TwoColumns', 'HeroSection', 'ContentSection'],
+      disallow: [
+        'Container',
+        'TwoColumns',
+        'Grid',
+        'HeroSection',
+        'ContentSection',
+      ],
     },
     rightColumn: {
       type: 'slot',
       label: 'Rechte Spalte',
-      disallow: ['Container', 'TwoColumns', 'HeroSection', 'ContentSection'],
+      disallow: [
+        'Container',
+        'TwoColumns',
+        'Grid',
+        'HeroSection',
+        'ContentSection',
+      ],
     },
   },
 

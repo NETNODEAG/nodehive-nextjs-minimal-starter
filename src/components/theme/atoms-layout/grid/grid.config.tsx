@@ -13,7 +13,13 @@ export const GridConfig: ComponentConfig = {
   fields: {
     content: {
       type: 'slot',
-      allow: ['Card', 'Heading', 'BodyCopy', 'CallToAction', 'Image', 'Video'],
+      disallow: [
+        'Container',
+        'TwoColumns',
+        'Grid',
+        'HeroSection',
+        'ContentSection',
+      ],
     },
     columns: {
       type: 'number',

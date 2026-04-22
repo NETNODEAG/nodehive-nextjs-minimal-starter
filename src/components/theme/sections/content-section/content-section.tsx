@@ -64,14 +64,18 @@ const ContentSection: React.FC<ContentSectionProps> = ({
         </p>
       )}
       {title && (
-        <Heading level="2" size="xl">
+        <Heading
+          level="2"
+          size="xl"
+          className={cn('max-w-prose', isCentered && 'mx-auto')}
+        >
           {title}
         </Heading>
       )}
       {body && (
         <BodyCopy
           size="lg"
-          className={cn('max-w-none', isCentered && 'mx-auto text-center')}
+          className={cn('max-w-prose', isCentered && 'mx-auto text-center')}
         >
           {body}
         </BodyCopy>
