@@ -23,73 +23,65 @@ const getLocale = (request: NextRequest) => {
   return matchLocale(languages, locales, i18n.defaultLocale);
 };
 
-function handleI18nRouting(request: NextRequest): NextResponse {
+export async function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
-  if (!i18n.isMultilingual) {
-    const rewriteUrl = new URL(
-      `/${i18n.defaultLocale}${pathname.startsWith('/') ? '' : '/'}${pathname}`,
-      request.url
+  // i18n missing-locale → redirect (terminates; no cookie forwarding needed).
+  if (i18n.isMultilingual) {
+    const pathnameIsMissingLocale = i18n.locales.every(
+      (locale) =>
+        !pathname.startsWith(`/${locale}/`) && pathname !== `/${locale}`
     );
-    return NextResponse.rewrite(rewriteUrl);
+    if (pathnameIsMissingLocale) {
+      const locale = getLocale(request);
+      return NextResponse.redirect(
+        new URL(
+          `/${locale}${pathname.startsWith('/') ? '' : '/'}${pathname}`,
+          request.url
+        )
+      );
+    }
   }
 
-  const pathnameIsMissingLocale = i18n.locales.every(
-    (locale) => !pathname.startsWith(`/${locale}/`) && pathname !== `/${locale}`
-  );
+  // Pass { request } so request.cookies mutations during refresh are
+  // forwarded to server components via x-middleware-request-* headers.
+  const response = i18n.isMultilingual
+    ? NextResponse.next({ request })
+    : NextResponse.rewrite(
+        new URL(
+          `/${i18n.defaultLocale}${pathname.startsWith('/') ? '' : '/'}${pathname}`,
+          request.url
+        ),
+        { request }
+      );
 
-  if (pathnameIsMissingLocale) {
-    const locale = getLocale(request);
-    return NextResponse.redirect(
-      new URL(
-        `/${locale}${pathname.startsWith('/') ? '' : '/'}${pathname}`,
-        request.url
-      )
-    );
-  }
-
-  return NextResponse.next();
-}
-
-export async function proxy(request: NextRequest) {
   // Skip token refresh for prefetch requests
   if (request.headers.get('next-router-prefetch') === '1') {
-    return handleI18nRouting(request);
+    return response;
   }
 
   if (!shouldRefreshSession(request)) {
-    return handleI18nRouting(request);
+    return response;
   }
 
   try {
-    // Refresh first — creates NextResponse.next({ request }) internally,
-    // updates request.cookies and collects Set-Cookie headers.
-    const refreshResponse = await refreshSession(request);
-
-    // Create the routing response (request cookies are already updated)
-    const response = handleI18nRouting(request);
-
-    // Copy Set-Cookie headers from refresh response to routing response
-    for (const header of refreshResponse.headers.getSetCookie()) {
-      response.headers.append('Set-Cookie', header);
-    }
-
+    await refreshSession(request, response);
     return response;
   } catch (error) {
     if (isAuthFailure(error)) {
       console.warn('[Proxy] Refresh token invalid, clearing session');
       const expiredUrl = new URL(request.url);
       expiredUrl.searchParams.set('session', 'expired');
-      const response = NextResponse.redirect(expiredUrl);
-      clearAuthCookies(request, response);
-      return response;
+      const redirectResponse = NextResponse.redirect(expiredUrl);
+      clearAuthCookies(request, redirectResponse);
+      return redirectResponse;
     }
 
     console.warn(
       '[Proxy] Token refresh failed (transient), keeping session:',
       error
     );
-    return handleI18nRouting(request);
+    return response;
   }
 }
 

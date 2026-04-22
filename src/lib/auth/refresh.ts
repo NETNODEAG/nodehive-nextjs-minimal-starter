@@ -43,14 +43,16 @@ export function shouldRefreshSession(request: NextRequest): boolean {
 
 /**
  * Refresh the OAuth session inline (Supabase pattern).
- * Creates a NextResponse.next({ request }) and sets cookies on both
- * request (for server components) and response (for browser).
- * Returns the response with Set-Cookie headers.
+ * Mutates request.cookies (for server components in the current request)
+ * and sets Set-Cookie on the given response (for the browser).
+ * The caller must have created `response` with `{ request }` so the cookie
+ * mutations are forwarded via x-middleware-request-* headers.
  * Throws on failure — caller decides how to handle.
  */
 export async function refreshSession(
-  request: NextRequest
-): Promise<NextResponse> {
+  request: NextRequest,
+  response: NextResponse
+): Promise<void> {
   const keys = NextCookieStorage.cookieKeys();
   const refreshToken = request.cookies.get(keys.refresh_token)?.value;
 
@@ -58,15 +60,8 @@ export async function refreshSession(
     throw new AuthenticationError('No refresh token available');
   }
 
-  // Create response with NextResponse.next({ request }) to ensure modified
-  // request cookies are forwarded to server components (Supabase pattern).
-  // The storage adapter sets cookies on both request and this response.
-  const context = { request, response: NextResponse.next({ request }) };
-
   // Dedup: if another request is already refreshing with the same token, reuse it
-  await refreshOnce(refreshToken, context);
-
-  return context.response;
+  await refreshOnce(refreshToken, { request, response });
 }
 
 /**
