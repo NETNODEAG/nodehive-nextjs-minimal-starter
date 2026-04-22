@@ -136,6 +136,50 @@ function serializeRootFields(config: Config): string {
   return lines.join('\n');
 }
 
+function formatRootValue(value: unknown): string {
+  if (value === undefined || value === null || value === '') return '(not set)';
+  if (typeof value === 'string') return JSON.stringify(value);
+  if (typeof value === 'number' || typeof value === 'boolean') {
+    return String(value);
+  }
+  if (Array.isArray(value)) {
+    return value.length === 0 ? '(empty)' : `(array, ${value.length} items)`;
+  }
+  if (typeof value === 'object') {
+    const obj = value as Record<string, unknown>;
+    if (obj.id && obj.type) {
+      const name =
+        typeof obj.name === 'string'
+          ? `, name: ${JSON.stringify(obj.name)}`
+          : '';
+      return `{ id: ${JSON.stringify(obj.id)}, type: ${JSON.stringify(obj.type)}${name} }`;
+    }
+    return '(object)';
+  }
+  return String(value);
+}
+
+function serializeRootValues(data: Data, config: Config): string {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const rootFields = ((config.root as any)?.fields || {}) as Record<
+    string,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    any
+  >;
+  if (Object.keys(rootFields).length === 0) return '';
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const rootProps = ((data as any).root?.props || {}) as Record<
+    string,
+    unknown
+  >;
+
+  const lines = Object.keys(rootFields).map((fieldName) => {
+    return `  - ${fieldName}: ${formatRootValue(rootProps[fieldName])}`;
+  });
+  return lines.join('\n');
+}
+
 function serializeCategories(config: Config): string {
   const lines = Object.entries(config.categories || {})
     .filter(([name]) => name !== 'other')
@@ -268,8 +312,9 @@ export function buildSystemPrompt(
 
   const structureTree = serializePageStructure(puckData, config);
   const rootFieldsBlock = serializeRootFields(config);
+  const rootValuesBlock = serializeRootValues(puckData, config);
   const rootSection = rootFieldsBlock
-    ? `\nPAGE METADATA FIELDS (set via the set_page_metadata tool):\n${rootFieldsBlock}\n`
+    ? `\nPAGE METADATA FIELDS (set via the set_page_metadata tool):\n${rootFieldsBlock}\n\nCURRENT PAGE METADATA\n${rootValuesBlock}\n`
     : '';
 
   return `You are an AI assistant integrated into a visual page builder called Puck. You help users create and modify web page content by manipulating components.

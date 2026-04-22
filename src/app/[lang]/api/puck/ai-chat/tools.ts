@@ -256,7 +256,7 @@ export function createAiChatTools({
 
     search_media: tool({
       description:
-        'Search the Drupal media library for images, videos, documents, or audio files. Use this to find existing media that can be used in components.',
+        'Search the Drupal media library for images, videos, documents, or audio files. Returns the full media entities as they come from the Drupal JSON:API — pass the chosen item verbatim into the component field (do NOT reshape, strip keys, or invent values). If your first search returns no relevant hit, refine the query or widen it before giving up; only then ask the user.',
       inputSchema: z.object({
         type: z
           .enum(['image', 'remote_video', 'document', 'audio'])
@@ -264,12 +264,14 @@ export function createAiChatTools({
         query: z
           .string()
           .optional()
-          .describe('Search query to filter media items'),
+          .describe('Search query to filter media items by name'),
         limit: z
           .number()
           .optional()
-          .default(10)
-          .describe('Maximum number of results to return'),
+          .default(5)
+          .describe(
+            'Maximum number of results to return (default 5). Increase only when the first page misses.'
+          ),
       }),
       execute: async ({ type, query, limit }) => {
         try {
@@ -290,21 +292,11 @@ export function createAiChatTools({
           }
 
           const data = await response.json();
-          const items = (data.data || []).map((item: any) => ({
-            id: item.id,
-            name: item.name,
-            type: item.type,
-            thumbnailUrl: item.thumbnail?.uri?.url
-              ? `${process.env.NEXT_PUBLIC_DRUPAL_BASE_URL}${item.thumbnail.uri.url}`
-              : null,
-            fileUrl: item.field_media_image?.uri?.url
-              ? `${process.env.NEXT_PUBLIC_DRUPAL_BASE_URL}${item.field_media_image.uri.url}`
-              : null,
-          }));
+          const results = data.data || [];
 
           return {
-            results: items,
-            message: `Found ${items.length} ${type} item(s)`,
+            results,
+            message: `Found ${results.length} ${type} item(s). Pass the full object of the chosen item verbatim into the media field.`,
           };
         } catch {
           return { results: [], message: 'Error searching media' };
