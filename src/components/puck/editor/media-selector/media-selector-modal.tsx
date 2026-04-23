@@ -4,10 +4,11 @@ import { useState } from 'react';
 import { useDebouncedValue } from '@/hooks/use-debounced-value';
 import { Button } from '@puckeditor/core';
 import { DialogDescription } from '@radix-ui/react-dialog';
-import { useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import {
   ChevronLeftIcon,
   ChevronRightIcon,
+  Loader2Icon,
   SearchIcon,
   XIcon,
 } from 'lucide-react';
@@ -173,7 +174,7 @@ export function MediaSelectorModal({
     }
   };
 
-  const { data, isLoading, refetch } = useQuery({
+  const { data, isLoading, isFetching, refetch } = useQuery({
     queryKey: [
       'media-items',
       mediaType,
@@ -189,6 +190,7 @@ export function MediaSelectorModal({
         limit: PAGE_LIMIT,
       }),
     enabled: isOpen && !!mediaType,
+    placeholderData: keepPreviousData,
   });
 
   const mediaItems: MediaItem[] =
@@ -310,75 +312,86 @@ export function MediaSelectorModal({
               </div>
             )}
 
-            <div className="grid grid-cols-3 gap-4 sm:grid-cols-5">
+            <div className="relative">
               {isLoading ? (
-                Array.from({ length: PAGE_LIMIT }).map((_, index) => (
-                  <div
-                    key={index}
-                    className="mb-4 aspect-square h-full w-full"
+                <div className="flex min-h-64 items-center justify-center">
+                  <Loader2Icon
+                    className="size-8 animate-spin text-gray-400"
+                    aria-label="Lädt Medien"
                   />
-                ))
+                </div>
               ) : mediaItems.length > 0 ? (
-                mediaItems.map((item) => (
-                  <div
-                    key={item.id}
-                    className={cn(
-                      'cursor-pointer rounded-lg border border-gray-200 p-2 transition-all hover:border-gray-300',
-                      {
-                        'border-primary ring-primary ring-2':
-                          value?.id === item.id,
-                      }
-                    )}
-                    onClick={() => onChange(item)}
-                  >
-                    <div className="mb-2 aspect-square w-full overflow-hidden rounded bg-gray-100">
-                      {(() => {
-                        const fileDisplay = getFileDisplay(item);
-
-                        if (fileDisplay) {
-                          // Show file type icon for non-image media types
-                          return (
-                            <div
-                              className={`flex h-full w-full items-center justify-center ${fileDisplay.bgColor}`}
-                            >
-                              <span
-                                className={`material-symbols-outlined ${fileDisplay.iconColor} text-6xl`}
-                              >
-                                {fileDisplay.icon}
-                              </span>
-                            </div>
-                          );
-                        } else if (item.thumbnailImage) {
-                          // Show thumbnail image for any media type that has one
-                          return (
-                            <div className="relative h-full w-full">
-                              {/*eslint-disable-next-line @next/next/no-img-element */}
-                              <img
-                                src={item.thumbnailImage}
-                                alt={item.name || ''}
-                                sizes="220px"
-                                className="h-full w-full object-contain"
-                              />
-                            </div>
-                          );
-                        } else {
-                          // Fallback generic icon for media without thumbnails
-                          return (
-                            <div className="flex h-full w-full items-center justify-center bg-gray-50">
-                              <span className="material-symbols-outlined text-6xl text-gray-600">
-                                attachment
-                              </span>
-                            </div>
-                          );
+                <div className="grid grid-cols-3 gap-4 sm:grid-cols-5">
+                  {mediaItems.map((item) => (
+                    <div
+                      key={item.id}
+                      className={cn(
+                        'cursor-pointer rounded-lg border border-gray-200 p-2 transition-all hover:border-gray-300',
+                        {
+                          'border-primary ring-primary ring-2':
+                            value?.id === item.id,
                         }
-                      })()}
+                      )}
+                      onClick={() => onChange(item)}
+                    >
+                      <div className="mb-2 aspect-square w-full overflow-hidden rounded bg-gray-100">
+                        {(() => {
+                          const fileDisplay = getFileDisplay(item);
+
+                          if (fileDisplay) {
+                            // Show file type icon for non-image media types
+                            return (
+                              <div
+                                className={`flex h-full w-full items-center justify-center ${fileDisplay.bgColor}`}
+                              >
+                                <span
+                                  className={`material-symbols-outlined ${fileDisplay.iconColor} text-6xl`}
+                                >
+                                  {fileDisplay.icon}
+                                </span>
+                              </div>
+                            );
+                          } else if (item.thumbnailImage) {
+                            // Show thumbnail image for any media type that has one
+                            return (
+                              <div className="relative h-full w-full">
+                                {/*eslint-disable-next-line @next/next/no-img-element */}
+                                <img
+                                  src={item.thumbnailImage}
+                                  alt={item.name || ''}
+                                  sizes="220px"
+                                  className="h-full w-full object-contain"
+                                />
+                              </div>
+                            );
+                          } else {
+                            // Fallback generic icon for media without thumbnails
+                            return (
+                              <div className="flex h-full w-full items-center justify-center bg-gray-50">
+                                <span className="material-symbols-outlined text-6xl text-gray-600">
+                                  attachment
+                                </span>
+                              </div>
+                            );
+                          }
+                        })()}
+                      </div>
+                      <div className="truncate text-sm">{item.name}</div>
                     </div>
-                    <div className="truncate text-sm">{item.name}</div>
-                  </div>
-                ))
+                  ))}
+                </div>
               ) : (
-                <div className="col-span-full py-8 text-center">
+                <div className="flex min-h-64 items-center justify-center text-gray-500">
                   Keine Medien gefunden
+                </div>
+              )}
+
+              {!isLoading && isFetching && (
+                <div className="absolute inset-0 flex items-center justify-center rounded bg-white/60">
+                  <Loader2Icon
+                    className="size-8 animate-spin text-gray-400"
+                    aria-label="Lädt Medien"
+                  />
                 </div>
               )}
             </div>
