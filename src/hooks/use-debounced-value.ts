@@ -6,11 +6,11 @@ export function useDebouncedValue<T>(
   value: T,
   delay: number
 ): [T, (v: T) => void] {
-  const [debouncedValue, setDebouncedValue] = useState(value);
+  const [debouncedValue, setInternal] = useState(value);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    timeoutRef.current = setTimeout(() => setDebouncedValue(value), delay);
+    timeoutRef.current = setTimeout(() => setInternal(value), delay);
     return () => {
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
@@ -19,13 +19,13 @@ export function useDebouncedValue<T>(
     };
   }, [value, delay]);
 
-  const setImmediately = (v: T) => {
+  const setDebouncedValue = (v: T) => {
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
       timeoutRef.current = null;
     }
-    setDebouncedValue(v);
+    setInternal(v);
   };
 
-  return [debouncedValue, setImmediately];
+  return [debouncedValue, setDebouncedValue];
 }

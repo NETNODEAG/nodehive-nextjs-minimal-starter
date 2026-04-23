@@ -80,11 +80,11 @@ export function MediaSelectorModal({
   const [mediaType, setMediaType] = useState(mediaTypes[0] || '');
   const [showAddMedia, setShowAddMedia] = useState(false);
   const [currentOffset, setCurrentOffset] = useState(0);
-  const [lastAppliedQuery, setLastAppliedQuery] =
+  const [prevDebouncedQuery, setPrevDebouncedQuery] =
     useState(debouncedSearchQuery);
 
-  if (lastAppliedQuery !== debouncedSearchQuery) {
-    setLastAppliedQuery(debouncedSearchQuery);
+  if (prevDebouncedQuery !== debouncedSearchQuery) {
+    setPrevDebouncedQuery(debouncedSearchQuery);
     setCurrentOffset(0);
   }
 
@@ -204,8 +204,11 @@ export function MediaSelectorModal({
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
+    if (searchQuery === debouncedSearchQuery) {
+      refetch();
+      return;
+    }
     flushSearchQuery(searchQuery);
-    refetch();
   };
 
   const clearSearch = () => {
@@ -219,13 +222,13 @@ export function MediaSelectorModal({
   };
 
   const handleNextPage = () => {
-    if (hasNextPage) {
+    if (hasNextPage && !isFetching) {
       setCurrentOffset((prev) => prev + PAGE_LIMIT);
     }
   };
 
   const handlePreviousPage = () => {
-    if (hasPreviousPage) {
+    if (hasPreviousPage && !isFetching) {
       setCurrentOffset((prev) => prev - PAGE_LIMIT);
     }
   };
@@ -275,7 +278,7 @@ export function MediaSelectorModal({
               </div>
               <Button
                 type="submit"
-                disabled={isLoading}
+                disabled={isFetching}
                 size="large"
                 onClick={(e) => {
                   e.stopPropagation();
@@ -400,8 +403,9 @@ export function MediaSelectorModal({
               <div className="col-start-2 flex items-center justify-center gap-2">
                 {hasPreviousPage ? (
                   <button
-                    className="cursor-pointer"
+                    className="cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
                     onClick={handlePreviousPage}
+                    disabled={isFetching}
                   >
                     <ChevronLeftIcon className="hover:text-primary size-5" />
                   </button>
@@ -410,7 +414,11 @@ export function MediaSelectorModal({
                 )}
                 <span>Page {Math.floor(currentOffset / PAGE_LIMIT) + 1}</span>
                 {hasNextPage ? (
-                  <button onClick={handleNextPage} className="cursor-pointer">
+                  <button
+                    onClick={handleNextPage}
+                    className="cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
+                    disabled={isFetching}
+                  >
                     <ChevronRightIcon className="hover:text-primary size-5" />
                   </button>
                 ) : (
