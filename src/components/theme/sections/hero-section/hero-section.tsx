@@ -11,6 +11,14 @@ import Container from '@/components/theme/atoms-layout/container/container';
 export type HeroLayout = 'default' | 'centered' | 'bottom';
 export type HeroHeight = '25' | '50' | '90';
 
+export interface HeroCta {
+  text: string;
+  href: string;
+  variant?: 'link' | 'button' | 'buttonOutline';
+  size?: 'small' | 'big';
+  target?: '_self' | '_blank';
+}
+
 export interface HeroProps extends Omit<
   React.HTMLAttributes<HTMLElement>,
   'title'
@@ -25,27 +33,13 @@ export interface HeroProps extends Omit<
     alt?: string;
   };
   overlayOpacity?: number;
-  primaryCta?: {
-    text: string;
-    href: string;
-    variant?: 'link' | 'button' | 'buttonOutline';
-    size?: 'small' | 'big';
-    target?: '_self' | '_blank';
-  };
-  secondaryCta?: {
-    text: string;
-    href: string;
-    variant?: 'link' | 'button' | 'buttonOutline';
-    size?: 'small' | 'big';
-    target?: '_self' | '_blank';
-  };
+  ctas?: HeroCta[];
 }
 
 const HeroSection: React.FC<HeroProps> = ({
   title,
   description,
-  primaryCta,
-  secondaryCta,
+  ctas,
   background = 'none',
   backgroundImage,
   overlayOpacity = 50,
@@ -54,6 +48,7 @@ const HeroSection: React.FC<HeroProps> = ({
   className,
   ...props
 }) => {
+  const visibleCtas = ctas?.filter((cta) => cta?.text && cta?.href) ?? [];
   const isCentered = layout === 'centered';
   const isBottom = layout === 'bottom';
   const hasBackgroundImage = !!backgroundImage?.src;
@@ -97,7 +92,7 @@ const HeroSection: React.FC<HeroProps> = ({
 
       <Container width="wide" className="relative z-10">
         <div
-          className={cn('space-y-6', {
+          className={cn('space-y-8', {
             'mx-auto max-w-4xl': isCentered,
           })}
         >
@@ -116,32 +111,25 @@ const HeroSection: React.FC<HeroProps> = ({
             </BodyCopy>
           )}
 
-          {(primaryCta || secondaryCta) && (
+          {visibleCtas.length > 0 && (
             <div
               className={cn('flex flex-wrap gap-4', {
                 'justify-center': isCentered,
               })}
             >
-              {primaryCta && (
+              {visibleCtas.map((cta, index) => (
                 <CallToAction
-                  href={primaryCta.href}
-                  variant={primaryCta.variant || 'button'}
-                  size={primaryCta.size || 'big'}
-                  target={primaryCta.target || '_self'}
+                  key={`${cta.href}-${index}`}
+                  href={cta.href}
+                  variant={
+                    cta.variant || (index === 0 ? 'button' : 'buttonOutline')
+                  }
+                  size={cta.size || 'big'}
+                  target={cta.target || '_self'}
                 >
-                  {primaryCta.text}
+                  {cta.text}
                 </CallToAction>
-              )}
-              {secondaryCta && (
-                <CallToAction
-                  href={secondaryCta.href}
-                  variant={secondaryCta.variant || 'buttonOutline'}
-                  size={secondaryCta.size || 'big'}
-                  target={secondaryCta.target || '_self'}
-                >
-                  {secondaryCta.text}
-                </CallToAction>
-              )}
+              ))}
             </div>
           )}
         </div>
