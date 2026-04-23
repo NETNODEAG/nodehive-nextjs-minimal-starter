@@ -13,7 +13,7 @@ export const HeroSectionConfig: ComponentConfig = {
       description:
         'Large intro section with headline, subtitle, CTAs, and optional background media.',
       instructions:
-        'At most once per page, as the first section. Title 3-8 words, description 10-25 words, max 2 CTAs.',
+        'At most once per page, as the first section. Title 3-8 words, description 10-25 words. CTAs are an array; 1-2 recommended.',
     },
   },
   fields: {
@@ -75,7 +75,7 @@ export const HeroSectionConfig: ComponentConfig = {
     cta: {
       type: 'array',
       label: 'Call to Actions',
-      max: 3,
+      getItemSummary: (item) => item.text || 'Call to Action',
       defaultItemProps: {
         text: 'Learn More',
         variant: 'button',
@@ -170,9 +170,6 @@ export const HeroSectionConfig: ComponentConfig = {
     height,
     cta,
   }) => {
-    const primaryCta = cta?.[0]?.text ? cta[0] : undefined;
-    const secondaryCta = cta?.[1]?.text ? cta[1] : undefined;
-
     const imageAlt = backgroundImage?.field_media_image?.meta?.alt || '';
     const uriUrl = backgroundImage?.field_media_image?.uri?.url;
     const imageSrc =
@@ -192,8 +189,7 @@ export const HeroSectionConfig: ComponentConfig = {
         overlayOpacity={overlayOpacity}
         layout={layout}
         height={height}
-        primaryCta={primaryCta}
-        secondaryCta={secondaryCta}
+        ctas={cta}
       />
     );
   },

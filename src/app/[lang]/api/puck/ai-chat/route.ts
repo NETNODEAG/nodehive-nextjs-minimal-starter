@@ -1,6 +1,7 @@
 import { createOpenAI } from '@ai-sdk/openai';
 import { convertToModelMessages, streamText, UIMessage } from 'ai';
 
+import { requireEditor } from '@/lib/auth/require-editor';
 import { buildSystemPrompt } from '@/components/puck/plugins/ai-chat-plugin/utils/build-system-prompt';
 import { createAiChatTools } from './tools';
 
@@ -11,6 +12,9 @@ interface RouteParams {
 }
 
 export async function POST(request: Request, { params }: RouteParams) {
+  const unauthorized = await requireEditor();
+  if (unauthorized) return unauthorized;
+
   const { lang } = await params;
 
   const body = await request.json();

@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { getMedia } from '@/data/nodehive/media/get-media';
 
+import { requireEditor } from '@/lib/auth/require-editor';
+
 interface RouteParams {
   params: Promise<{
     lang: string;
@@ -10,6 +12,9 @@ interface RouteParams {
 }
 
 export async function GET(request: Request, { params }: RouteParams) {
+  const unauthorized = await requireEditor();
+  if (unauthorized) return unauthorized;
+
   try {
     const { id, type, lang } = await params;
     const media = await getMedia(id, type, lang);

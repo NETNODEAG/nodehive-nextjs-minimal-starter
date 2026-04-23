@@ -3,6 +3,7 @@ import { tool } from 'ai';
 import TurndownService from 'turndown';
 import { z } from 'zod';
 
+import { safeExternalFetch } from '@/lib/fetch/safe-external-fetch';
 import { serializeComponentSpec } from '@/components/puck/plugins/ai-chat-plugin/utils/build-system-prompt';
 import { findComponentLocation } from '@/components/puck/plugins/ai-chat-plugin/utils/find-component-location';
 import { generateTemplateIds } from '@/components/puck/utils';
@@ -433,9 +434,12 @@ export function createAiChatTools({
       inputSchema: z.object({
         url: z.string().url().describe('The URL to fetch'),
       }),
+      // The URL comes from user-influenced input, so we route through
+      // safeExternalFetch which blocks private / loopback / link-local
+      // addresses (SSRF protection — see src/lib/fetch/safe-external-fetch.ts).
       execute: async ({ url }) => {
         try {
-          const response = await fetch(url, {
+          const response = await safeExternalFetch(url, {
             headers: {
               'User-Agent': 'Mozilla/5.0 (compatible; PuckAI/1.0)',
             },

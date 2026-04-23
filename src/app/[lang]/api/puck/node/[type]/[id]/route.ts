@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { getNode } from '@/data/nodehive/nodes/get-node';
 
+import { requireEditor } from '@/lib/auth/require-editor';
+
 interface RouteParams {
   params: Promise<{
     lang: string;
@@ -10,6 +12,9 @@ interface RouteParams {
 }
 
 export async function GET(request: Request, { params }: RouteParams) {
+  const unauthorized = await requireEditor();
+  if (unauthorized) return unauthorized;
+
   try {
     const { type, id, lang } = await params;
 

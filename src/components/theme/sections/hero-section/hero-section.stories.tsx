@@ -13,18 +13,20 @@ const meta = {
     title: 'Craft standout digital experiences',
     description:
       '<p>Bring your marketing and editorial teams together with a component library that stays consistent across every touchpoint.</p>',
-    primaryCta: {
-      text: 'Get started',
-      href: '/',
-      variant: 'button',
-      size: 'big',
-    },
-    secondaryCta: {
-      text: 'View documentation',
-      href: '/',
-      variant: 'buttonOutline',
-      size: 'big',
-    },
+    ctas: [
+      {
+        text: 'Get started',
+        href: '/',
+        variant: 'button',
+        size: 'big',
+      },
+      {
+        text: 'View documentation',
+        href: '/',
+        variant: 'buttonOutline',
+        size: 'big',
+      },
+    ],
   },
   argTypes: {
     background: {
