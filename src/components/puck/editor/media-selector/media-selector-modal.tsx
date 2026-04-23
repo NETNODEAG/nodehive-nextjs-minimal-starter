@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useDebouncedValue } from '@/hooks/use-debounced-value';
 import { Button } from '@puckeditor/core';
 import { DialogDescription } from '@radix-ui/react-dialog';
 import { useQuery } from '@tanstack/react-query';
@@ -23,6 +24,7 @@ import { MediaItem } from './media-selector-field';
 import { VideoUploadForm } from './video-upload-form';
 
 const PAGE_LIMIT = 15;
+const SEARCH_DEBOUNCE_MS = 300;
 
 type MediaSelectorModalProps = {
   value: MediaItem | null;
@@ -70,10 +72,20 @@ export function MediaSelectorModal({
   mediaTypes,
 }: MediaSelectorModalProps) {
   const [searchQuery, setSearchQuery] = useState('');
-  const [appliedSearchQuery, setAppliedSearchQuery] = useState('');
+  const [debouncedSearchQuery, flushSearchQuery] = useDebouncedValue(
+    searchQuery,
+    SEARCH_DEBOUNCE_MS
+  );
   const [mediaType, setMediaType] = useState(mediaTypes[0] || '');
   const [showAddMedia, setShowAddMedia] = useState(false);
   const [currentOffset, setCurrentOffset] = useState(0);
+  const [lastAppliedQuery, setLastAppliedQuery] =
+    useState(debouncedSearchQuery);
+
+  if (lastAppliedQuery !== debouncedSearchQuery) {
+    setLastAppliedQuery(debouncedSearchQuery);
+    setCurrentOffset(0);
+  }
 
   // Helper function to get file icon and styling based on file type
   const getFileDisplay = (media: MediaItem) => {
@@ -165,14 +177,14 @@ export function MediaSelectorModal({
     queryKey: [
       'media-items',
       mediaType,
-      appliedSearchQuery,
+      debouncedSearchQuery,
       currentOffset,
       PAGE_LIMIT,
     ],
     queryFn: () =>
       fetchMedia({
         type: mediaType,
-        query: appliedSearchQuery,
+        query: debouncedSearchQuery,
         offset: currentOffset,
         limit: PAGE_LIMIT,
       }),
@@ -190,16 +202,13 @@ export function MediaSelectorModal({
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    setAppliedSearchQuery(searchQuery);
-    setCurrentOffset(0);
+    flushSearchQuery(searchQuery);
     refetch();
   };
 
   const clearSearch = () => {
     setSearchQuery('');
-    setAppliedSearchQuery('');
-    setCurrentOffset(0);
-    refetch();
+    flushSearchQuery('');
   };
 
   const handleMediaAdded = () => {
