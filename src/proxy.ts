@@ -23,10 +23,8 @@ const getLocale = (request: NextRequest) => {
   return matchLocale(languages, locales, i18n.defaultLocale);
 };
 
-// API paths are language-neutral (or already prefixed under /{lang}/api/).
-// Language-rewrite/redirect logic should skip them — but token refresh
-// should still run so editors do not see random 401s mid-session when their
-// access token expires between navigations.
+// API paths skip locale rewrite/redirect, but still need token refresh so
+// editors don't see 401s mid-session.
 function isApiPath(pathname: string): boolean {
   return pathname.startsWith('/api/') || /^\/[a-z]{2}\/api\//.test(pathname);
 }
@@ -35,7 +33,6 @@ export async function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
   const isApi = isApiPath(pathname);
 
-  // i18n missing-locale redirect — only for user-facing pages, never API.
   if (i18n.isMultilingual && !isApi) {
     const pathnameIsMissingLocale = i18n.locales.every(
       (locale) =>
@@ -52,9 +49,7 @@ export async function proxy(request: NextRequest) {
     }
   }
 
-  // Pass { request } so request.cookies mutations during refresh are
-  // forwarded to server components via x-middleware-request-* headers.
-  // API paths always pass through — no rewrite to the default locale.
+  // { request } forwards cookie mutations from refresh to server components.
   const response =
     i18n.isMultilingual || isApi
       ? NextResponse.next({ request })
@@ -66,7 +61,6 @@ export async function proxy(request: NextRequest) {
           { request }
         );
 
-  // Skip token refresh for prefetch requests
   if (request.headers.get('next-router-prefetch') === '1') {
     return response;
   }
@@ -81,7 +75,7 @@ export async function proxy(request: NextRequest) {
   } catch (error) {
     if (isAuthFailure(error)) {
       console.warn('[Proxy] Refresh token invalid, clearing session');
-      // API clients expect a status code / JSON, not a 3xx redirect.
+      // API clients expect a status, not a redirect.
       if (isApi) {
         const unauthorized = new NextResponse('Unauthorized', { status: 401 });
         clearAuthCookies(request, unauthorized);
@@ -102,16 +96,11 @@ export async function proxy(request: NextRequest) {
   }
 }
 
-// Matcher includes /api/ and /{lang}/api/ — token-refresh runs on API requests
-// too, so editor sessions stay fresh mid-workflow. Historical note: these
-// paths were previously excluded to dodge an OAuth refresh race (commit
-// ba94af7). That race was structurally eliminated by moving the refresh
-// inline (commit 6f687b7) and deduping concurrent refreshes per-token in
-// src/lib/auth/refresh.ts (activeRefreshes Map). It is now safe — and better
-// for UX — to let the middleware see API requests.
+// Matcher covers /api/ and /{lang}/api/ so token refresh keeps editor
+// sessions fresh. Safe against the old OAuth refresh race thanks to
+// per-token dedupe in src/lib/auth/refresh.ts (activeRefreshes).
 export const config = {
   matcher: [
-    // excludes static assets, favicon, manifest, robots, images, etc.
     '/((?!_next/static|_next/image|favicon.ico|icon*.png|manifest.ts|manifest.webmanifest|robots.ts|robots.txt|css/|metadata/|images/).*)',
   ],
 };
