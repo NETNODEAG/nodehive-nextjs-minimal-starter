@@ -10,6 +10,7 @@ import { createUserClient } from '@/lib/nodehive-client';
 
 const MAX_RETRIES = 3;
 const BACKOFF_MS = 200;
+const ROTATION_GRACE_MS = 30_000;
 
 const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -17,6 +18,38 @@ const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 // Note: This Map is per-isolate — on serverless deployments, dedup is best-effort
 // and not guaranteed across concurrent isolates. On long-running servers it works fully.
 const activeRefreshes = new Map<string, Promise<LoginResult>>();
+
+// Grace cache for recently rotated refresh tokens.
+//
+// OAuth refresh tokens are single-use: each successful refresh invalidates the
+// previous one. But the browser can have parallel requests in flight carrying
+// the old refresh-token cookie when the rotation happens. Without this cache,
+// stale requests arriving just AFTER the original refresh completed (so the
+// `activeRefreshes` dedup map is already empty) trigger a second refresh that
+// fails with invalid_grant and logs the user out.
+//
+// Mapping: old refresh_token → fresh LoginResult, valid for ROTATION_GRACE_MS.
+const recentRotations = new Map<
+  string,
+  { result: LoginResult; expiresAt: number }
+>();
+
+function rememberRotation(oldToken: string, result: LoginResult) {
+  const expiresAt = Date.now() + ROTATION_GRACE_MS;
+  recentRotations.set(oldToken, { result, expiresAt });
+  setTimeout(() => recentRotations.delete(oldToken), ROTATION_GRACE_MS).unref?.();
+}
+
+function getRecentRotation(oldToken: string): LoginResult | null {
+  const entry = recentRotations.get(oldToken);
+  if (!entry) return null;
+  if (entry.expiresAt < Date.now()) {
+    recentRotations.delete(oldToken);
+    return null;
+  }
+  console.info('[Refresh] grace cache hit — stale refresh-token reused');
+  return entry.result;
+}
 
 /**
  * Check if the session token needs refreshing.
@@ -95,14 +128,22 @@ function refreshOnce(
   refreshToken: string,
   context: { request: NextRequest; response: NextResponse }
 ): Promise<LoginResult> {
+  const recent = getRecentRotation(refreshToken);
+  if (recent) return Promise.resolve(recent);
+
   const existing = activeRefreshes.get(refreshToken);
   if (existing) return existing;
 
   const client = createUserClient(context);
 
-  const promise = refreshWithRetries(client).finally(() => {
-    activeRefreshes.delete(refreshToken);
-  });
+  const promise = refreshWithRetries(client)
+    .then((result) => {
+      rememberRotation(refreshToken, result);
+      return result;
+    })
+    .finally(() => {
+      activeRefreshes.delete(refreshToken);
+    });
 
   activeRefreshes.set(refreshToken, promise);
   return promise;
